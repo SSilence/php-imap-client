@@ -157,7 +157,9 @@ class Imap {
                 
             // get email body
             if($withbody===true) {
-                $email['body'] = $this->getBody($id);
+                $body = $this->getBody($id);
+                $email['body'] = $body['body'];
+                $email['html'] = $body['html'];
             }
             
             // get attachments
@@ -521,11 +523,13 @@ class Imap {
      */
     private function getBody($uid) {
         $body = $this->get_part($this->imap, $uid, "TEXT/HTML");
+        $html = true;
         // if HTML body is empty, try getting text body
         if ($body == "") {
             $body = $this->get_part($this->imap, $uid, "TEXT/PLAIN");
+            $html = false;
         }
-        return $body;
+        return array( 'body' => $body, 'html' => $html);
     }
 
     
