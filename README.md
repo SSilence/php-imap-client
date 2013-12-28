@@ -155,7 +155,7 @@ Methods
 
 Following methods are available.
 
-* ``__construct($mailbox, $username, $password)`` open new imap connection
+* ``__construct($mailbox, $username, $password, $encryption)`` open new imap connection
 * ``isConnected()`` check whether the imap connection could be opened successfully
 * ``getError()`` returns the last error message
 * ``selectFolder($folder)`` select current folder
