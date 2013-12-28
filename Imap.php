@@ -35,9 +35,15 @@ class Imap {
      * @param $mailbox imap_open string
      * @param $username
      * @param $password
+     * @param $encryption ssl or tls
      */
-    public function __construct($mailbox, $username, $password) {
-        $this->mailbox = "{" . $mailbox . "}";
+    public function __construct($mailbox, $username, $password, $encryption = false) {
+        $enc = '';
+        if($encryption!=null && isset($encryption) && $encryption=='ssl')
+            $enc = '/imap/ssl';
+        else if($encryption!=null && isset($encryption) && $encryption=='tls')
+            $enc = '/imap/tls';
+        $this->mailbox = "{" . $mailbox . $enc . "}";
         $this->imap = @imap_open($this->mailbox, $username, $password);
     }
     
@@ -136,11 +142,12 @@ class Imap {
             $id = imap_uid($this->imap, $i);
             
             // get email data
+            $subject = isset($header->subject) && strlen($header->subject) > 0 ? imap_mime_header_decode($header->subject)[0]->text : '';
             $email = array(
                 'to'       => $this->arrayToAddress($header->to),
                 'from'     => $this->toAddress($header->from[0]),
                 'date'     => $header->date,
-                'subject'  => imap_mime_header_decode($header->subject)[0]->text,
+                'subject'  => $subject,
                 'id'       => $id,
                 'unread'   => strlen(trim($header->Unseen))>0,
                 'answered' => strlen(trim($header->Answered))>0
