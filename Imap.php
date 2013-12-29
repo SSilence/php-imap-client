@@ -143,8 +143,9 @@ class Imap {
             
             // get email data
             $subject = isset($header->subject) && strlen($header->subject) > 0 ? imap_mime_header_decode($header->subject)[0]->text : '';
+            $subject = $this->convertToUtf8($subject);
             $email = array(
-                'to'       => $this->arrayToAddress($header->to),
+                'to'       => isset($header->to) ? $this->arrayToAddress($header->to) : '',
                 'from'     => $this->toAddress($header->from[0]),
                 'date'     => $header->date,
                 'subject'  => $subject,
@@ -172,13 +173,17 @@ class Imap {
         }
         
         // sort emails descending by date
-        usort($emails, function($a, $b) {
-            $datea = new \DateTime($a['date']);
-            $dateb = new \DateTime($b['date']);
-            if ($datea == $dateb)
-                return 0;
-            return $datea < $dateb ? 1 : -1;
-        });
+        // usort($emails, function($a, $b) {
+            // try {
+                // $datea = new \DateTime($a['date']);
+                // $dateb = new \DateTime($b['date']);
+            // } catch(\Exception $e) {
+                // return 0;
+            // }
+            // if ($datea == $dateb)
+                // return 0;
+            // return $datea < $dateb ? 1 : -1;
+        // });
         
         return $emails;
     }
@@ -496,6 +501,8 @@ class Imap {
             $name = $email;
         }
         
+        $name = $this->convertToUtf8($name);
+        
         return $name . " <" . $email . ">";
     }
 
@@ -529,9 +536,24 @@ class Imap {
             $body = $this->get_part($this->imap, $uid, "TEXT/PLAIN");
             $html = false;
         }
+        $body = $this->convertToUtf8($body);
         return array( 'body' => $body, 'html' => $html);
     }
-
+    
+    
+    /**
+     * convert to utf8 if necessary.
+     *
+     * @return true or false
+     * @param $string utf8 encoded string
+     */
+    function convertToUtf8($str) { 
+        if(mb_detect_encoding($str, "UTF-8, ISO-8859-1, GBK")!="UTF-8")
+            $str = utf8_encode($str);
+        $str = iconv('UTF-8', 'UTF-8//IGNORE', $str);
+        return $str; 
+    } 
+    
     
     /**
      * returns a part with a given mimetype
@@ -637,5 +659,6 @@ class Imap {
         }
      
         return $attachments;
-}
+    }
+    
 }
