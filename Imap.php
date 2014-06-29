@@ -176,8 +176,8 @@ class Imap {
     protected function formatMessage($id, $withbody=true){
         $header = imap_headerinfo($this->imap, $id);
 
-        // fetch unique id
-        $id = imap_uid($this->imap, $id);
+        // fetch unique uid
+        $uid = imap_uid($this->imap, $id);
 
         // get email data
         $subject = isset($header->subject) && strlen($header->subject) > 0 ? imap_mime_header_decode($header->subject)[0]->text : '';
@@ -187,7 +187,7 @@ class Imap {
             'from'     => $this->toAddress($header->from[0]),
             'date'     => $header->date,
             'subject'  => $subject,
-            'id'       => $id,
+            'uid'       => $uid,
             'unread'   => strlen(trim($header->Unseen))>0,
             'answered' => strlen(trim($header->Answered))>0
         );
@@ -196,7 +196,7 @@ class Imap {
 
         // get email body
         if($withbody===true) {
-            $body = $this->getBody($id);
+            $body = $this->getBody($uid);
             $email['body'] = $body['body'];
             $email['html'] = $body['html'];
         }
