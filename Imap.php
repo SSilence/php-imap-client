@@ -516,7 +516,7 @@ class Imap {
             $email = $headerinfos->mailbox . "@" . $headerinfos->host;
         }
 
-        if(isset($headerinfos->personal)) {
+        if(!empty($headerinfos->personal)) {
             $name = imap_mime_header_decode($headerinfos->personal)[0]->text;
         } else {
             $name = $email;
