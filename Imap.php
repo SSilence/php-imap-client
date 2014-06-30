@@ -123,6 +123,20 @@ class Imap {
             return false;
         return count($result);
     }
+
+    /**
+     * returns unseen emails in the current folder
+     *
+     * @return array messages
+     * @param $withbody without body
+     */
+    public function getUnreadMessages($withbody=true){
+        $result = imap_search($this->imap, 'UNSEEN');
+        foreach($result as $k=>$i){
+            $emails[]= $this->formatMessage($i, $withbody);
+        }
+        return $emails;
+    }
     
     
     /**
@@ -135,59 +149,66 @@ class Imap {
         $count = $this->countMessages();
         $emails = array();
         for($i=1;$i<=$count;$i++) {
-            // get email data
-            $header = imap_headerinfo($this->imap, $i);
-            
-            // fetch unique id
-            $id = imap_uid($this->imap, $i);
-            
-            // get email data
-            $subject = isset($header->subject) && strlen($header->subject) > 0 ? imap_mime_header_decode($header->subject)[0]->text : '';
-            $subject = $this->convertToUtf8($subject);
-            $email = array(
-                'to'       => isset($header->to) ? $this->arrayToAddress($header->to) : '',
-                'from'     => $this->toAddress($header->from[0]),
-                'date'     => $header->date,
-                'subject'  => $subject,
-                'id'       => $id,
-                'unread'   => strlen(trim($header->Unseen))>0,
-                'answered' => strlen(trim($header->Answered))>0
-            );
-            if(isset($header->cc))
-                $email['cc'] = $this->arrayToAddress($header->cc);
-                
-            // get email body
-            if($withbody===true) {
-                $body = $this->getBody($id);
-                $email['body'] = $body['body'];
-                $email['html'] = $body['html'];
-            }
-            
-            // get attachments
-            $mailStruct = imap_fetchstructure($this->imap, $i);
-            $attachments = $this->attachments2name($this->getAttachments($this->imap, $i, $mailStruct, ""));
-            if(count($attachments)>0)
-                $email['attachments'] = $attachments;
-            
-            $emails[]= $email;
+            $emails[]= $this->formatMessage($i, $withbody);
         }
-        
+
         // sort emails descending by date
         // usort($emails, function($a, $b) {
-            // try {
-                // $datea = new \DateTime($a['date']);
-                // $dateb = new \DateTime($b['date']);
-            // } catch(\Exception $e) {
-                // return 0;
-            // }
-            // if ($datea == $dateb)
-                // return 0;
-            // return $datea < $dateb ? 1 : -1;
+        // try {
+        // $datea = new \DateTime($a['date']);
+        // $dateb = new \DateTime($b['date']);
+        // } catch(\Exception $e) {
+        // return 0;
+        // }
+        // if ($datea == $dateb)
+        // return 0;
+        // return $datea < $dateb ? 1 : -1;
         // });
-        
+
         return $emails;
     }
     
+    /**
+     * @param $id
+     * @param bool $withbody
+     * @return array
+     */
+    protected function formatMessage($id, $withbody=true){
+        $header = imap_headerinfo($this->imap, $id);
+
+        // fetch unique uid
+        $uid = imap_uid($this->imap, $id);
+
+        // get email data
+        $subject = isset($header->subject) && strlen($header->subject) > 0 ? imap_mime_header_decode($header->subject)[0]->text : '';
+        $subject = $this->convertToUtf8($subject);
+        $email = array(
+            'to'       => isset($header->to) ? $this->arrayToAddress($header->to) : '',
+            'from'     => $this->toAddress($header->from[0]),
+            'date'     => $header->date,
+            'subject'  => $subject,
+            'uid'       => $uid,
+            'unread'   => strlen(trim($header->Unseen))>0,
+            'answered' => strlen(trim($header->Answered))>0
+        );
+        if(isset($header->cc))
+            $email['cc'] = $this->arrayToAddress($header->cc);
+
+        // get email body
+        if($withbody===true) {
+            $body = $this->getBody($uid);
+            $email['body'] = $body['body'];
+            $email['html'] = $body['html'];
+        }
+
+        // get attachments
+        $mailStruct = imap_fetchstructure($this->imap, $id);
+        $attachments = $this->attachments2name($this->getAttachments($this->imap, $id, $mailStruct, ""));
+        if(count($attachments)>0)
+            $email['attachments'] = $attachments;
+
+        return $email;
+    }
     
     /**
      * delete given message
@@ -495,7 +516,7 @@ class Imap {
             $email = $headerinfos->mailbox . "@" . $headerinfos->host;
         }
 
-        if(isset($headerinfos->personal)) {
+        if(!empty($headerinfos->personal)) {
             $name = imap_mime_header_decode($headerinfos->personal)[0]->text;
         } else {
             $name = $email;
