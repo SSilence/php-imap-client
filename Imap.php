@@ -1,4 +1,4 @@
-<?PHP
+<?php
 
 /**
  * Helper class for imap access
@@ -180,7 +180,12 @@ class Imap {
         $uid = imap_uid($this->imap, $id);
 
         // get email data
-        $subject = isset($header->subject) && strlen($header->subject) > 0 ? imap_mime_header_decode($header->subject)[0]->text : '';
+        if ( isset($header->subject) && strlen($header->subject) > 0 ) {
+			$subject = imap_mime_header_decode($header->subject);
+			$subject = $subject[0]->text;
+		} else {
+			$subject = '';
+		}
         $subject = $this->convertToUtf8($subject);
         $email = array(
             'to'       => isset($header->to) ? $this->arrayToAddress($header->to) : '',
@@ -517,7 +522,8 @@ class Imap {
         }
 
         if(!empty($headerinfos->personal)) {
-            $name = imap_mime_header_decode($headerinfos->personal)[0]->text;
+            $name = imap_mime_header_decode($headerinfos->personal);
+			$name = $name[0]->text;
         } else {
             $name = $email;
         }
@@ -683,3 +689,5 @@ class Imap {
     }
     
 }
+
+?>
