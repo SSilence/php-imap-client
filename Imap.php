@@ -40,9 +40,9 @@ class Imap {
     public function __construct($mailbox, $username, $password, $encryption = false) {
         $enc = '';
         if($encryption!=null && isset($encryption) && $encryption=='ssl')
-            $enc = '/imap/ssl';
+            $enc = '/imap/ssl/novalidate-cert';
         else if($encryption!=null && isset($encryption) && $encryption=='tls')
-            $enc = '/imap/tls';
+            $enc = '/imap/tls/novalidate-cert';
         $this->mailbox = "{" . $mailbox . $enc . "}";
         $this->imap = @imap_open($this->mailbox, $username, $password);
     }
