@@ -209,9 +209,19 @@ class Imap {
         // get attachments
         $mailStruct = imap_fetchstructure($this->imap, $id);
         $attachments = $this->attachments2name($this->getAttachments($this->imap, $id, $mailStruct, ""));
-        if(count($attachments)>0)
-            $email['attachments'] = $attachments;
+        if(count($attachments)>0) {
 
+			foreach ($attachments as $val) {
+				foreach ($val as $k=>$t) {
+					if ($k == 'name') {
+						$decodedName = imap_mime_header_decode($t);
+						$t = $this->convertToUtf8($decodedName[0]->text);
+					}
+				$arr[$k] = $t;
+				}
+			$email['attachments'][] = $arr;
+			}
+		}
         return $email;
     }
     
