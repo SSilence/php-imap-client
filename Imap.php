@@ -294,7 +294,7 @@ class Imap {
         $flags .= (strlen(trim($header->Draft))>0 ? "\\Draft " : '');
         
         $flags .= (($seen == true) ? '\\Seen ' : ' ');
-        echo "\n<br />".$id.": ".$flags;
+        //echo "\n<br />".$id.": ".$flags;
         imap_clearflag_full($this->imap, $id, '\\Seen', ST_UID);
         return imap_setflag_full($this->imap, $id, trim($flags), ST_UID);
     }
