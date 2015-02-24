@@ -169,6 +169,17 @@ class Imap {
     }
     
     /**
+     * returns email by given id
+     *
+     * @return array messages
+     * @param $id
+     * @param $withbody without body
+     */
+    public function getMessage($id, $withbody = true) {
+        return $this->formatMessage($id, $withbody);
+    }
+    
+    /**
      * @param $id
      * @param bool $withbody
      * @return array
