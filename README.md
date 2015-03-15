@@ -163,6 +163,7 @@ Following methods are available.
 * ``countMessages()`` count messages in current folder
 * ``countUnreadMessages()`` count unread messages in current folder
 * ``getMessages($withbody = true)`` get emails in current folder
+* ``getMessage($id, $withbody = true)`` get email by given id
 * ``deleteMessage($id)`` delete message with given id
 * ``deleteMessages($ids)`` delete messages with given ids (as array)
 * ``moveMessage($id, $target)`` move message with given id in new folder
