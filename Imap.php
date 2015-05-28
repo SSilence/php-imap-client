@@ -120,7 +120,7 @@ class Imap {
     public function countUnreadMessages() {
         $result = imap_search($this->imap, 'UNSEEN');
         if($result===false)
-            return false;
+            return 0;
         return count($result);
     }
 
@@ -131,9 +131,12 @@ class Imap {
      * @param $withbody without body
      */
     public function getUnreadMessages($withbody=true){
+    	$emails = [];
         $result = imap_search($this->imap, 'UNSEEN');
-        foreach($result as $k=>$i){
-            $emails[]= $this->formatMessage($i, $withbody);
+        if($result){
+            foreach($result as $k=>$i){
+            	$emails[]= $this->formatMessage($i, $withbody);
+            }
         }
         return $emails;
     }
