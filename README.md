@@ -3,7 +3,7 @@ PHP Imap Client
 
 Copyright (c) 2013 Tobias Zeising, tobias.zeising@aditu.de  
 http://www.aditu.de  
-Licensed under the GPLv3 license  
+Licensed under the MIT license  
 
 
 Features
