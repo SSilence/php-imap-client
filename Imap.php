@@ -194,12 +194,15 @@ class Imap {
         $uid = imap_uid($this->imap, $id);
 
         // get email data
+        
+        //get full subject
+        $subject = '';
         if ( isset($header->subject) && strlen($header->subject) > 0 ) {
-            $subject = imap_mime_header_decode($header->subject);
-            $subject = $subject[0]->text;
-        } else {
-            $subject = '';
+            foreach(imap_mime_header_decode($header->subject) as $obj){
+                $subject .= $obj->text;
+            }
         }
+        
         $subject = $this->convertToUtf8($subject);
         $email = array(
             'to'       => isset($header->to) ? $this->arrayToAddress($header->to) : '',
