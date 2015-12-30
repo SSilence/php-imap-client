@@ -712,4 +712,14 @@ class Imap {
         return $attachments;
     }
     
+    /**
+     * Return general mailbox statistics
+     *
+     * @return bool | StdClass object
+     */
+    public function getMailboxStatistics()
+    {
+        return $this->isConnected() ? imap_mailboxmsginfo($this->imap) : false ;
+    }
+
 }
