@@ -453,6 +453,15 @@ class Imap {
     public function saveMessageInSent($header, $body) {
         return imap_append($this->imap, $this->mailbox . $this->getSent(), $header . "\r\n" . $body . "\r\n", "\\Seen");
     }
+	
+	
+	/**
+     * explicitly close imap connection
+     */
+	public function close() {
+		if($this->imap!==false)
+            imap_close($this->imap);
+	}
     
     
     
