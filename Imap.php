@@ -404,16 +404,10 @@ class Imap {
 		// get attachment body
 		$partStruct = imap_bodystruct($this->imap, $messageIndex, $attachment['partNum']);
 
-		// Todo: Auto discover wath dparameters index have the [attribute] => filename
-
-		// Outlook:
 		$filename = $partStruct->dparameters[0]->value;
 
-		// Gmail:
-		//$filename = $partStruct->dparameters[1]->value;
-
 		$message = imap_fetchbody($this->imap, $id, $attachment['partNum']);
-		//print_r($partStruct);exit;
+
 		switch ($attachment['enc'])
 		{
 			case 0:
@@ -888,8 +882,6 @@ class Imap {
 				$partStruct = imap_bodystruct($imap, $mailNum, $partNum);
 				$attachmentDetails = array(
 					"name"    => $part->dparameters[0]->value,
-					// Outlook
-					//"name"    => $part->dparameters[1]->value, // Gmail
 					"partNum" => $partNum,
 					"enc"     => $partStruct->encoding,
 					"size"    => $part->bytes
