@@ -9,25 +9,25 @@
  * @author     Tobias Zeising <tobias.zeising@aditu.de>
  */
 class Imap {
-    
+
     /**
      * imap connection
      */
     private $imap = false;
-    
+
     /**
      * mailbox url string
      */
     private $mailbox = "";
-    
+
     /**
      * currentfolder
      */
     private $folder = "Inbox";
-    
-    
-    
-    
+
+
+
+
     /**
      * initialize imap helper
      *
@@ -46,8 +46,8 @@ class Imap {
         $this->mailbox = "{" . $mailbox . $enc . "}";
         $this->imap = @imap_open($this->mailbox, $username, $password);
     }
-    
-    
+
+
     /**
      * close connection
      */
@@ -55,8 +55,8 @@ class Imap {
         if($this->imap!==false)
             imap_close($this->imap);
     }
-   
-   
+
+
     /**
      * returns true after successfull connection
      *
@@ -65,8 +65,8 @@ class Imap {
     public function isConnected() {
         return $this->imap !== false;
     }
-    
-    
+
+
     /**
      * returns last imap error
      *
@@ -75,22 +75,22 @@ class Imap {
     public function getError() {
         return imap_last_error();
     }
-    
-    
+
+
     /**
      * select given folder
      *
      * @return bool successfull opened folder
      * @param $folder name
      */
-    public function selectFolder($folder) {
+    public function selectFolder($folder = '') {
         $result = imap_reopen($this->imap, $this->mailbox . $folder);
         if($result === true)
             $this->folder = $folder;
         return $result;
     }
-    
-    
+
+
     /**
      * returns all available folders
      *
@@ -100,8 +100,8 @@ class Imap {
         $folders = imap_list($this->imap, $this->mailbox, "*");
         return str_replace($this->mailbox, "", $folders);
     }
-    
-    
+
+
     /**
      * returns the number of messages in the current folder
      *
@@ -110,8 +110,8 @@ class Imap {
     public function countMessages() {
         return imap_num_msg($this->imap);
     }
-    
-    
+
+
     /**
      * returns the number of unread messages in the current folder
      *
@@ -131,17 +131,17 @@ class Imap {
      * @param $withbody without body
      */
     public function getUnreadMessages($withbody=true){
-    	$emails = [];
+        $emails = [];
         $result = imap_search($this->imap, 'UNSEEN');
         if($result){
             foreach($result as $k=>$i){
-            	$emails[]= $this->formatMessage($i, $withbody);
+                $emails[]= $this->formatMessage($i, $withbody);
             }
         }
         return $emails;
     }
-    
-    
+
+
     /**
      * returns all emails in the current folder
      *
@@ -170,29 +170,29 @@ class Imap {
 
         return $emails;
     }
-    
+
     /**
      * returns email by given id
      *
      * @return array messages
-     * @param $id
-     * @param $withbody without body
+     * @param int $id
+     * @param bool $withbody without body
      */
-    public function getMessage($id, $withbody = true) {
+    public function getMessage($id = 0, $withbody = true) {
         return $this->formatMessage($id, $withbody);
     }
-    
+
     /**
      * @param $id
      * @param bool $withbody
      * @return array
      */
-    protected function formatMessage($id, $withbody=true){
+    protected function formatMessage($id = 0, $withbody=true){
         $header = imap_headerinfo($this->imap, $id);
 
         // fetch unique uid
         $uid = imap_uid($this->imap, $id);
-	
+
         // get email data
         $subject = '';
         if ( isset($header->subject) && strlen($header->subject) > 0 ) {
@@ -225,44 +225,44 @@ class Imap {
         $attachments = $this->attachments2name($this->getAttachments($this->imap, $id, $mailStruct, ""));
         if(count($attachments)>0) {
 
-			foreach ($attachments as $val) {
-				foreach ($val as $k=>$t) {
-					if ($k == 'name') {
-						$decodedName = imap_mime_header_decode($t);
-						$t = $this->convertToUtf8($decodedName[0]->text);
-					}
-				$arr[$k] = $t;
-				}
-			$email['attachments'][] = $arr;
-			}
-		}
+            foreach ($attachments as $val) {
+                foreach ($val as $k=>$t) {
+                    if ($k == 'name') {
+                        $decodedName = imap_mime_header_decode($t);
+                        $t = $this->convertToUtf8($decodedName[0]->text);
+                    }
+                    $arr[$k] = $t;
+                }
+                $email['attachments'][] = $arr;
+            }
+        }
         return $email;
     }
-    
+
     /**
      * delete given message
      *
      * @return bool success or not
-     * @param $id of the message
+     * @param int $id of the message
      */
-    public function deleteMessage($id) {
+    public function deleteMessage($id = 0) {
         return $this->deleteMessages(array($id));
     }
-    
-    
+
+
     /**
      * delete messages
      *
      * @return bool success or not
-     * @param $ids array of ids
+     * @param array $ids array of ids
      */
-    public function deleteMessages($ids) {
+    public function deleteMessages($ids = array()) {
         if( imap_mail_move($this->imap, implode(",", $ids), $this->getTrash(), CP_UID) == false)
-                return false;
+            return false;
         return imap_expunge($this->imap);
     }
-    
-    
+
+
     /**
      * move given message in new folder
      *
@@ -270,78 +270,87 @@ class Imap {
      * @param $id of the message
      * @param $target new folder
      */
-    public function moveMessage($id, $target) {
+    public function moveMessage($id = 0, $target = '') {
         return $this->moveMessages(array($id), $target);
     }
-    
-    
+
+
     /**
      * move given message in new folder
      *
      * @return bool success or not
-     * @param $ids array of message ids
-     * @param $target new folder
+     * @param array $ids array of message ids
+     * @param string $target new folder
      */
-    public function moveMessages($ids, $target) {
+    public function moveMessages($ids = array(), $target = '') {
         if(imap_mail_move($this->imap, implode(",", $ids), $target, CP_UID)===false)
             return false;
         return imap_expunge($this->imap);
     }
-    
-    
+
+
     /**
      * mark message as read
      *
      * @return bool success or not
      * @param $id of the message
-     * @param $seen true = message is read, false = message is unread
+     * @param bool $seen true = message is read, false = message is unread
      */
-    public function setUnseenMessage($id, $seen = true) {
+    public function setUnseenMessage($id = 0, $seen = true) {
         $header = $this->getMessageHeader($id);
         if($header==false)
             return false;
-            
+
         $flags = "";
         $flags .= (strlen(trim($header->Answered))>0 ? "\\Answered " : '');
         $flags .= (strlen(trim($header->Flagged))>0 ? "\\Flagged " : '');
         $flags .= (strlen(trim($header->Deleted))>0 ? "\\Deleted " : '');
         $flags .= (strlen(trim($header->Draft))>0 ? "\\Draft " : '');
-        
+
         $flags .= (($seen == true) ? '\\Seen ' : ' ');
         //echo "\n<br />".$id.": ".$flags;
         imap_clearflag_full($this->imap, $id, '\\Seen', ST_UID);
         return imap_setflag_full($this->imap, $id, trim($flags), ST_UID);
     }
-    
-    
+
+
     /**
      * return content of messages attachment
      *
      * @return binary attachment
-     * @param $id of the message
-     * @param $index of the attachment (default: first attachment)
+     * @param int $id of the message
+     * @param int $index of the attachment (default: first attachment)
+     * @param string $tmp_path temp path (Like '/tmp/') of downloaded attachment. If eguals '' will get the file code in the output
      */
-    public function getAttachment($id, $index = 0) {
+    public function getAttachment($id = 0, $index = 0, $tmp_path = '') {
         // find message
         $attachments = false;
-        $messageIndex = imap_msgno($this->imap, $id);
+        $messageIndex = imap_msgno($this->imap, imap_uid($this->imap, $id));
         $header = imap_headerinfo($this->imap, $messageIndex);
         $mailStruct = imap_fetchstructure($this->imap, $messageIndex);
         $attachments = $this->getAttachments($this->imap, $messageIndex, $mailStruct, "");
-        
+
         if($attachments==false)
             return false;
-        
+
         // find attachment
         if($index > count($attachments))
             return false;
         $attachment = $attachments[$index];
-        
+
         // get attachment body
-        $partStruct = imap_bodystruct($this->imap, imap_msgno($this->imap, $id), $attachment['partNum']);
-        $filename = $partStruct->dparameters[0]->value;
-        $message = imap_fetchbody($this->imap, $id, $attachment['partNum'], FT_UID);
-     
+        $partStruct = imap_bodystruct($this->imap, $messageIndex, $attachment['partNum']);
+
+        // Todo: Auto discover wath dparameters index have the [attribute] => filename
+
+        // Outlook:
+        // $filename = $partStruct->dparameters[0]->value;
+
+        // Gmail:
+        $filename = $partStruct->dparameters[1]->value;
+
+        $message = imap_fetchbody($this->imap, $id, $attachment['partNum']);
+        //print_r($partStruct);exit;
         switch ($attachment['enc']) {
             case 0:
             case 1:
@@ -357,36 +366,50 @@ class Imap {
                 $message = quoted_printable_decode($message);
                 break;
         }
-     
-        return array(
-                "name" => $attachment['name'], 
-                "size" => $attachment['size'],
-                "content" => $message);
+
+        $file = array(
+            "name" => $filename,
+            "size" => $attachment['size'],
+        );
+
+        if ($tmp_path != '')
+        {
+            $file['content'] = $tmp_path . $filename;
+            $fp = fopen($file['content'], "wb");
+            fwrite($fp, $message);
+            fclose($fp);
+        }
+        else
+        {
+            $file['content'] = $message;
+        }
+
+        return $file;
     }
-    
-    
+
+
     /**
      * add new folder
      *
      * @return bool success or not
      * @param $name of the folder
      */
-    public function addFolder($name) {
+    public function addFolder($name = '') {
         return imap_createmailbox($this->imap , $this->mailbox . $name);
     }
-    
-    
+
+
     /**
      * remove folder
      *
      * @return bool success or not
      * @param $name of the folder
      */
-    public function removeFolder($name) {
+    public function removeFolder($name = '') {
         return imap_deletemailbox($this->imap, $this->mailbox . $name);
     }
-    
-    
+
+
     /**
      * rename folder
      *
@@ -394,11 +417,11 @@ class Imap {
      * @param $name of the folder
      * @param $newname of the folder
      */
-    public function renameFolder($name, $newname) {
+    public function renameFolder($name = '', $newname = '') {
         return imap_renamemailbox($this->imap, $this->mailbox . $name, $this->mailbox . $newname);
     }
-    
-    
+
+
     /**
      * clean folder content of selected folder
      *
@@ -411,16 +434,16 @@ class Imap {
                 return false;
             }
             return imap_expunge($this->imap);
-        
-        // move others to trash
+
+            // move others to trash
         } else {
             if( imap_mail_move($this->imap,'1:*', $this->getTrash()) == false)
                 return false;
             return imap_expunge($this->imap);
         }
     }
-    
-    
+
+
     /**
      * returns all email addresses
      *
@@ -441,8 +464,8 @@ class Imap {
         $this->selectFolder($saveCurrentFolder);
         return array_unique($emails);
     }
-    
-    
+
+
     /**
      * save email in sent
      *
@@ -453,21 +476,21 @@ class Imap {
     public function saveMessageInSent($header, $body) {
         return imap_append($this->imap, $this->mailbox . $this->getSent(), $header . "\r\n" . $body . "\r\n", "\\Seen");
     }
-	
-	
-	/**
+
+
+    /**
      * explicitly close imap connection
      */
-	public function close() {
-		if($this->imap!==false)
+    public function close() {
+        if($this->imap!==false)
             imap_close($this->imap);
-	}
-    
-    
-    
+    }
+
+
+
     // private helpers
-    
-    
+
+
     /**
      * get trash folder name or create new trash folder
      *
@@ -478,14 +501,14 @@ class Imap {
             if(strtolower($folder)==="trash" || strtolower($folder)==="papierkorb")
                 return $folder;
         }
-        
+
         // no trash folder found? create one
         $this->addFolder('Trash');
-        
+
         return 'Trash';
     }
-    
-    
+
+
     /**
      * get sent folder name or create new sent folder
      *
@@ -496,14 +519,14 @@ class Imap {
             if(strtolower($folder)==="sent" || strtolower($folder)==="gesendet")
                 return $folder;
         }
-        
+
         // no sent folder found? create one
         $this->addFolder('Sent');
-        
+
         return 'Sent';
     }
-    
-    
+
+
     /**
      * fetch message by id
      *
@@ -521,8 +544,8 @@ class Imap {
         }
         return false;
     }
-    
-    
+
+
     /**
      * convert attachment in array(name => ..., size => ...).
      *
@@ -539,8 +562,8 @@ class Imap {
         }
         return $names;
     }
-    
-    
+
+
     /**
      * convert imap given address in string
      *
@@ -560,13 +583,13 @@ class Imap {
         } else {
             $name = $email;
         }
-        
+
         $name = $this->convertToUtf8($name);
-        
+
         return $name . " <" . $email . ">";
     }
 
-    
+
     /**
      * converts imap given array of addresses in strings
      *
@@ -581,7 +604,7 @@ class Imap {
         return $addressesAsString;
     }
 
-    
+
     /**
      * returns body of the email. First search for html version of the email, then the plain part.
      *
@@ -599,22 +622,22 @@ class Imap {
         $body = $this->convertToUtf8($body);
         return array( 'body' => $body, 'html' => $html);
     }
-    
-    
+
+
     /**
      * convert to utf8 if necessary.
      *
      * @return true or false
      * @param $string utf8 encoded string
      */
-    function convertToUtf8($str) { 
+    function convertToUtf8($str) {
         if(mb_detect_encoding($str, "UTF-8, ISO-8859-1, GBK")!="UTF-8")
             $str = utf8_encode($str);
         $str = iconv('UTF-8', 'UTF-8//IGNORE', $str);
-        return $str; 
-    } 
-    
-    
+        return $str;
+    }
+
+
     /**
      * returns a part with a given mimetype
      * taken from http://www.sitepoint.com/exploring-phps-imap-library-2/
@@ -626,7 +649,7 @@ class Imap {
      */
     private function get_part($imap, $uid, $mimetype, $structure = false, $partNumber = false) {
         if (!$structure) {
-               $structure = imap_fetchstructure($imap, $uid, FT_UID);
+            $structure = imap_fetchstructure($imap, $uid, FT_UID);
         }
         if ($structure) {
             if ($mimetype == $this->get_mime_type($structure)) {
@@ -638,10 +661,10 @@ class Imap {
                     case 3: return imap_base64($text);
                     case 4: return imap_qprint($text);
                     default: return $text;
-               }
-           }
-     
-            // multipart 
+                }
+            }
+
+            // multipart
             if ($structure->type == 1) {
                 foreach ($structure->parts as $index => $subStruct) {
                     $prefix = "";
@@ -657,8 +680,8 @@ class Imap {
         }
         return false;
     }
-    
-    
+
+
     /**
      * extract mimetype
      * taken from http://www.sitepoint.com/exploring-phps-imap-library-2/
@@ -668,14 +691,14 @@ class Imap {
      */
     private function get_mime_type($structure) {
         $primaryMimetype = array("TEXT", "MULTIPART", "MESSAGE", "APPLICATION", "AUDIO", "IMAGE", "VIDEO", "OTHER");
-     
+
         if ($structure->subtype) {
-           return $primaryMimetype[(int)$structure->type] . "/" . $structure->subtype;
+            return $primaryMimetype[(int)$structure->type] . "/" . $structure->subtype;
         }
         return "TEXT/PLAIN";
     }
-    
-    
+
+
     /**
      * get attachments of given email
      * taken from http://www.sitepoint.com/exploring-phps-imap-library-2/
@@ -688,7 +711,7 @@ class Imap {
      */
     private function getAttachments($imap, $mailNum, $part, $partNum) {
         $attachments = array();
-     
+
         if (isset($part->parts)) {
             foreach ($part->parts as $key => $subpart) {
                 if($partNum != "") {
@@ -700,8 +723,8 @@ class Imap {
                 $result = $this->getAttachments($imap, $mailNum, $subpart,
                     $newPartNum);
                 if (count($result) != 0) {
-                     array_push($attachments, $result);
-                 }
+                    array_push($attachments, $result);
+                }
             }
         }
         else if (isset($part->disposition)) {
@@ -709,7 +732,7 @@ class Imap {
                 $partStruct = imap_bodystruct($imap, $mailNum,
                     $partNum);
                 $attachmentDetails = array(
-                    "name"    => $part->dparameters[0]->value,
+                    "name"    => $part->dparameters[1]->value,
                     "partNum" => $partNum,
                     "enc"     => $partStruct->encoding,
                     "size"    => $part->bytes
@@ -717,8 +740,8 @@ class Imap {
                 return $attachmentDetails;
             }
         }
-     
+
         return $attachments;
     }
-    
+
 }
