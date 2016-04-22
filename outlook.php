@@ -17,12 +17,13 @@ if ($imap->is_connected())
 {
 	// Output test. Do you tests here:
 	$output = array(
-		'get_folders'          => $imap->get_folders(),
-		'select_folder'        => $imap->select_folder('Inbox'),
-		'count_messages'       => $imap->count_messages(),
+		'get_folders'           => $imap->get_folders(),
+		'select_folder'         => $imap->select_folder('Inbox'),
+		'count_messages'        => $imap->count_messages(),
+		'add_folder '           => $imap->add_folder('Tes'),
 		'count_unread_messages' => $imap->count_unread_messages(),
-		'get_message'          => $imap->get_message(1, TRUE),
-		'get_attachment'       => $imap->get_attachment(1, 0),
+		'get_message'           => $imap->get_message(1, TRUE),
+		'get_attachment'        => $imap->get_attachment(1, 0),
 	);
 }
 else
