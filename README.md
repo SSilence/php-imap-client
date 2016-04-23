@@ -1,7 +1,7 @@
 PHP Imap Client
 ===============
 
-Copyright (c) 2013 Tobias Zeising, tobias.zeising@aditu.de  
+Copyright (c) 2016 Tobias Zeising, tobias.zeising@aditu.de  
 http://www.aditu.de  
 Licensed under the MIT license  
 
@@ -10,7 +10,7 @@ Features
 --------
 
 This PHP IMAP Client is a simple class for IMAP Email access. 
-It base on the [PHP IMAP extension][1] and offers a simple interface for handling emails. In my opinion the PHP IMAP functions are not very intuitive.
+It base on the [PHP IMAP extension](http://at1.php.net/imap) and offers a simple interface for handling emails. In my opinion the PHP IMAP functions are not very intuitive.
 
 * simple interface
 * get emails and folders
@@ -176,11 +176,10 @@ Following methods are available.
 * ``purge()`` move all emails in the current folder into trash. emails in trash and spam will be deleted
 * ``getAllEmailAddresses()`` returns all email addresses of all emails (for auto suggestion list)
 * ``saveMessageInSent($header, $body)`` save a sent message in sent folder
+* ``getMailboxStatistics()`` returns statistics, see [imap_mailboxmsginfo](http://php.net/manual/de/function.imap-mailboxmsginfo.php)
 
 
 Feedback
 --------
 
 Feel free to improve this class. You can use the pull request function of github for contributing improvments. The inner structure of this class is simple and easy. Don't hesitate and check it out ;)
-
-  [1]: http://at1.php.net/imap
