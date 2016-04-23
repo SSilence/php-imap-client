@@ -13,17 +13,17 @@ class Imap {
 	/**
 	 * imap connection
 	 */
-	protected $imap = false;
+	private $imap = false;
 
 	/**
 	 * mailbox url string
 	 */
-	protected $mailbox = "";
+	private $mailbox = "";
 
 	/**
 	 * currentfolder
 	 */
-	protected $folder = "Inbox";
+	private $folder = "Inbox";
 
 
 	/**
@@ -508,7 +508,7 @@ class Imap {
 	 *
 	 * @return string Trash folder name
 	 */
-	protected function get_trash() {
+	private function get_trash() {
 		foreach ($this->get_folders() as $folder) {
 			if (strtolower($folder) === "trash" || strtolower($folder) === "papierkorb") {
 				return $folder;
@@ -527,7 +527,7 @@ class Imap {
 	 *
 	 * @return string Sent folder name
 	 */
-	protected function get_sent() {
+	private function get_sent() {
 		foreach ($this->get_folders() as $folder) {
 			if (strtolower($folder) === "sent" || strtolower($folder) === "gesendet") {
 				return $folder;
@@ -547,7 +547,7 @@ class Imap {
 	 * @param int $id Message id
 	 * @return bool|object Message header on success
 	 */
-	protected function get_message_header($id = 0) {
+	private function get_message_header($id = 0) {
 		$count = $this->count_messages();
 		for ($i = 1; $i <= $count; $i++) {
 			$uid = imap_uid($this->imap, $i);
@@ -568,7 +568,7 @@ class Imap {
 	 * @param array $attachments Attachment with name and size
 	 * @return array Name and size of the attachement
 	 */
-	protected function attachments_to_name($attachments = array()) {
+	private function attachments_to_name($attachments = array()) {
 		$names = array();
 		foreach ($attachments as $attachment) {
 			$names[] = array(
@@ -587,7 +587,7 @@ class Imap {
 	 * @param array $headerinfos The infos given by imap
 	 * @return string In format "Name <username@domain.tld>"
 	 */
-	protected function to_address($headerinfos = array()) {
+	private function to_address($headerinfos = array()) {
 		$email = "";
 
 		if (isset($headerinfos->mailbox) && isset($headerinfos->host)) {
@@ -613,7 +613,7 @@ class Imap {
 	 * @param array $addresses Imap given addresses as array
 	 * @return array With strings (e.g. ["Name <username@domain.tld>", "Name2 <username2@domain.tld>"]
 	 */
-	protected function array_to_address($addresses = array()) {
+	private function array_to_address($addresses = array()) {
 		$addressesAsString = array();
 		foreach ($addresses as $address) {
 			$addressesAsString[] = $this->to_address($address);
@@ -629,7 +629,7 @@ class Imap {
 	 * @param int $uid Message id
 	 * @return array Body and html
 	 */
-	protected function get_body($uid = 0) {
+	private function get_body($uid = 0) {
 		$body = $this->get_part($this->imap, $uid, "TEXT/HTML");
 		$html = true;
 		// if HTML body is empty, try getting text body
@@ -652,7 +652,7 @@ class Imap {
 	 * @param string $str Utf8 encoded string
 	 * @return string The converted string or false
 	 */
-	protected function convert_to_utf8($str = '') {
+	function convert_to_utf8($str = '') {
 		if (mb_detect_encoding($str, "UTF-8, ISO-8859-1, GBK") != "UTF-8") {
 			$str = utf8_encode($str);
 		}
@@ -673,7 +673,7 @@ class Imap {
 	 * @param bool     $partNumber Part number
 	 * @return bool|string Formated string on success
 	 */
-	protected function get_part($imap, $uid = 0, $mimetype = '', $structure = false, $partNumber = false) {
+	private function get_part($imap, $uid = 0, $mimetype = '', $structure = false, $partNumber = false) {
 		if ( ! $structure) {
 			$structure = imap_fetchstructure($imap, $uid, FT_UID);
 		}
@@ -719,7 +719,7 @@ class Imap {
 	 * @param object $structure
 	 * @return string Mime type
 	 */
-	protected function get_mime_type($structure) {
+	private function get_mime_type($structure) {
 		$primaryMimetype = array(
 			"TEXT",
 			"MULTIPART",
@@ -749,7 +749,7 @@ class Imap {
 	 * @param string   $partNum Part number
 	 * @return array Array of attachments
 	 */
-	protected function get_attachments($imap, $mailNum, $part, $partNum = '') {
+	private function get_attachments($imap, $mailNum, $part, $partNum = '') {
 		$attachments = array();
 
 		if (isset($part->parts)) {
