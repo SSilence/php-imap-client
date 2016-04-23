@@ -259,7 +259,7 @@ class Imap {
      */
     public function deleteMessages($ids) {
         if( imap_mail_move($this->imap, implode(",", $ids), $this->getTrash(), CP_UID) == false)
-                return false;
+            return false;
         return imap_expunge($this->imap);
     }
     
@@ -701,18 +701,16 @@ class Imap {
             foreach ($part->parts as $key => $subpart) {
                 if($partNum != "") {
                     $newPartNum = $partNum . "." . ($key + 1);
-                }
-                else {
+                } else {
                     $newPartNum = ($key+1);
                 }
                 $result = $this->getAttachments($imap, $mailNum, $subpart,
                     $newPartNum);
                 if (count($result) != 0) {
-                     array_push($attachments, $result);
-                 }
+                    array_push($attachments, $result);
+                }
             }
-        }
-        else if (isset($part->disposition)) {
+        } else if (isset($part->disposition)) {
             if (strtolower($part->disposition) == "attachment") {
                 $partStruct = imap_bodystruct($imap, $mailNum,
                     $partNum);
@@ -734,8 +732,7 @@ class Imap {
      *
      * @return bool | StdClass object
      */
-    public function getMailboxStatistics()
-    {
+    public function getMailboxStatistics() {
         return $this->isConnected() ? imap_mailboxmsginfo($this->imap) : false ;
     }
 
