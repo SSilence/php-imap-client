@@ -398,15 +398,9 @@ class Imap {
 	 *
 	 * @param string $name Folder name
 	 * @return bool true on success
-	 * @param $subscribe immediately subscribe to folder
 	 */
-	public function add_folder($name = '', $subscribe = false) {
-		$success = imap_createmailbox($this->imap, $this->mailbox . $name);
- 
- 		if ($success && $subscribe) {
- 			$success = imap_subscribe($this->imap, $this->mailbox . $name);
- 		}
- 		return $success;
+	public function add_folder($name = '') {
+		return imap_createmailbox($this->imap, $this->mailbox . $name);
 	}
 
 
