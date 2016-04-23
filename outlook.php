@@ -13,23 +13,23 @@ $encryption = 'ssl';
 $imap = new Imap($mailbox, $username, $password, $encryption);
 
 // Check connection status
-if ($imap->is_connected())
+if ($imap->isConnected())
 {
 	// Output test. Do you tests here:
 	$output = array(
-		'get_folders'           => $imap->get_folders(),
-		'select_folder'         => $imap->select_folder('Inbox'),
-		'count_messages'        => $imap->count_messages(),
-		'add_folder '           => $imap->add_folder('Tes'),
-		'count_unread_messages' => $imap->count_unread_messages(),
-		'get_message'           => $imap->get_message(1, TRUE),
-		'get_attachment'        => $imap->get_attachment(1, 0),
+		'getFolders'           => $imap->getFolders(),
+		'selectFolder'         => $imap->selectFolder('Inbox'),
+		'countMessages'        => $imap->countMessages(),
+		'addFolder '           => $imap->addFolder('Test'),
+		'countUnreadMessages' => $imap->countUnreadMessages(),
+		'getMessage'           => $imap->getMessage(1, TRUE),
+		'getAttachment'        => $imap->getAttachment(1, 0),
 	);
 }
 else
 {
 	$output = array(
-		'get_error' => $imap->get_error(),
+		'getError' => $imap->getError(),
 	);
 }
 
