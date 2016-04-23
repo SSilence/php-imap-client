@@ -242,8 +242,7 @@ class Imap {
 			'subject'  => $subject,
 			'uid'      => $uid,
 			'unread'   => strlen(trim($header->Unseen)) > 0,
-			'answered' => strlen(trim($header->Answered))>0,
-            'deleted' => strlen(trim($header->Deleted))>0
+			'answered' => strlen(trim($header->Answered)) > 0
 		);
 		if (isset($header->cc))
 		{
