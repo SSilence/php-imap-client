@@ -34,7 +34,7 @@ var_dump($emails);
 $imap->addFolder('archive');
 
 // move the first email to archive
-$imap->moveMessage($emails[0]['id'], 'archive');
+$imap->moveMessage($emails[0]['uid'], 'archive');
 
 // delete second message
-$imap->deleteMessage($emails[1]['id']);
+$imap->deleteMessage($emails[1]['uid']);
