@@ -6,6 +6,7 @@ http://www.aditu.de
 Licensed under the MIT license  
 
 
+<<<<<<< HEAD
 Install
 -------
  add repositories and require in composer.json
@@ -29,6 +30,8 @@ Install
   - package name: "SSilence/php-imap-client": "dev-master"
 
 
+=======
+>>>>>>> origin/master
 Features
 --------
 
