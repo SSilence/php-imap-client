@@ -53,9 +53,6 @@ class Imap {
             $enc = '/imap/tls/novalidate-cert';
         $this->mailbox = "{" . $mailbox . $enc . "}";
         $this->imap = imap_open($this->mailbox, $username, $password);
-        if ($this->imap === false) {
-            throw new ImapClientException('Not connect with '.$mailbox);
-        };
     }
     
     /**
