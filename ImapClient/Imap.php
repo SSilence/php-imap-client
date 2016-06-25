@@ -42,6 +42,7 @@ class Imap {
      * @param $encryption ssl or tls
      */
     public function __construct($mailbox, $username, $password, $encryption = false) {
+        # php.ini ;extension=php_imap.dll
         if (!function_exists('imap_open')) {
             throw new ImapClientException('Imap function not available');
         };
@@ -51,7 +52,7 @@ class Imap {
         else if($encryption!=null && isset($encryption) && $encryption=='tls')
             $enc = '/imap/tls/novalidate-cert';
         $this->mailbox = "{" . $mailbox . $enc . "}";
-        $this->imap = @imap_open($this->mailbox, $username, $password);
+        $this->imap = imap_open($this->mailbox, $username, $password);
         if ($this->imap === false) {
             throw new ImapClientException('Not connect with '.$mailbox);
         };
