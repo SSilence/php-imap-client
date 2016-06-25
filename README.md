@@ -15,11 +15,12 @@ Install
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/sergey144010/php-imap-client"
+            "url": "https://github.com/sergey144010/php-imap-client",
+			"packagist": false
         }
     ],
     "require": {
-        "sergey144010/php-imap-client": "dev-master"
+        "SSilence/php-imap-client": "dev-sergey144010"
     }
 }
  ```
