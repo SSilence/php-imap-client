@@ -15,11 +15,11 @@ Install
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/SSilence/php-imap-client"
+            "url": "https://github.com/sergey144010/php-imap-client"
         }
     ],
     "require": {
-        "SSilence/php-imap-client": "dev-master"
+        "sergey144010/php-imap-client": "dev-master"
     }
 }
  ```
@@ -27,7 +27,7 @@ Install
  composer.phar update
 
  composer.phar require
-  - package name: "SSilence/php-imap-client": "dev-master"
+  - package name: "sergey144010/php-imap-client": "dev-master"
 
 
 Features
