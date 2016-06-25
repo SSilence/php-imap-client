@@ -28,7 +28,7 @@ Install
  composer.phar update
 
  composer.phar require
-  - package name: "sergey144010/php-imap-client": "dev-master"
+  - package name: "SSilence/php-imap-client": "dev-master"
 
 
 Features
