@@ -1,16 +1,16 @@
 {
-  "name": "sergey144010/php-imap-client",
+  "name": "SSilence/php-imap-client",
   "version": "0.0.1",
   "type": "library",
   "description": "Php imap client",
   "keywords": ["php", "imap", "client"],
-  "homepage": "https://github.com/sergey144010/php-imap-client",
+  "homepage": "https://github.com/SSilence/php-imap-client",
   "license": "MIT",
   "authors": [
     {
-      "name": "sergey144010",
-      "email": "sergey144010@mail.ru",
-      "homepage": "https://github.com/sergey144010"
+      "name": "SSilence",
+      "email": "tobias.zeising@aditu.de",
+      "homepage": "https://github.com/SSilence"
     }
   ],
   "require": {
