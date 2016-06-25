@@ -1,0 +1,22 @@
+{
+  "name": "SSilence/php-imap-client",
+  "version": "0.0.1",
+  "type": "library",
+  "description": "Php imap client",
+  "keywords": ["php", "imap", "client"],
+  "homepage": "https://github.com/SSilence/php-imap-client",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "SSilence",
+      "email": "tobias.zeising@aditu.de",
+      "homepage": "https://github.com/SSilence"
+    }
+  ],
+  "require": {
+    "php": ">=5.6"
+  },
+  "autoload": {
+    "classmap": ["ImapClient/"]
+  }
+}
