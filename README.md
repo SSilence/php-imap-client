@@ -9,18 +9,18 @@ Licensed under the MIT license
 Install
 -------
 
- add repositories and require in composer.json
+ Add repositories and require in composer.json
  ```php
 {
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/sergey144010/php-imap-client",
+            "url": "https://github.com/SSilence/php-imap-client",
 			"packagist": false
         }
     ],
     "require": {
-        "SSilence/php-imap-client": "dev-sergey144010"
+        "SSilence/php-imap-client": "dev-master"
     }
 }
  ```
