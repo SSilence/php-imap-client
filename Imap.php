@@ -221,14 +221,6 @@ class Imap {
         // fetch unique uid
         $uid = imap_uid($this->imap, $id);
 
-        // Check Importance
-        // @TODO need improvement
-        $importance = "Normal";
-        if (strpos($header, 'X-Priority: 1') !== false) { $importance = "Very High"; }
-        if (strpos($header, 'X-Priority: 2') !== false) { $importance = "High"; }
-        if (strpos($header, 'X-Priority: 4') !== false) { $importance = "Low"; }
-        if (strpos($header, 'X-Priority: 5') !== false) { $importance = "Very Low"; }
-
         // get email data
         $subject = '';
         if ( isset($header->subject) && strlen($header->subject) > 0 ) {
@@ -242,7 +234,6 @@ class Imap {
             'from'      => $this->toAddress($header->from[0]),
             'date'      => $header->date,
             'subject'   => $subject,
-            'importance'=> $importance,
             'uid'       => $uid,
             'flagged'   => strlen(trim($header->Flagged))>0,
             'unread'    => strlen(trim($header->Unseen))>0,
