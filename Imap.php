@@ -223,7 +223,7 @@ class Imap {
 
         // Check Importance
         preg_match('/X-Priority: ([\d])/mi', imap_fetchheader($this->imap, $id), $matches);
-        $importance = isset($matches[1]) ? $matches[1] : 3;
+        $priority = isset($matches[1]) ? $matches[1] : 3;
 
 
         // get email data
@@ -239,7 +239,7 @@ class Imap {
             'from'      => $this->toAddress($header->from[0]),
             'date'      => $header->date,
             'subject'   => $subject,
-            'importance'=> $importance,
+            'priority'  => $priority,
             'uid'       => $uid,
             'flagged'   => strlen(trim($header->Flagged))>0,
             'unread'    => strlen(trim($header->Unseen))>0,
