@@ -221,7 +221,7 @@ class Imap {
         // fetch unique uid
         $uid = imap_uid($this->imap, $id);
 
-        // Check Importance
+        // Check Priority
         preg_match('/X-Priority: ([\d])/mi', imap_fetchheader($this->imap, $id), $matches);
         $priority = isset($matches[1]) ? $matches[1] : 3;
 

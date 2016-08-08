@@ -160,6 +160,7 @@ Following methods are available.
 * ``getError()`` returns the last error message
 * ``selectFolder($folder)`` select current folder
 * ``getFolders()`` get all available folders
+* ``setEmbed($val)`` If true, embed all 'inline' images into body HTML, accesible in 'body_embed'
 * ``countMessages()`` count messages in current folder
 * ``countUnreadMessages()`` count unread messages in current folder
 * ``getMessages($withbody = true)`` get emails in current folder
