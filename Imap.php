@@ -221,6 +221,11 @@ class Imap {
         // fetch unique uid
         $uid = imap_uid($this->imap, $id);
 
+        // Check Importance
+        preg_match('/X-Priority: ([\d])/mi', imap_fetchheader($this->imap, $id), $matches);
+        $importance = isset($matches[1]) ? $matches[1] : 3;
+
+
         // get email data
         $subject = '';
         if ( isset($header->subject) && strlen($header->subject) > 0 ) {
@@ -234,6 +239,7 @@ class Imap {
             'from'      => $this->toAddress($header->from[0]),
             'date'      => $header->date,
             'subject'   => $subject,
+            'importance'=> $importance,
             'uid'       => $uid,
             'flagged'   => strlen(trim($header->Flagged))>0,
             'unread'    => strlen(trim($header->Unseen))>0,
@@ -770,8 +776,7 @@ class Imap {
                 } else {
                     $newPartNum = ($key+1);
                 }
-                $result = $this->getAttachments($imap, $mailNum, $subpart,
-                    $newPartNum);
+                $result = $this->getAttachments($imap, $mailNum, $subpart, $newPartNum);
                 if (count($result) != 0) {
                     if (isset($result[0]['name'])) {
                         foreach($result as $inline) {
@@ -801,6 +806,30 @@ class Imap {
                 );
                 return $attachmentDetails;
             }
+        } else if (isset($part->subtype) && in_array($part->subtype, array('JPEG', 'GIF', 'PNG'))) {
+
+            $partStruct = imap_bodystruct($imap, $mailNum, $partNum);
+            $reference = isset($partStruct->id) ? $partStruct->id : "";
+            $disposition = empty($reference) ? 'attachment' : 'inline';
+            if ($disposition == "inline") { $this->inline = true; }
+            if (isset($part->dparameters[0]->value)){
+                $name = $part->dparameters[0]->value;
+            } elseif ($part->parameters[0]->value) {
+                $name = $part->parameters[0]->value;
+            } else {
+                $name = "unknown";
+            }
+
+            $attachmentDetails = array(
+                "name"          => $name,
+                "partNum"       => $partNum,
+                "enc"           => $partStruct->encoding,
+                "size"          => $part->bytes,
+                "reference"     => $reference,
+                "disposition"   => $disposition,
+                "type"          => $part->subtype
+            );
+            return $attachmentDetails;
         }
         return $attachments;
     }
