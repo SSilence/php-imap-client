@@ -1,5 +1,9 @@
 <?php
 
+namespace SSilence\ImapClient;
+
+use SSilence\ImapClient\ImapClientException;
+
 /**
  * Helper class for imap access
  *
@@ -8,7 +12,7 @@
  * @license    GPLv3 (http://www.gnu.org/licenses/gpl-3.0.html)
  * @author     Tobias Zeising <tobias.zeising@aditu.de>
  */
-class Imap {
+class ImapClient {
 
     /**
      * imap connection
@@ -50,6 +54,9 @@ class Imap {
      * @param bool|false $encryption SSL or TLS
      */
     public function __construct($mailbox, $username, $password, $encryption = false) {
+        if (!function_exists('imap_open')) {
+            throw new ImapClientException('Imap function not available');
+        };
         $enc = '';
         if ($encryption != null && isset($encryption) && $encryption == 'ssl') {
             $enc = '/imap/ssl/novalidate-cert';
@@ -59,13 +66,16 @@ class Imap {
         }
         $this->mailbox = "{" . $mailbox . $enc . "}";
         $this->imap = @imap_open($this->mailbox, $username, $password);
+        if ($this->imap === false) {
+            throw new ImapClientException('Not connect with '.$mailbox);
+        };
     }
 
 
     /**
      * close connection
      */
-    function __destruct() {
+    public function __destruct() {
         if ($this->imap!==false) {
             imap_close($this->imap);
         }
@@ -148,6 +158,7 @@ class Imap {
         }
         return count($result);
     }
+
 
     /**
      * returns unseen emails in the current folder
@@ -684,7 +695,7 @@ class Imap {
      * @param string $str utf8 encoded string
      * @return bool
      */
-    function convertToUtf8($str) {
+    public function convertToUtf8($str) {
         if (mb_detect_encoding($str, "UTF-8, ISO-8859-1, GBK")!="UTF-8") {
             $str = utf8_encode($str);
         }

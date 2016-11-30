@@ -1,6 +1,12 @@
-<?PHP
+<?php
 
-require_once "Imap.php";
+namespace program;
+
+require_once "ImapClient/ImapClientException.php";
+require_once "ImapClient/ImapClient.php";
+
+use SSilence\ImapClient\ImapClientException;
+use SSilence\ImapClient\ImapClient as Imap;
 
 $mailbox = 'my.imapserver.com';
 $username = 'username';
@@ -8,11 +14,12 @@ $password = 'secret';
 $encryption = 'tls'; // or ssl or ''
 
 // open connection
-$imap = new Imap($mailbox, $username, $password, $encryption);
-
-// stop on error
-if($imap->isConnected()===false)
-    die($imap->getError());
+try{
+    $imap = new Imap($mailbox, $username, $password, $encryption);
+}catch (ImapClientException $error){
+    echo $error->getMessage().PHP_EOL;
+    die();
+}
 
 // get all folders as array of strings
 $folders = $imap->getFolders();

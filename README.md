@@ -6,6 +6,31 @@ http://www.aditu.de
 Licensed under the MIT license  
 
 
+Install
+-------
+
+ Add repositories and require in composer.json
+ ```php
+{
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/SSilence/php-imap-client",
+			"packagist": false
+        }
+    ],
+    "require": {
+        "SSilence/php-imap-client": "dev-master"
+    }
+}
+ ```
+ and make
+ composer.phar update
+
+ composer.phar require
+  - package name: "SSilence/php-imap-client": "dev-master"
+
+
 Features
 --------
 
@@ -165,6 +190,7 @@ Following methods are available.
 * ``countUnreadMessages()`` count unread messages in current folder
 * ``getMessages($withbody = true)`` get emails in current folder
 * ``getMessage($id, $withbody = true)`` get email by given id
+* ``getUnreadMessages($withbody = true)`` get unread messages in current folder
 * ``deleteMessage($id)`` delete message with given id
 * ``deleteMessages($ids)`` delete messages with given ids (as array)
 * ``moveMessage($id, $target)`` move message with given id in new folder
