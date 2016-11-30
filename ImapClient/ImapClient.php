@@ -1,8 +1,8 @@
 <?php
 
-namespace SSilence;
+namespace SSilence\ImapClient;
 
-use SSilence\ImapClientException;
+use SSilence\ImapClient\ImapClientException;
 
 /**
  * Helper class for imap access
@@ -12,7 +12,7 @@ use SSilence\ImapClientException;
  * @license    GPLv3 (http://www.gnu.org/licenses/gpl-3.0.html)
  * @author     Tobias Zeising <tobias.zeising@aditu.de>
  */
-class Imap {
+class ImapClient {
 
     /**
      * imap connection
@@ -70,16 +70,12 @@ class Imap {
             throw new ImapClientException('Not connect with '.$mailbox);
         };
     }
-<<<<<<< HEAD:ImapClient/Imap.php
-    
-=======
 
 
->>>>>>> SSilenceOrigin/master:Imap.php
     /**
      * close connection
      */
-    function __destruct() {
+    public function __destruct() {
         if ($this->imap!==false) {
             imap_close($this->imap);
         }
@@ -162,6 +158,7 @@ class Imap {
         }
         return count($result);
     }
+
 
     /**
      * returns unseen emails in the current folder
@@ -698,7 +695,7 @@ class Imap {
      * @param string $str utf8 encoded string
      * @return bool
      */
-    function convertToUtf8($str) {
+    public function convertToUtf8($str) {
         if (mb_detect_encoding($str, "UTF-8, ISO-8859-1, GBK")!="UTF-8") {
             $str = utf8_encode($str);
         }

@@ -4,8 +4,8 @@ namespace program;
 
 require_once "vendor/autoload.php";
 
-use SSilence\ImapClientException;
-use SSilence\Imap;
+use SSilence\ImapClient\ImapClientException;
+use SSilence\ImapClient\ImapClient as Imap;
 
 $mailbox = 'my.imapserver.com';
 $username = 'username';

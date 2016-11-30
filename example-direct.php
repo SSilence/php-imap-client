@@ -3,10 +3,10 @@
 namespace program;
 
 require_once "ImapClient/ImapClientException.php";
-require_once "ImapClient/Imap.php";
+require_once "ImapClient/ImapClient.php";
 
-use SSilence\ImapClientException;
-use SSilence\Imap;
+use SSilence\ImapClient\ImapClientException;
+use SSilence\ImapClient\ImapClient as Imap;
 
 $mailbox = 'my.imapserver.com';
 $username = 'username';

@@ -1,6 +1,6 @@
 <?php
 
-namespace SSilence;
+namespace SSilence\ImapClient;
 
 use \Exception;
 
