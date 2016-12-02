@@ -53,11 +53,14 @@ class ImapClient {
      * @param string $password
      * @param bool|false $encryption SSL or TLS
      */
-    public function __construct($mailbox, $username, $password, $encryption = false) {
+    public function __construct($mailbox, $username, $password, $encryption = false, $ignoreinvalidvert = false) {
         if (!function_exists('imap_open')) {
             throw new ImapClientException('Imap function not available');
         };
         $enc = '';
+        if($ignoreinvalidvert != null && $ignoreinvalidvert = true) {
+            $enc = '/novalidate-cert';
+        }
         if ($encryption != null && isset($encryption) && $encryption == 'ssl') {
             $enc = '/imap/ssl/novalidate-cert';
         }
