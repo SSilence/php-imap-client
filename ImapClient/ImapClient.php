@@ -9,7 +9,7 @@ use SSilence\ImapClient\ImapClientException;
  *
  * @package    protocols
  * @copyright  Copyright (c) Tobias Zeising (http://www.aditu.de)
- * @license    GPLv3 (http://www.gnu.org/licenses/gpl-3.0.html)
+ * @license    Apache2.0 (https://www.apache.org/licenses/LICENSE-2.0)
  * @author     Tobias Zeising <tobias.zeising@aditu.de>
  */
 class ImapClient {
@@ -53,11 +53,14 @@ class ImapClient {
      * @param string $password
      * @param bool|false $encryption SSL or TLS
      */
-    public function __construct($mailbox, $username, $password, $encryption = false) {
+    public function __construct($mailbox, $username, $password, $encryption = false, $ignoreinvalidvert = false) {
         if (!function_exists('imap_open')) {
             throw new ImapClientException('Imap function not available');
         };
         $enc = '';
+        if($ignoreinvalidvert != null && $ignoreinvalidvert = true) {
+            $enc = '/novalidate-cert';
+        }
         if ($encryption != null && isset($encryption) && $encryption == 'ssl') {
             $enc = '/imap/ssl/novalidate-cert';
         }
@@ -67,7 +70,7 @@ class ImapClient {
         $this->mailbox = "{" . $mailbox . $enc . "}";
         $this->imap = @imap_open($this->mailbox, $username, $password);
         if ($this->imap === false) {
-            throw new ImapClientException('Not connect with '.$mailbox);
+            throw new ImapClientException('Failed to connect to: '.$mailbox);
         };
     }
 
@@ -732,7 +735,7 @@ class ImapClient {
                 }
             }
 
-            // multipart 
+            // multipart
             if ($structure->type == 1) {
                 foreach ($structure->parts as $index => $subStruct) {
                     $prefix = "";
