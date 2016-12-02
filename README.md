@@ -34,7 +34,7 @@ Install
 Features
 --------
 
-This PHP IMAP Client is a simple class for IMAP Email access. 
+This PHP IMAP Client is a simple class for IMAP Email access.
 It base on the [PHP IMAP extension](http://at1.php.net/imap) and offers a simple interface for handling emails. In my opinion the PHP IMAP functions are not very intuitive.
 
 * simple interface
@@ -54,7 +54,8 @@ $mailbox = 'my.imapserver.com';
 $username = 'myuser';
 $password = 'secret';
 $encryption = 'tls'; // or ssl or '';
-$imap = new Imap($mailbox, $username, $password, $encryption);
+$ignoreinvalidvert = false;
+$imap = new Imap($mailbox, $username, $password, $encryption, $ignoreinvalidvert);
 
 if($imap->isConnected()===false) {
     die($imap->getError());
