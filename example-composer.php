@@ -11,10 +11,10 @@ $mailbox = 'my.imapserver.com';
 $username = 'username';
 $password = 'secret';
 $encryption = 'tls'; // or ssl or ''
-
+$ignoreinvalidvert = false;
 // open connection
 try{
-    $imap = new Imap($mailbox, $username, $password, $encryption);
+    $imap = new Imap($mailbox, $username, $password, $encryption, $ignoreinvalidvert);
 }catch (ImapClientException $error){
     echo $error->getMessage().PHP_EOL;
     die();
