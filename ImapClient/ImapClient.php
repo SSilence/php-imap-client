@@ -67,7 +67,7 @@ class ImapClient {
         $this->mailbox = "{" . $mailbox . $enc . "}";
         $this->imap = @imap_open($this->mailbox, $username, $password);
         if ($this->imap === false) {
-            throw new ImapClientException('Not connect with '.$mailbox);
+            throw new ImapClientException('Failed to connect to: '.$mailbox);
         };
     }
 
