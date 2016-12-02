@@ -9,7 +9,7 @@ use SSilence\ImapClient\ImapClientException;
  *
  * @package    protocols
  * @copyright  Copyright (c) Tobias Zeising (http://www.aditu.de)
- * @license    GPLv3 (http://www.gnu.org/licenses/gpl-3.0.html)
+ * @license    Apache2.0 (https://www.apache.org/licenses/LICENSE-2.0)
  * @author     Tobias Zeising <tobias.zeising@aditu.de>
  */
 class ImapClient {
@@ -732,7 +732,7 @@ class ImapClient {
                 }
             }
 
-            // multipart 
+            // multipart
             if ($structure->type == 1) {
                 foreach ($structure->parts as $index => $subStruct) {
                     $prefix = "";
