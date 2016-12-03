@@ -810,7 +810,7 @@ class ImapClient {
                 }
 
                 $attachmentDetails = array(
-                    "name"          => $part->dparameters[0]->value,
+                    "name"          => $part->parameters[0]->value,
                     "partNum"       => $partNum,
                     "enc"           => $partStruct->encoding,
                     "size"          => $part->bytes,
