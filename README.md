@@ -198,6 +198,8 @@ Following methods are available.
 * ``moveMessages($ids, $target)`` move messages with given ids (as array) in new folder
 * ``setUnseenMessage($id, $seen = true)`` set unseen state of the message with given id
 * ``getAttachment($id, $index = 0)`` get attachment of the message with given id (getMessages returns all available attachments)
+* ``getQuota($user)`` Retrieve the quota level settings, and usage statics per mailbox.
+* ``getQuotaRoot($user)`` Retrieve the quota level settings, and usage statics per mailbox.
 * ``addFolder($name)`` add new folder with given name
 * ``removeFolder($name)`` delete folder with fiven name
 * ``renameFolder($name, $newname)`` rename folder with given name
