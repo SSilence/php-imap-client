@@ -882,4 +882,37 @@ class ImapClient {
         return $this->isConnected() ? imap_mailboxmsginfo($this->imap) : false ;
     }
 
+    /**
+    * Unsubscribe from a mail box
+    * @return bool
+    */
+    public function unSubscribe()
+    {
+        if (imap_unsubscribe($this->iamp, $this->mailbox)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    /**
+    * Retrieve the quota level settings, and usage statics per mailbox.
+    * @return array
+    */
+    public function getQuota($user)
+    {
+        $quota = imap_get_quota($this->mailbox, "user.".$user);
+        return $quota;
+    }
+
+    /**
+    * Retrieve the quota level settings, and usage statics per mailbox.
+    * @return array
+    */
+    public function getQuotaRoot($user)
+    {
+        $quota = imap_get_quotaroot($this->mailbox, "user.".$user);
+        return $quota;
+    }
 }
