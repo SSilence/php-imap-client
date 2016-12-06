@@ -6,11 +6,96 @@
   "homepage": "https://github.com/SSilence/php-imap-client",
   "license": "MIT",
   "authors": [
-    {
-      "name": "SSilence",
-      "email": "tobias.zeising@aditu.de",
-      "homepage": "https://github.com/SSilence"
-    }
+      {
+          "name": "SSilence",
+          "email": "tobias.zeising@aditu.de",
+          "homepage": "https://github.com/SSilence",
+          "role": "Founder"
+      },
+      {
+          "name": "xXXIMMATTEWXXx",
+          "email": "mattparksjr@gmail.com",
+          "homepage": "http://matthewp.lexium.xyz/",
+          "role": "Developer"
+      },
+      {
+          "name": "serguy144010",
+          "email": "",
+          "homepage": "https://github.com/sergey144010",
+          "role": "Developer"
+      },
+      {
+          "name": "natanfelles",
+          "email": "natanfelles@gmail.com",
+          "homepage": "https://natanfelles.github.io",
+          "role": "Developer"
+      },
+      {
+          "name": "developarts",
+          "email": "nexus@developarts.com",
+          "homepage": "http://www.developarts.com",
+          "role": "Developer"
+      },
+      {
+          "name": "dutchakdev",
+          "email": "dutchakdev@gmail.com",
+          "homepage": "http://dutchak.io/",
+          "role": "Developer"
+      },
+      {
+          "name": "dutchakdev",
+          "email": "natanfelles@gmail.com",
+          "homepage": "https://natanfelles.github.io",
+          "role": "Developer"
+      },
+      {
+          "name": "HenriqueSalvan",
+          "email": "henriquesalvan@gmail.com",
+          "homepage": "https://github.com/HenriqueSalvan",
+          "role": "Developer"
+      },
+      {
+          "name": "melcak",
+          "email": "jiri@plugo.cz",
+          "homepage": "http://www.plugo.cz",
+          "role": "Developer"
+      },
+      {
+          "name": "fulldecent",
+          "email": "github.com@phor.net",
+          "homepage": "http://phor.net",
+          "role": "Developer"
+      },
+      {
+          "name": "parturi",
+          "email": "",
+          "homepage": "https://github.com/parturi",
+          "role": "Developer"
+      },
+      {
+          "name": "tomjoad2000",
+          "email": "",
+          "homepage": "https://github.com/tomjoad2000",
+          "role": "Developer"
+      },
+      {
+          "name": "radub",
+          "email": "",
+          "homepage": "https://github.com/radub",
+          "role": "Developer"
+      },
+      {
+          "name": "russ-ab",
+          "email": "",
+          "homepage": "https://github.com/russ-ab",
+          "role": "Developer"
+      },
+      {
+          "name": "wayne5w",
+          "email": "",
+          "homepage": "https://github.com/wayne5w",
+          "role": "Developer"
+      }
   ],
   "require": {
     "php": ">=5.6"
