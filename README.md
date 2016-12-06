@@ -209,7 +209,7 @@ Following methods are available.
 * ``getMailboxStatistics()`` returns statistics, see [imap_mailboxmsginfo](http://php.net/manual/de/function.imap-mailboxmsginfo.php)
 
 
-Feedback
+Feedback and Contributing
 --------
 
-Feel free to improve this class. You can use the pull request function of github for contributing improvments. The inner structure of this class is simple and easy. Don't hesitate and check it out ;)
+Feel free to improve this class. You can use the pull request function of github for contributing improvments. The inner structure of this class is simple and easy. Don't hesitate and check it out ;). Note to contributers: If you make a edit and it gets accepted it is up to YOU to add your self to the composer.json file. *No one* will do this for you!
