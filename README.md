@@ -189,7 +189,7 @@ Following methods are available.
 * ``setEmbed($val)`` If true, embed all 'inline' images into body HTML, accesible in 'body_embed'
 * ``countMessages()`` count messages in current folder
 * ``countUnreadMessages()`` count unread messages in current folder
-* ``getMessages($withbody = true, $standard)`` get emails in current folder
+* ``getMessages($withbody = true, $standard = "UNSEEN")`` get emails in current folder
 * ``getMessage($id, $withbody = true)`` get email by given id
 * ``getUnreadMessages($withbody = true)`` get unread messages in current folder
 * ``deleteMessage($id)`` delete message with given id
