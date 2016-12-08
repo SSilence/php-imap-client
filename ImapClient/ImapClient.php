@@ -168,10 +168,11 @@ class ImapClient {
      *
      * @return array messages
      * @param bool|true $withbody without body
+     * @param string|UNSEEN set what will be used to find unread emails
      */
-    public function getUnreadMessages($withbody = true) {
+    public function getUnreadMessages($withbody = true, $standard = "UNSEEN") {
         $emails = array();
-        $result = imap_search($this->imap, 'UNSEEN');
+        $result = imap_search($this->imap, $standard);
         if ($result) {
             foreach($result as $k=>$i) {
                 $emails[]= $this->formatMessage($i, $withbody);
