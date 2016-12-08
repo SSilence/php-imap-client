@@ -311,20 +311,22 @@ class ImapClient {
         return $this->deleteMessages(array($id));
     }
 
-
     /**
      * delete messages
      *
-     * @param array $ids array of ids
      * @return bool success or not
+     * @param $ids array of ids
      */
     public function deleteMessages($ids) {
-        if ( imap_mail_move($this->imap, implode(",", $ids), $this->getTrash(), CP_UID) == false) {
-            return false;
+        foreach ($ids as $id) {
+            imap_delete($this->imap, $id, FT_UID);
         }
+        /*
+        if( imap_mail_move($this->imap, implode(",", $ids), $this->getTrash(), CP_UID) == false)
+            return false;
+        */
         return imap_expunge($this->imap);
     }
-
 
     /**
      * move given message in new folder
