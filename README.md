@@ -204,6 +204,8 @@ Following methods are available.
 * ``removeFolder($name)`` delete folder with fiven name
 * ``renameFolder($name, $newname)`` rename folder with given name
 * ``purge()`` move all emails in the current folder into trash. emails in trash and spam will be deleted
+* ``setEncoding()`` Identify encoding by charset attribute in header
+* ``convertToUtf8()`` Apply encoding defined in header
 * ``getAllEmailAddresses()`` returns all email addresses of all emails (for auto suggestion list)
 * ``saveMessageInSent($header, $body)`` save a sent message in sent folder
 * ``getMailboxStatistics()`` returns statistics, see [imap_mailboxmsginfo](http://php.net/manual/de/function.imap-mailboxmsginfo.php)
