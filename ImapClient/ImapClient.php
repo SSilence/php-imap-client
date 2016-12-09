@@ -871,15 +871,6 @@ class ImapClient {
     }
 
     /**
-    * Apply encoding defined in header
-    * @param $str
-    * @return string
-    */
-    function convertToUtf8($str) {
-        return imap_utf8(mb_convert_encoding($str, 'utf-8', $this->encoding));
-    }
-
-    /**
      * HTML embed inline images
      *
      * @param array $email
