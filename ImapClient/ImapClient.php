@@ -168,10 +168,11 @@ class ImapClient {
      *
      * @return array messages
      * @param bool|true $withbody without body
+     * @param string|UNSEEN set what will be used to find unread emails
      */
-    public function getUnreadMessages($withbody = true) {
+    public function getUnreadMessages($withbody = true, $standard = "UNSEEN") {
         $emails = array();
-        $result = imap_search($this->imap, 'UNSEEN');
+        $result = imap_search($this->imap, $standard);
         if ($result) {
             foreach($result as $k=>$i) {
                 $emails[]= $this->formatMessage($i, $withbody);
@@ -310,20 +311,22 @@ class ImapClient {
         return $this->deleteMessages(array($id));
     }
 
-
     /**
      * delete messages
      *
-     * @param array $ids array of ids
      * @return bool success or not
+     * @param $ids array of ids
      */
     public function deleteMessages($ids) {
-        if ( imap_mail_move($this->imap, implode(",", $ids), $this->getTrash(), CP_UID) == false) {
-            return false;
+        foreach ($ids as $id) {
+            imap_delete($this->imap, $id, FT_UID);
         }
+        /*
+        if( imap_mail_move($this->imap, implode(",", $ids), $this->getTrash(), CP_UID) == false)
+            return false;
+        */
         return imap_expunge($this->imap);
     }
-
 
     /**
      * move given message in new folder
@@ -848,6 +851,33 @@ class ImapClient {
         return $attachments;
     }
 
+    /**
+    * Identify encoding by charset attribute in header
+    * @param $id
+    * @return string
+    */
+    protected function setEncoding($id)
+    {
+        $header = imap_fetchstructure($this->imap, $id);
+        $params = $header->parameters ?: [];
+
+            foreach ($params as $k => $v) {
+                if (stristr($v->attribute, 'charset')) {
+                    return $v->value;
+                }
+            }
+
+        return 'utf-8';
+    }
+
+    /**
+    * Apply encoding defined in header
+    * @param $str
+    * @return string
+    */
+    function convertToUtf8($str) {
+        return imap_utf8(mb_convert_encoding($str, 'utf-8', $this->encoding));
+    }
 
     /**
      * HTML embed inline images

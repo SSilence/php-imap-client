@@ -189,7 +189,7 @@ Following methods are available.
 * ``setEmbed($val)`` If true, embed all 'inline' images into body HTML, accesible in 'body_embed'
 * ``countMessages()`` count messages in current folder
 * ``countUnreadMessages()`` count unread messages in current folder
-* ``getMessages($withbody = true)`` get emails in current folder
+* ``getMessages($withbody = true, $standard = "UNSEEN")`` get emails in current folder
 * ``getMessage($id, $withbody = true)`` get email by given id
 * ``getUnreadMessages($withbody = true)`` get unread messages in current folder
 * ``deleteMessage($id)`` delete message with given id
@@ -204,12 +204,14 @@ Following methods are available.
 * ``removeFolder($name)`` delete folder with fiven name
 * ``renameFolder($name, $newname)`` rename folder with given name
 * ``purge()`` move all emails in the current folder into trash. emails in trash and spam will be deleted
+* ``setEncoding()`` Identify encoding by charset attribute in header
+* ``convertToUtf8()`` Apply encoding defined in header
 * ``getAllEmailAddresses()`` returns all email addresses of all emails (for auto suggestion list)
 * ``saveMessageInSent($header, $body)`` save a sent message in sent folder
 * ``getMailboxStatistics()`` returns statistics, see [imap_mailboxmsginfo](http://php.net/manual/de/function.imap-mailboxmsginfo.php)
 
 
-Feedback
+Feedback and Contributing
 --------
 
-Feel free to improve this class. You can use the pull request function of github for contributing improvments. The inner structure of this class is simple and easy. Don't hesitate and check it out ;)
+Feel free to improve this class. You can use the pull request function of github for contributing improvments. The inner structure of this class is simple and easy. Don't hesitate and check it out ;). Note to contributers: If you make a edit and it gets accepted it is up to YOU to add your self to the composer.json file. *No one* will do this for you!
