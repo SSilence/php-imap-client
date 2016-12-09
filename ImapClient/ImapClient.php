@@ -44,7 +44,6 @@ class ImapClient {
      */
     protected $embed = false;
 
-
     /**
      * initialize imap helper
      *
@@ -74,7 +73,6 @@ class ImapClient {
         };
     }
 
-
     /**
      * close connection
      */
@@ -83,7 +81,6 @@ class ImapClient {
             imap_close($this->imap);
         }
     }
-
 
     /**
      * returns true after successfull connection
@@ -94,7 +91,6 @@ class ImapClient {
         return $this->imap !== false;
     }
 
-
     /**
      * returns last imap error
      *
@@ -103,7 +99,6 @@ class ImapClient {
     public function getError() {
         return imap_last_error();
     }
-
 
     /**
      * select given folder
@@ -119,7 +114,6 @@ class ImapClient {
         return $result;
     }
 
-
     /**
      * returns all available folders
      *
@@ -130,14 +124,14 @@ class ImapClient {
         return str_replace($this->mailbox, "", $folders);
     }
 
-
     /**
+    * Set embeded or not
+    *
      * @param bool|false $val
      */
     public function setEmbed($val = false) {
         $this->embed = boolval($val);
     }
-
 
     /**
      * returns the number of messages in the current folder
@@ -147,7 +141,6 @@ class ImapClient {
     public function countMessages() {
         return imap_num_msg($this->imap);
     }
-
 
     /**
      * returns the number of unread messages in the current folder
@@ -161,7 +154,6 @@ class ImapClient {
         }
         return count($result);
     }
-
 
     /**
      * returns unseen emails in the current folder
@@ -180,7 +172,6 @@ class ImapClient {
         }
         return $emails;
     }
-
 
     /**
      * returns all emails in the current folder
@@ -212,7 +203,6 @@ class ImapClient {
         return $emails;
     }
 
-
     /**
      * returns email by given id
      *
@@ -224,11 +214,12 @@ class ImapClient {
         return $this->formatMessage($id, $withbody);
     }
 
-
     /**
-     * @param int $id
-     * @param bool $withbody
-     * @return array
+     * Formats the email is be displayed via HTML
+     *
+     * @param int $id Id of the email
+     * @param bool $withbody Do you want to body too?
+     * @return array New and formatted email
      */
     protected function formatMessage($id, $withbody=true) {
         $header = imap_headerinfo($this->imap, $id);
@@ -300,7 +291,6 @@ class ImapClient {
         return $email;
     }
 
-
     /**
      * delete given message
      *
@@ -339,7 +329,6 @@ class ImapClient {
         return $this->moveMessages(array($id), $target);
     }
 
-
     /**
      * move given message in new folder
      *
@@ -352,7 +341,6 @@ class ImapClient {
             return false;
         return imap_expunge($this->imap);
     }
-
 
     /**
      * mark message as read
@@ -378,7 +366,6 @@ class ImapClient {
         imap_clearflag_full($this->imap, $id, '\\Seen', ST_UID);
         return imap_setflag_full($this->imap, $id, trim($flags), ST_UID);
     }
-
 
     /**
      * return content of messages attachment
@@ -436,7 +423,6 @@ class ImapClient {
         );
     }
 
-
     /**
      * add new folder
      *
@@ -454,7 +440,6 @@ class ImapClient {
         return $success;
     }
 
-
     /**
      * remove folder
      *
@@ -464,7 +449,6 @@ class ImapClient {
     public function removeFolder($name) {
         return imap_deletemailbox($this->imap, $this->mailbox . $name);
     }
-
 
     /**
      * rename folder
@@ -477,9 +461,8 @@ class ImapClient {
         return imap_renamemailbox($this->imap, $this->mailbox . $name, $this->mailbox . $newname);
     }
 
-
     /**
-     * clean folder content of selected folder
+     * clean trash and spam folder
      *
      * @return bool success or not
      */
@@ -499,7 +482,6 @@ class ImapClient {
             return imap_expunge($this->imap);
         }
     }
-
 
     /**
      * returns all email addresses
@@ -523,7 +505,6 @@ class ImapClient {
         return array_unique($emails);
     }
 
-
     /**
      * save email in sent
      *
@@ -535,7 +516,6 @@ class ImapClient {
         return imap_append($this->imap, $this->mailbox . $this->getSent(), $header . "\r\n" . $body . "\r\n", "\\Seen");
     }
 
-
     /**
      * explicitly close imap connection
      */
@@ -544,11 +524,6 @@ class ImapClient {
             imap_close($this->imap);
         }
     }
-
-
-
-    // protected helpers
-
 
     /**
      * get trash folder name or create new trash folder
@@ -568,7 +543,6 @@ class ImapClient {
         return 'Trash';
     }
 
-
     /**
      * get sent folder name or create new sent folder
      *
@@ -585,7 +559,6 @@ class ImapClient {
         $this->addFolder('Sent');
         return 'Sent';
     }
-
 
     /**
      * fetch message by id
@@ -604,7 +577,6 @@ class ImapClient {
         }
         return false;
     }
-
 
     /**
      * convert attachment in array(name => ..., size => ...).
@@ -634,7 +606,6 @@ class ImapClient {
         return $names;
     }
 
-
     /**
      * convert imap given address in string
      *
@@ -660,7 +631,6 @@ class ImapClient {
         return $name . " <" . $email . ">";
     }
 
-
     /**
      * converts imap given array of addresses in strings
      *
@@ -674,7 +644,6 @@ class ImapClient {
         }
         return $addressesAsString;
     }
-
 
     /**
      * returns body of the email. First search for html version of the email, then the plain part.
@@ -694,7 +663,6 @@ class ImapClient {
         return array( 'body' => $body, 'html' => $html);
     }
 
-
     /**
      * convert to utf8 if necessary.
      *
@@ -709,16 +677,15 @@ class ImapClient {
         return $str;
     }
 
-
     /**
      * returns a part with a given mimetype
      * taken from http://www.sitepoint.com/exploring-phps-imap-library-2/
      *
      * @param false|resource $imap imap stream
      * @param int $uid id
-     * @param string $mimetype
-     * @param bool|false $structure
-     * @param bool|false $partNumber
+     * @param string $mimetype Mime Type
+     * @param bool|false $structure Structure?
+     * @param bool|false $partNumber part number
      * @return bool|string email body
      */
     protected function get_part($imap, $uid, $mimetype, $structure = false, $partNumber = false) {
@@ -755,7 +722,6 @@ class ImapClient {
         return false;
     }
 
-
     /**
      * extract mimetype
      * taken from http://www.sitepoint.com/exploring-phps-imap-library-2/
@@ -771,7 +737,6 @@ class ImapClient {
         }
         return "TEXT/PLAIN";
     }
-
 
     /**
      * get attachments of given email
@@ -853,6 +818,7 @@ class ImapClient {
 
     /**
     * Identify encoding by charset attribute in header
+    *
     * @param $id
     * @return string
     */
@@ -868,15 +834,6 @@ class ImapClient {
             }
 
         return 'utf-8';
-    }
-
-    /**
-    * Apply encoding defined in header
-    * @param $str
-    * @return string
-    */
-    function convertToUtf8($str) {
-        return imap_utf8(mb_convert_encoding($str, 'utf-8', $this->encoding));
     }
 
     /**
@@ -901,7 +858,6 @@ class ImapClient {
         }
         return $html_embed;
     }
-
 
     /**
      * Return general mailbox statistics
