@@ -175,6 +175,52 @@ class ImapClient {
     }
 
     /**
+     * Get Messages by Criteria
+     *
+     * @see http://php.net/manual/en/function.imap-search.php
+     *
+     * @param string $criteria ALL, UNSEEN, FLAGGED, UNANSWERED, DELETED, UNDELETED, etc (e.g. FROM "joey smith")
+     * @param int    $number
+     * @param int    $start
+     * @param string $order
+     * @param bool   $withbody
+     * @param bool   $embed_images
+     *
+     * @return array
+     */
+    public function getMessagesByCriteria($criteria = '', $number = 0, $start = 0, $order = 'DESC', $withbody = FALSE, $embed_images = FALSE)
+    {
+        $emails = array();
+        $result = imap_search($this->imap, $criteria);
+        if ($number == 0)
+        {
+            $number = count($result);
+        }
+        if ($result)
+        {
+            $ids = array();
+            foreach ($result as $k => $i)
+            {
+                $ids[] = $i;
+            }
+            $ids = array_chunk($ids, $number);
+            $ids = array_slice($ids[0], $start, $number);
+
+            $emails = array();
+            foreach ($ids as $id)
+            {
+                $emails[] = $this->formatMessage($id, $withbody, $embed_images);
+            }
+        }
+        if ($order == 'DESC')
+        {
+            $emails = array_reverse($emails);
+        }
+
+        return $emails;
+    }
+
+    /**
      * Get messages
      *
      * @param int    $number       Number of messages. 0 to get all
