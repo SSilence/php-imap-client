@@ -174,54 +174,70 @@ class ImapClient {
     }
 
     /**
-     * returns all emails in the current folder
+     * Get messages
      *
-     * @return array messages
-     * @param bool|true $withbody without body
+     * @param int    $number       Number of messages. 0 to get all
+     * @param int    $start        Starting message number
+     * @param string $order        ASC or DESC
+     * @param bool   $withbody     Get message body
+     * @param bool   $embed_images Get embed images in message body
+     *
      * @return array
      */
-    public function getMessages($withbody = true) {
-        $count = $this->countMessages();
-        $emails = array();
-        for ($i=1;$i<=$count;$i++) {
-            $emails[]= $this->formatMessage($i, $withbody);
+    public function getMessages($withbody = true, $number = 0, $start = 0, $order = 'DESC', $embed_images = false) {
+        if ($number == 0)
+        {
+            $number = $this->countMessages();
         }
+        $emails = array();
+        $result = imap_search($this->imap, 'ALL');
+        if ($result)
+        {
+            $ids = array();
+            foreach ($result as $k => $i)
+            {
+                $ids[] = $i;
+            }
 
-        // sort emails descending by date
-        // usort($emails, function($a, $b) {
-        // try {
-        // $datea = new \DateTime($a['date']);
-        // $dateb = new \DateTime($b['date']);
-        // } catch(\Exception $e) {
-        // return 0;
-        // }
-        // if ($datea == $dateb)
-        // return 0;
-        // return $datea < $dateb ? 1 : -1;
-        // });
+            if ($order == 'DESC')
+            {
+                $ids = array_reverse($ids);
+            }
+            $ids = array_chunk($ids, $number);
+            $ids = $ids[$start];
+
+            foreach ($ids as $id)
+            {
+                $emails[] = $this->formatMessage($id, $withbody, $embed_images);
+            }
+        }
 
         return $emails;
     }
 
     /**
-     * returns email by given id
+     * Returns one email by given id
      *
-     * @return array messages
-     * @param int $id
-     * @param bool|true $withbody without body
+     * @param int  $id           Message id
+     * @param bool $withbody     False if you want without body
+     * @param bool $embed_images If use $withbody TRUE and you want body embed images, set TRUE
+     *
+     * @return array
      */
-    public function getMessage($id, $withbody = true) {
-        return $this->formatMessage($id, $withbody);
+    public function getMessage($id, $withbody = true, $embed_images = false) {
+        return $this->formatMessage($id, $withbody, $embed_images);
     }
 
     /**
-     * Formats the email is be displayed via HTML
+     * Create the final message array
      *
-     * @param int $id Id of the email
-     * @param bool $withbody Do you want to body too?
-     * @return array New and formatted email
+     * @param int  $id           Message uid
+     * @param bool $withbody     Define if the output will get the message body
+     * @param bool $embed_images Define if message body will show embeded images
+     *
+     * @return array
      */
-    protected function formatMessage($id, $withbody=true) {
+    protected function formatMessage($id, $withbody = true, $embed_images = true) {
         $header = imap_headerinfo($this->imap, $id);
 
         // fetch unique uid
@@ -244,13 +260,15 @@ class ImapClient {
             'to'        => isset($header->to) ? $this->arrayToAddress($header->to) : '',
             'from'      => $this->toAddress($header->from[0]),
             'date'      => $header->date,
+            'udate'     => $header->udate,
             'subject'   => $subject,
             'priority'  => $priority,
             'uid'       => $uid,
             'flagged'   => strlen(trim($header->Flagged))>0,
             'unread'    => strlen(trim($header->Unseen))>0,
             'answered'  => strlen(trim($header->Answered))>0,
-            'deleted'   => strlen(trim($header->Deleted))>0
+            'deleted'   => strlen(trim($header->Deleted))>0,
+            'size'     => $header->Size,
         );
 
         if (isset($header->cc)) {
@@ -267,13 +285,15 @@ class ImapClient {
         // get attachments
         $mailStruct = imap_fetchstructure($this->imap, $id);
         $attachments = $this->attachments2name($this->getAttachments($this->imap, $id, $mailStruct, ""));
-        $email['inline'] = $this->inline;
-
-        if (count($attachments)>0) {
-            foreach ($attachments as $val) {
+        if (count($attachments) > 0)
+        {
+            foreach ($attachments as $val)
+            {
                 $arr = array();
-                foreach ($val as $k => $t) {
-                    if ($k == 'name') {
+                foreach ($val as $k => $t)
+                {
+                    if ($k == 'name')
+                    {
                         $decodedName = imap_mime_header_decode($t);
                         $t = $this->convertToUtf8($decodedName[0]->text);
                     }
@@ -284,8 +304,9 @@ class ImapClient {
         }
 
         // Modify HTML to embed images inline
-        if ($this->embed == true && $this->inline == true && $email['html'] == true) {
-            $email['body_embed'] = $this->embedImages($email);
+        if ((count(@$email['attachments']) > 0) and (@$email['html'] == TRUE) and ($embed_images == TRUE))
+        {
+            $email['body'] = $this->embedImages($email);
         }
 
         return $email;
