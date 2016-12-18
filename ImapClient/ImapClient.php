@@ -3,6 +3,7 @@
 namespace SSilence\ImapClient;
 
 use SSilence\ImapClient\ImapClientException;
+use SSilence\ImapClient\ImapConnect;
 
 /**
  * Helper class for imap access
@@ -14,23 +15,48 @@ use SSilence\ImapClient\ImapClientException;
  */
 class ImapClient {
 
+    /*
+     * Use the Secure Socket Layer to encrypt the session
+     */
+    const ENCRYPT_SSL = 'ssl';
+    /*
+     * Force use of start-TLS to encrypt the session, and reject connection to servers that do not support it
+     */
+    const ENCRYPT_TLS = 'tls';
+    const CONNECT_ADVANCED = 'connectAdvanced';
+    const CONNECT_DEFAULT = 'connectDefault';
+
+    /*
+     * Connect status or advanced or default
+     *
+     * @var string
+     */
+    public static $connect;
+
+    /*
+     * Config for advanced connect
+     *
+     * @var array
+     */
+    public static $connectConfig;
+
     /**
-     * imap connection
+     * Imap connection
      * @var bool
      */
     protected $imap = false;
 
     /**
-     * mailbox url
+     * Mailbox url
      * @var string
      */
     protected $mailbox = "";
 
     /**
-     * currentfolder
+     * Current folder
      * @var string
      */
-    protected $folder = "Inbox";
+    protected $folder = "INBOX";
 
     /**
      * Have inline files
@@ -45,36 +71,99 @@ class ImapClient {
     protected $embed = false;
 
     /**
-     * initialize imap helper
+     * Initialize imap helper
      *
-     * @param string $mailbox imap_open string
+     * @param string $mailbox
      * @param string $username
      * @param string $password
-     * @param bool|false $encryption SSL or TLS
+     * @param string $encryption use ImapClient::ENCRYPT_SSL or ImapClient::ENCRYPT_TLS
+     * @return void
      */
-    public function __construct($mailbox, $username, $password, $encryption = false, $ignoreinvalidvert = false) {
-        if (!function_exists('imap_open')) {
-            throw new ImapClientException('Imap function not available');
+    public function __construct($mailbox = null, $username = null, $password = null, $encryption = null)
+    {
+        if(isset($mailbox) && is_string($mailbox)){
+            $this->setConnectDefault();
         };
-        $enc = '';
-        if($ignoreinvalidvert != null && $ignoreinvalidvert = true) {
-            $enc = '/novalidate-cert';
-        }
-        if ($encryption != null && isset($encryption) && $encryption == 'ssl') {
-            $enc = '/imap/ssl/novalidate-cert';
-        }
-        else if ($encryption != null && isset($encryption) && $encryption == 'tls') {
-            $enc = '/imap/tls/novalidate-cert';
-        }
-        $this->mailbox = "{" . $mailbox . $enc . "}";
-        $this->imap = @imap_open($this->mailbox, $username, $password);
-        if ($this->imap === false) {
-            throw new ImapClientException('Failed to connect to: '.$mailbox);
+        if(isset($mailbox) && is_array($mailbox)){
+            $this->setConnectAdvanced();
+            $this->setConnectConfig($mailbox);
+        };
+
+        if(!isset(self::$connect) || self::$connect === self::CONNECT_DEFAULT){
+            $this->connectDefault($mailbox, $username, $password, $encryption);
+        };
+        if(self::$connect === self::CONNECT_ADVANCED){
+            $this->connectAdvanced(self::$connectConfig);
         };
     }
 
+    public static function setConnectAdvanced()
+    {
+        static::$connect = self::CONNECT_ADVANCED;
+    }
+
+    public static function setConnectDefault()
+    {
+        static::$connect = self::CONNECT_DEFAULT;
+    }
+
+    public static function setConnectConfig(array $config)
+    {
+        static::$connectConfig = $config;
+    }
+
+    /*
+     * The default connection.
+     * Not used a lot of imap connection options.
+     * Use only ENCRYPT_SSL and VALIDATE_CERT.
+     *
+     * If you need a more advanced connection settings,
+     * use connectAdvanced() method.
+     *
+     * @param string $mailbox
+     * @param string $username
+     * @param string $password
+     * @param string $encryption use ImapClient::ENCRYPT_SSL or ImapClient::ENCRYPT_TLS
+     * @return void
+     */
+    public function connectDefault($mailbox, $username, $password, $encryption = null)
+    {
+        $connect = new ImapConnect();
+        if($encryption === ImapClient::ENCRYPT_SSL){
+            $connect->prepareFlags(ImapConnect::SERVICE_IMAP, ImapConnect::ENCRYPT_SSL, ImapConnect::NOVALIDATE_CERT);
+        };
+        if($encryption === ImapClient::ENCRYPT_TLS){
+            $connect->prepareFlags(ImapConnect::SERVICE_IMAP, ImapConnect::ENCRYPT_TLS, ImapConnect::NOVALIDATE_CERT);
+        };
+        $connect->prepareMailbox($mailbox);
+        $connect->connect(null, $username, $password);
+        $this->imap = $connect->getImap();
+        $this->mailbox = $connect->getResponseMailbox();
+    }
+
+    /*
+     * Advanced connect
+     *
+     * @param array $config
+     * @return void
+     */
+    public function connectAdvanced(array $config)
+    {
+        if(!isset($config['flags'])){$config['flags'] = null;};
+        if(!isset($config['mailbox'])){$config['mailbox'] = null;};
+        if(!isset($config['connect'])){
+            throw new ImapClientException('Option connect must be installed');
+        };
+        $connect = new ImapConnect();
+        $connect->prepareFlags($config['flags']);
+        $connect->prepareMailbox($config['mailbox']);
+        $connect->connect($config['connect']);
+        $this->imap = $connect->getImap();
+        $this->mailbox = $connect->getResponseMailbox();
+    }
+
     /**
-     * close connection
+     * Close connection
      */
     public function __destruct() {
         if (is_resource($this->imap))
