@@ -30,7 +30,6 @@ dwsync.xml
 .komodotools
 
 # Eclipse for PHP
-
 .metadata
 bin/
 tmp/
@@ -43,3 +42,8 @@ local.properties
 .loadpath
 .recommenders
 .project
+
+#PhpStorm
+.idea
+
+#Tests
