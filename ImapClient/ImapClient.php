@@ -408,6 +408,7 @@ class ImapClient
             'udate'     => $header->udate,
             'subject'   => $subject,
             'priority'  => $priority,
+            'id'        => $id,
             'uid'       => $uid,
             'flagged'   => strlen(trim($header->Flagged))>0,
             'unread'    => strlen(trim($header->Unseen))>0,
@@ -1028,8 +1029,8 @@ class ImapClient
         $html_embed = $email['body'];
 
         foreach ($email['attachments'] as $key => $attachment) {
-            if ($attachment['disposition'] == 'inline' && !empty($attachment['reference'])){
-                $file = $this->getAttachment($email['uid'] , $key);
+            if (strtolower($attachment['disposition']) == 'inline' && !empty($attachment['reference'])){
+                $file = $this->getAttachment($email['id'] , $key);
 
                 $reference = str_replace(array("<", ">"), "", $attachment['reference']);
                 $img_embed = "data:image/" . strtolower($file['type']) . ";base64," . base64_encode($file['content']);
@@ -1063,23 +1064,31 @@ class ImapClient
         }
     }
 
+
     /**
-    * Retrieve the quota level settings, and usage statics per mailbox.
-    * @return array
-    */
-    public function getQuota($user)
+     * Retrieve the quota level settings, and usage statics per mailbox.
+     *
+     * @param string $mailbox
+     *
+     * @return array
+     */
+    public function getQuota($mailbox)
     {
-        $quota = imap_get_quota($this->mailbox, "user.".$user);
+        $quota = imap_get_quota($this->imap, "user.".$mailbox);
         return $quota;
     }
 
+
     /**
-    * Retrieve the quota level settings, and usage statics per mailbox.
-    * @return array
-    */
-    public function getQuotaRoot($user)
+     * Retrieve the quota level settings, and usage statics per mailbox.
+     *
+     * @param string $mailbox
+     *
+     * @return array
+     */
+    public function getQuotaRoot($mailbox)
     {
-        $quota = imap_get_quotaroot($this->mailbox, "user.".$user);
+        $quota = imap_get_quotaroot($this->imap, "user.".$mailbox);
         return $quota;
     }
 }
