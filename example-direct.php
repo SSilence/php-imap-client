@@ -3,19 +3,21 @@
 namespace program;
 
 require_once "ImapClient/ImapClientException.php";
+require_once "ImapClient/ImapConnect.php";
 require_once "ImapClient/ImapClient.php";
 
 use SSilence\ImapClient\ImapClientException;
+use SSilence\ImapClient\ImapConnect;
 use SSilence\ImapClient\ImapClient as Imap;
 
 $mailbox = 'my.imapserver.com';
 $username = 'username';
 $password = 'secret';
-$encryption = 'tls'; // or ssl or ''
-$ignoreinvalidvert = false;
+$encryption = Imap::ENCRYPT_TLS; // or ImapClient::ENCRYPT_SSL or ImapClient::ENCRYPT_TLS or null
+
 // open connection
 try{
-    $imap = new Imap($mailbox, $username, $password, $encryption, $ignoreinvalidvert);
+    $imap = new Imap($mailbox, $username, $password, $encryption);
 }catch (ImapClientException $error){
     echo $error->getMessage().PHP_EOL;
     die();
