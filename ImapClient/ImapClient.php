@@ -147,7 +147,7 @@ class ImapClient
         $connect->prepareMailbox($mailbox);
         $connect->connect(null, $username, $password);
         $this->imap = $connect->getImap();
-        $this->mailbox = $connect->getResponseMailbox();
+        $this->mailbox = $connect->getMailbox();
     }
 
     /*
@@ -168,7 +168,7 @@ class ImapClient
         $connect->prepareMailbox($config['mailbox']);
         $connect->connect($config['connect']);
         $this->imap = $connect->getImap();
-        $this->mailbox = $connect->getResponseMailbox();
+        $this->mailbox = $connect->getMailbox();
     }
 
     /**
