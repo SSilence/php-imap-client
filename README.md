@@ -53,9 +53,8 @@ Instantiating the class will open the imap connection.
 $mailbox = 'my.imapserver.com';
 $username = 'myuser';
 $password = 'secret';
-$encryption = 'tls'; // or ssl or '';
-$ignoreinvalidvert = false;
-$imap = new Imap($mailbox, $username, $password, $encryption, $ignoreinvalidvert);
+$encryption = Imap::ENCRYPT_SSL; // or ImapClient::ENCRYPT_SSL or ImapClient::ENCRYPT_TLS or null
+$imap = new Imap($mailbox, $username, $password, $encryption);
 
 if($imap->isConnected()===false) {
     die($imap->getError());

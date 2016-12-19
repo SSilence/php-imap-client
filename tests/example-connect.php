@@ -82,3 +82,31 @@ ImapClient::setConnectDefault();
 $imap = new ImapClient($mailbox, $username, $password, $encryption);
 /* or just */
 $imap = new ImapClient($mailbox, $username, $password, $encryption);
+
+/* Example 5 All options*/
+$imap = new ImapClient([
+    'flags' => [
+        'service' => ImapConnect::SERVICE_IMAP, # ImapConnect::SERVICE_IMAP ,ImapConnect::SERVICE_POP3, ImapConnect::SERVICE_NNTP
+        'encrypt' => ImapConnect::ENCRYPT_SSL, # ImapConnect::ENCRYPT_SSL, ImapConnect::ENCRYPT_TLS, ImapConnect::ENCRYPT_NOTLS
+        'validateCertificates' => ImapConnect::NOVALIDATE_CERT, # ImapConnect::VALIDATE_CERT, ImapConnect::NOVALIDATE_CERT
+        'secure' => ImapConnect::SECURE, # or null
+        'norsh' => ImapConnect::NORSH, # or null
+        'readonly' => ImapConnect::READONLY, # or null
+        'anonymous' => ImapConnect::ANONYMOUS, # or null
+        'debug' => ImapConnect::DEBUG # or null
+    ],
+    'mailbox' => [
+        'remote_system_name' => 'imap.server.ru',
+        'port' => null,
+        'flags' => null,
+        'mailbox_name' => null,
+    ],
+    'connect' => [
+        'mailbox' => null,
+        'username' => 'user',
+        'password' => 'pass',
+        'options' => 0,
+        'n_retries' => 0,
+        'params' => [],
+    ]
+]);
