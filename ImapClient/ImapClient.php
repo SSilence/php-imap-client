@@ -927,6 +927,13 @@ class ImapClient
     protected function getAttachments($mailNum, $part, $partNum) {
         $attachments = array();
 
+        if (!isset($part->parts)
+            && !isset($part->disposition)
+            && (!isset($part->subtype) || !in_array($part->subtype, array('JPEG', 'GIF', 'PNG')))
+        ) {
+            $part->disposition = 'attachment';
+        }
+
         if (isset($part->parts)) {
             foreach ($part->parts as $key => $subpart) {
                 if ($partNum != "") {
