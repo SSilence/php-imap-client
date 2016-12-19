@@ -18,6 +18,27 @@ $encryption = Imap::ENCRYPT_TLS; // or ImapClient::ENCRYPT_SSL or ImapClient::EN
 // open connection
 try{
     $imap = new Imap($mailbox, $username, $password, $encryption);
+
+    /*
+     * Or use advanced connect option like this
+     *
+    $imap = new ImapClient([
+        'flags' => [
+            'service' => ImapConnect::SERVICE_IMAP,
+            'encrypt' => ImapConnect::ENCRYPT_SSL,
+            'validateCertificates' => ImapConnect::VALIDATE_CERT,
+        ],
+        'mailbox' => [
+            'remote_system_name' => 'imap.server.ru',
+            'port' => 431,
+        ],
+        'connect' => [
+            'username' => 'user',
+            'password' => 'pass'
+        ]
+    ]);
+    */
+
 }catch (ImapClientException $error){
     echo $error->getMessage().PHP_EOL;
     die();
