@@ -1098,4 +1098,24 @@ class ImapClient
         $quota = imap_get_quotaroot($this->imap, "user.".$mailbox);
         return $quota;
     }
+
+    /*
+     * Support issue #17. Prefixed folders.
+     *
+     * INBOX.Sent
+     * getInbox_Sent
+     *
+     * @return void|ImapClientException
+     */
+    public function __call($name, $arguments)
+    {
+        $get = substr($name, 0, 3);
+        if($get === 'get'){
+            $folder = substr($name, 3);
+            $folder = str_replace('_' , '.', $folder);
+            if(!$this->selectFolder($folder)){
+                throw new ImapClientException('Error get '.$folder);
+            };
+        };
+    }
 }
