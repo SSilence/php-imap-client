@@ -1103,16 +1103,16 @@ class ImapClient
      * Support issue #17. Prefixed folders.
      *
      * INBOX.Sent
-     * getFolderInboxSent
+     * getFolder_INBOX_Sent
      *
      * @return void|ImapClientException
      */
     public function __call($name, $arguments)
     {
-        $get = substr($name, 0, 9);
-        if($get === 'getFolder'){
-            $folder = substr($name, 9);
-            $folder = str_replace('_' , '.', $folder);
+        $get = substr($name, 0, 10);
+        if($get === 'getFolder_'){
+            $folder = substr($name, 10);
+            $folder = str_replace('_' , '/', $folder);
             if(!$this->selectFolder($folder)){
                 throw new ImapClientException('Error get '.$folder);
             };
