@@ -957,10 +957,16 @@ class ImapClient
                 $partStruct = imap_bodystruct($this->imap, $mailNum, $partNum);
                 $reference = isset($partStruct->id) ? $partStruct->id : "";
                 $attachmentDetails = array();
-                if (isset($part->dparameters[0]))
-                {
+                $parameters = array();
+                if (isset($part->dparameters[0])) {
+                    $parameters = $part->dparameters[0];
+                } else if ($part->parameters[0]) {
+                    $parameters = $part->parameters[0];
+                }
+
+                if ($parameters) {
                     $attachmentDetails = array(
-                        "name"        => $part->dparameters[0]->value,
+                        "name"        => $parameters->value,
                         "partNum"     => $partNum,
                         "enc"         => @$partStruct->encoding,
                         "size"        => $part->bytes,
