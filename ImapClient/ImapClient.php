@@ -214,13 +214,33 @@ class ImapClient
     }
 
     /**
-     * returns all available folders
+     * Returns all available folders
      *
+     * @param string $separator. Default is '.'
      * @return array with foldernames
      */
-    public function getFolders() {
+    public function getFolders($separator = null) {
         $folders = imap_list($this->imap, $this->mailbox, "*");
-        return str_replace($this->mailbox, "", $folders);
+        #return str_replace($this->mailbox, "", $folders);
+        $array = str_replace($this->mailbox, "", $folders);
+        if(!isset($separator)){ $separator = '.'; };
+        $outArray = [];
+        foreach ($array as $folders) {
+            $subFolders = explode($separator, $folders);
+            $countSubFolders = count($subFolders);
+            if($countSubFolders > 1){
+                $arrMake = $this->makeArrayFolders($subFolders);
+                $kv = each($arrMake);
+                if(!isset($outArray[$kv['key']])){
+                    $outArray[$kv['key']] = $kv['value'];
+                }else{
+                    $outArray[$kv['key']] = array_merge($outArray[$kv['key']], $kv['value']);
+                };
+            }else{
+                $outArray[$subFolders[0]] = [];
+            };
+        };
+        return $outArray;
     }
 
     /**
@@ -1107,6 +1127,7 @@ class ImapClient
      *
      * @return void|ImapClientException
      */
+    /*
     public function __call($name, $arguments)
     {
         $get = substr($name, 0, 10);
@@ -1117,5 +1138,40 @@ class ImapClient
                 throw new ImapClientException('Error get '.$folder);
             };
         };
+    }
+    */
+
+    /*
+     * Make from ['one', 'two', 'three', 'four', 'five']
+     * to
+     * [
+     *  'one'=>[
+     *   'two'=>[
+     *     'three'=>[
+     *      'four'=>[
+     *       'five'=>[]
+     *      ]
+     *     ]
+     *    ]
+     *  ]
+     * ]
+     *
+     * @param array $subFolders
+     * @return array
+     */
+    protected function makeArrayFolders(array $subFolders)
+    {
+        $count = count($subFolders);
+        $array = $subFolders;
+        $out = [];
+        for($i = $count; $i >= 2; $i--){
+            if(empty($out)){
+                $out[$array[$i-2]] = [$array[$i-1]=>[]];
+            }else{
+                $out[$array[$i-2]] = $out;
+                unset($out[$array[$i-1]]);
+            };
+        };
+        return $out;
     }
 }
