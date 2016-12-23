@@ -3,7 +3,7 @@ This PHP IMAP Client is a simple class for IMAP Email access.
 It is based on the [PHP IMAP extension](http://php.net/imap) and offers a simple interface for handling emails. In my opinion the PHP IMAP functions are not very intuitive.
 
 #### Install
-Read [our install guide](docs/Install.md)
+Read [our install guide](docs/guide-en/Install.md)
 
 #### Features
 
@@ -14,13 +14,13 @@ Read [our install guide](docs/Install.md)
 * get attachments
 
 #### Errors
-Are you stuck on an error? Read [our bug guide](docs/Error.md)
+Are you stuck on an error? Read [our error guide](docs/guide-en/Error.md)
 
 ##### How to use
-Read [our usage guide](docs/Usage.md)
+Read [our usage guide](docs/guide-en/Usage.md)
 
 #### Methods
-Read [our current list of methods](docs/Methods.md)
+Read [our current list of methods](docs/guide-en/Methods.md)
 
 #### Feedback and Contributing
 Feel free to improve this class. You can use the pull request function of github for contributing improvments. The inner structure of this class is simple and easy. Don't hesitate and check it out ;). Note to contributers: If you make a edit and it gets accepted it is up to YOU to add your self to the composer.json file. *No one* will do this for you!
