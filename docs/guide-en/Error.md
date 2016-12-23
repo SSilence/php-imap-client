@@ -33,4 +33,12 @@ The parameters provided to connect to the server are not an array
 PHP-imap client had trouble connecting to the provided mailbox with the provided details
 This can mean many things. It can mean your mailbox is invalid or your username and password are not valid. Comfirm your login details and make sure your mail server is online
 #### Option connect must be installed
-// Dont know. Someone checking pr tell me and ill fix
+If you selected the advanced connect and not installed `connect` option like
+```php
+$imap = new ImapClient([
+    'connect' => [
+        'username' => 'user',
+        'password' => 'pass',
+    ]
+]);
+```
