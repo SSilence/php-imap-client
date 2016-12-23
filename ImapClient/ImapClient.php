@@ -214,13 +214,40 @@ class ImapClient
     }
 
     /**
-     * returns all available folders
+     * Returns all available folders
      *
-     * @return array with foldernames
+     * @param string $separator. Default is '.'
+     * @param int $type. Has two meanings 0 and 1.
+     * If 0 return nested array, if 1 return an array of strings.
+     * @return array with folder names
      */
-    public function getFolders() {
+    public function getFolders($separator = null, $type = 0) {
         $folders = imap_list($this->imap, $this->mailbox, "*");
-        return str_replace($this->mailbox, "", $folders);
+        if($type == 1){
+            return str_replace($this->mailbox, "", $folders);
+        };
+        if($type == 0){
+            $array = str_replace($this->mailbox, "", $folders);
+            if(!isset($separator)){ $separator = '.'; };
+            $outArray = [];
+            foreach ($array as $folders) {
+                $subFolders = explode($separator, $folders);
+                $countSubFolders = count($subFolders);
+                if($countSubFolders > 1){
+                    $arrMake = $this->makeArrayFolders($subFolders);
+                    $kv = each($arrMake);
+                    if(!isset($outArray[$kv['key']])){
+                        $outArray[$kv['key']] = $kv['value'];
+                    }else{
+                        $outArray[$kv['key']] = array_merge($outArray[$kv['key']], $kv['value']);
+                    };
+                }else{
+                    $outArray[$subFolders[0]] = [];
+                };
+            };
+            return $outArray;
+        };
+        return null;
     }
 
     /**
@@ -1103,5 +1130,31 @@ class ImapClient
     {
         $quota = imap_get_quotaroot($this->imap, "user.".$mailbox);
         return $quota;
+    }
+
+    /*
+     * Make an array of strings, a nested array.
+     * From
+     * ['one', 'two', 'three', 'four', 'five' ...]
+     * to
+     * ['one'=>['two'=>['three'=>['four'=>['five'=>[...] ]]]]]
+     *
+     * @param array $subFolders
+     * @return array
+     */
+    protected function makeArrayFolders(array $subFolders)
+    {
+        $count = count($subFolders);
+        $array = $subFolders;
+        $out = [];
+        for($i = $count; $i >= 2; $i--){
+            if(empty($out)){
+                $out[$array[$i-2]] = [$array[$i-1]=>[]];
+            }else{
+                $out[$array[$i-2]] = $out;
+                unset($out[$array[$i-1]]);
+            };
+        };
+        return $out;
     }
 }
