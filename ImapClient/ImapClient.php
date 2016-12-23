@@ -217,30 +217,37 @@ class ImapClient
      * Returns all available folders
      *
      * @param string $separator. Default is '.'
-     * @return array with foldernames
+     * @param int $type. Has two meanings 0 and 1.
+     * If 0 return nested array, if 1 return an array of strings.
+     * @return array with folder names
      */
-    public function getFolders($separator = null) {
+    public function getFolders($separator = null, $type = 0) {
         $folders = imap_list($this->imap, $this->mailbox, "*");
-        #return str_replace($this->mailbox, "", $folders);
-        $array = str_replace($this->mailbox, "", $folders);
-        if(!isset($separator)){ $separator = '.'; };
-        $outArray = [];
-        foreach ($array as $folders) {
-            $subFolders = explode($separator, $folders);
-            $countSubFolders = count($subFolders);
-            if($countSubFolders > 1){
-                $arrMake = $this->makeArrayFolders($subFolders);
-                $kv = each($arrMake);
-                if(!isset($outArray[$kv['key']])){
-                    $outArray[$kv['key']] = $kv['value'];
-                }else{
-                    $outArray[$kv['key']] = array_merge($outArray[$kv['key']], $kv['value']);
-                };
-            }else{
-                $outArray[$subFolders[0]] = [];
-            };
+        if($type == 1){
+            return str_replace($this->mailbox, "", $folders);
         };
-        return $outArray;
+        if($type == 0){
+            $array = str_replace($this->mailbox, "", $folders);
+            if(!isset($separator)){ $separator = '.'; };
+            $outArray = [];
+            foreach ($array as $folders) {
+                $subFolders = explode($separator, $folders);
+                $countSubFolders = count($subFolders);
+                if($countSubFolders > 1){
+                    $arrMake = $this->makeArrayFolders($subFolders);
+                    $kv = each($arrMake);
+                    if(!isset($outArray[$kv['key']])){
+                        $outArray[$kv['key']] = $kv['value'];
+                    }else{
+                        $outArray[$kv['key']] = array_merge($outArray[$kv['key']], $kv['value']);
+                    };
+                }else{
+                    $outArray[$subFolders[0]] = [];
+                };
+            };
+            return $outArray;
+        };
+        return null;
     }
 
     /**
@@ -1120,41 +1127,11 @@ class ImapClient
     }
 
     /*
-     * Support issue #17. Prefixed folders.
-     *
-     * INBOX.Sent
-     * getFolder_INBOX_Sent
-     *
-     * @return void|ImapClientException
-     */
-    /*
-    public function __call($name, $arguments)
-    {
-        $get = substr($name, 0, 10);
-        if($get === 'getFolder_'){
-            $folder = substr($name, 10);
-            $folder = str_replace('_' , '/', $folder);
-            if(!$this->selectFolder($folder)){
-                throw new ImapClientException('Error get '.$folder);
-            };
-        };
-    }
-    */
-
-    /*
-     * Make from ['one', 'two', 'three', 'four', 'five']
+     * Make an array of strings, a nested array.
+     * From
+     * ['one', 'two', 'three', 'four', 'five' ...]
      * to
-     * [
-     *  'one'=>[
-     *   'two'=>[
-     *     'three'=>[
-     *      'four'=>[
-     *       'five'=>[]
-     *      ]
-     *     ]
-     *    ]
-     *  ]
-     * ]
+     * ['one'=>['two'=>['three'=>['four'=>['five'=>[...] ]]]]]
      *
      * @param array $subFolders
      * @return array
