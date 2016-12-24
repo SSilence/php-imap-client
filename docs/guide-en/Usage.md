@@ -127,7 +127,7 @@ We also can save emails
 $imap->saveEmail('archive/users/johndoe/email_1.eml', 1);
 ```
 
-For a full list of methods you can do check part [Methods](docs/guide-en/Methods.md).
+For a full list of methods you can do check [current list of methods](docs/guide-en/Methods.md).
 
 #### Advanced connecting
 
