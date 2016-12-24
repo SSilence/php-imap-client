@@ -1,5 +1,5 @@
 # Methods
----
+
 The following methods are currently available.
 
 * ``__construct($mailbox, $username, $password, $encryption)`` open new imap connection

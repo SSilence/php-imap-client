@@ -1,5 +1,4 @@
 # Usage
----
 #### After install prep
 After you install this library, however you did it make sure the file you want to do the connecting with includes the required classes
 A basic connection may look like this:
@@ -114,8 +113,8 @@ $imap->addFolder('archive');
 Now we move the first email into this folder
 
 ```php
-$imap->moveMessage($emails[0]['id'], 'archive');`
-``
+$imap->moveMessage($emails[0]['id'], 'archive');
+```
 And we delete the second email from inbox
 
 ```php
@@ -128,49 +127,32 @@ We also can save emails
 $imap->saveEmail('archive/users/johndoe/email_1.eml', 1);
 
 For a full list of methods you can do check docs/Methods.md
-#### Advanced connecting
-You can also use the below code to add some more options while connecting
-1. Direct mailbox setup
- ```php
-connect = new ImapConnect();
-$connect->connect('{server.imap:431/imap/ssl/novalidate-cert}INBOX', 'user', 'pass');
-$imap = $connect->getImap();
-$mailbox = $connect->getResponseMailbox();
-```
-2. Same as above
-```php
-$connect = new ImapConnect();
-$connect->setMailbox('{server.imap:431/imap/ssl/novalidate-cert}INBOX');
-$connect->connect(null, 'user', 'pass');
-$imap = $connect->getImap();
-$mailbox = $connect->getResponseMailbox();
-```
-3. A more convenient way for IDE
-```php
-$connect = new ImapConnect();
-$connect->prepareFlags(ImapConnect::SERVICE_IMAP, ImapConnect::ENCRYPT_SSL, ImapConnect::NOVALIDATE_CERT);
-$connect->prepareMailbox('server.imap', 431);
-$connect->connect(null, 'user', 'pass');
-$imap = $connect->getImap();
-$mailbox = $connect->getResponseMailbox();
 
+#### Advanced connecting
+
+You can also use the below code to add some more options while connecting
+
+```php
+$imap = new ImapClient([
+    'flags' => [
+        'service' => ImapConnect::SERVICE_IMAP, # ImapConnect::SERVICE_IMAP ,ImapConnect::SERVICE_POP3, ImapConnect::SERVICE_NNTP
+        'encrypt' => ImapConnect::ENCRYPT_SSL, # ImapConnect::ENCRYPT_SSL, ImapConnect::ENCRYPT_TLS, ImapConnect::ENCRYPT_NOTLS
+        'validateCertificates' => ImapConnect::NOVALIDATE_CERT, # ImapConnect::VALIDATE_CERT, ImapConnect::NOVALIDATE_CERT
+        # ... and other
+    ],
+    'mailbox' => [
+        'remote_system_name' => 'imap.server.ru',
+        'port' => '431',
+        'mailbox_name' => 'INBOX.Send',
+        # ... and other
+    ],
+    'connect' => [
+        'username' => 'user',
+        'password' => 'pass',
+        # ... and other
+    ]
+]);
 ```
-4. Same as above in 3 example
- ```php
- $connect = new ImapConnect();
- $connect->prepareFlags([
-    'service' => ImapConnect::SERVICE_IMAP,
-    'encrypt' => ImapConnect::ENCRYPT_SSL,
-    'validateCertificates' => ImapConnect::NOVALIDATE_CERT
-]);
-$connect->prepareMailbox([
-    'remote_system_name' => 'server.imap',
-    'port' => 431
-]);
-$connect->connect([
-    'username' => 'user',
-    'password' => 'pass'
- ]);
- $imap = $connect->getImap();
- $mailbox = $connect->getResponseMailbox();
- ```
+ All connecting options you can see in example-connect.php file
+ or go [Advanced connecting](docs/guide-en/AdvancedConnecting.md)
+ or you can see code ImapConnect class.
