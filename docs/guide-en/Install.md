@@ -1,9 +1,9 @@
 # Installing
----
 PHP-imap-client can be installed 2 ways. The first composer and the second manual
 ### 1) Composer
 Add repositories and require in composer.json
-```{
+```php
+{
     "repositories": [
         {
             "type": "vcs",
@@ -25,6 +25,8 @@ composer.phar require
 2) Extract the files into the folder you wish
 20 In the file that will call methods add
 ```php
-require('path/to/ImapClient.php');
+require_once "path/to/ImapClientException.php";
+require_once "path/to/ImapConnect.php";
+require_once "path/to/ImapClient.php";
 ```
 You may then use connect etc
