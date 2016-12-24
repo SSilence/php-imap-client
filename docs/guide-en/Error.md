@@ -33,7 +33,7 @@ The parameters provided to connect to the server are not an array
 PHP-imap client had trouble connecting to the provided mailbox with the provided details
 This can mean many things. It can mean your mailbox is invalid or your username and password are not valid. Comfirm your login details and make sure your mail server is online
 #### Option connect must be installed
-If you selected the advanced connect and not installed `connect` option like
+If you selected the advanced connection and not installed `connect` option like
 ```php
 $imap = new ImapClient([
     'connect' => [
@@ -42,3 +42,21 @@ $imap = new ImapClient([
     ]
 ]);
 ```
+#### File must be specified for saveEmail()
+You did not specify a file path
+Insure your code looks like this:
+```php
+$imap->saveEmail($your_file_path_var, $your_email_id_var, $your_part_var)
+```
+#### Email id must be specified for saveEmail()
+You did not specify an email id
+Insure your code looks like this:
+```php
+$imap->saveEmail($your_file_path_var, $your_email_id_var, $your_part_var)
+```
+#### File must be a string for saveEmail()
+The provided file path is not a string
+Make sure your $file is a string *not* a open file
+#### $id must be a integer for saveEmail()
+The provided email id is an integer
+Make sure your $id is an integer

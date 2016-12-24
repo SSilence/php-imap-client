@@ -30,3 +30,5 @@ The following methods are currently available.
 * ``getAllEmailAddresses()`` returns all email addresses of all emails (for auto suggestion list)
 * ``saveMessageInSent($header, $body)`` save a sent message in sent folder
 * ``getMailboxStatistics()`` returns statistics, see [imap_mailboxmsginfo](http://php.net/manual/de/function.imap-mailboxmsginfo.php)
+* ``saveEmail($file , $id, $part)`` saves an email to the $file file
+* ``saveEmailSafe($file , $id, $part, $streamFilter)`` saves an email to the $file file. This is recommended for servers with low amounts of RAM. Stream filter is set to convert.base64-decode by default
