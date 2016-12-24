@@ -1,5 +1,5 @@
 # Errors
----
+
 Many errors can be throw while using the library, if you cant seem to find what an error means or what you are doing wrong, take a look here.
 Everything is structured like this:
 #### [Error name]
