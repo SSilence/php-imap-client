@@ -224,7 +224,7 @@ class ImapClient
          }
          if($part === null)
          {
-             $parts = false
+             $parts = false;
          }
          else {
              $parts = true;
@@ -268,7 +268,7 @@ class ImapClient
           }
           if($part === null)
           {
-              $parts = false
+              $parts = false;
           }
           else {
               $parts = true;
