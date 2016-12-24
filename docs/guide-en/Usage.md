@@ -121,7 +121,13 @@ And we delete the second email from inbox
 ```php
 $imap->deleteMessage($emails[1]['id']);
 ```
-For a full list of methods you can do check docs/Mehods.md
+
+We also can save emails
+```php
+// Note: for slower web servers will less ram use saveEmailSafe()
+$imap->saveEmail('archive/users/johndoe/email_1.eml', 1);
+
+For a full list of methods you can do check docs/Methods.md
 #### Advanced connecting
 You can also use the below code to add some more options while connecting
 1. Direct mailbox setup
