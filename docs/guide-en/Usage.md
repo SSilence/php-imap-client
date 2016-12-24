@@ -125,8 +125,9 @@ We also can save emails
 ```php
 // Note: for slower web servers will less ram use saveEmailSafe()
 $imap->saveEmail('archive/users/johndoe/email_1.eml', 1);
+```
 
-For a full list of methods you can do check docs/Methods.md
+For a full list of methods you can do check part [Methods](docs/guide-en/Methods.md).
 
 #### Advanced connecting
 
