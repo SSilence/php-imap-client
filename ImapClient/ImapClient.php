@@ -1,8 +1,8 @@
 <?php
-namespace ssilence\ImapClient;
+namespace ImapClient;
 
-use ssilence\ImapClient\ImapClientException;
-use ssilence\ImapClient\ImapConnect;
+use ImapClient\ImapClientException;
+use ImapClient\ImapConnect;
 
 
 /**
