@@ -1,5 +1,5 @@
 {
-  "name": "sslience/php-imap-client",
+  "name": "SSilence/php-imap-client",
   "type": "library",
   "description": "Php imap client",
   "keywords": ["php", "imap", "client"],
