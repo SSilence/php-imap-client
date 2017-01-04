@@ -50,7 +50,7 @@ use ImapClient\ImapClientException;
  *
  * To view the current mailbox string you can use everywhere getMailbox() method.
  *
- * Copyright (C) 2016  SSilence
+ * Copyright (C) 2016-2017  SSilence
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
