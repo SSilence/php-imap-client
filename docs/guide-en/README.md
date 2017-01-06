@@ -12,4 +12,3 @@ Need to know everything you can do? Read [our current list of methods](Methods.m
 
 ### Errors
 Are you stuck on an error? Read [our error guide](Error.md)
-
