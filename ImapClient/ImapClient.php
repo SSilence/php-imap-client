@@ -901,12 +901,7 @@ class ImapClient
                     "reference" => $attachment['reference']
                 );
             } else {
-                $names[] = array(
-                    'name' => $attachment['name'],
-                    'size' => $attachment['size'],
-                    "disposition" => $attachment['disposition'],
-                    "reference" => $attachment['reference']
-                );
+                throw new ImapClientException('Your attachments do not have a name. This should NOT be happening');
             }
         }
         return $names;
@@ -1235,7 +1230,7 @@ class ImapClient
         return $quota;
     }
 
-    /*
+    /**
      * Make an array of strings, a nested array.
      * From
      * ['one', 'two', 'three', 'four', 'five' ...]
