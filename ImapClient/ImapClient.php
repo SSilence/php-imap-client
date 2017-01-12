@@ -483,7 +483,8 @@ class ImapClient
 
             foreach ($ids as $id)
             {
-                $emails[] = $this->formatMessage($id, $withbody, $embed_images);
+                $emails[] = $this->
+			Message($id, $withbody, $embed_images);
             }
         }
 
@@ -533,7 +534,7 @@ class ImapClient
         $subject = $this->convertToUtf8($subject);
         $email = array(
             'to'        => isset($header->to) ? $this->arrayToAddress($header->to) : '',
-            'from'      => $this->toAddress($header->from[0]),
+            'from'      => $header->from[0],
             'date'      => $header->date,
             'udate'     => $header->udate,
             'subject'   => $subject,
@@ -912,7 +913,7 @@ class ImapClient
      *
      * @param object $headerinfos the infos given by imap
      * @return string in format "Name <email@bla.de>"
-     */
+     *
     protected function toAddress($headerinfos) {
         $email = "";
         $name = "";
@@ -931,6 +932,8 @@ class ImapClient
 
         return $name . " <" . $email . ">";
     }
+    * 
+    TODO: Re add this in a better way later/ 
 
     /**
      * converts imap given array of addresses in strings
