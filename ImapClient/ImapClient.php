@@ -607,7 +607,7 @@ class ImapClient
      */
     public function deleteMessages($ids) {
         foreach ($ids as $id) {
-            imap_delete($this->imap, $id, FT_UID);
+            imap_delete($this->imap, $id);
         }
         /*
         if( imap_mail_move($this->imap, implode(",", $ids), $this->getTrash(), CP_UID) == false)
