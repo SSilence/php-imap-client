@@ -906,7 +906,12 @@ class ImapClient
                     "reference" => $attachment['reference']
                 );
             } else {
-                throw new ImapClientException('Your attachments do not have a name. This should NOT be happening');
+               	$names[] = array(
+ -                    'name' => $attachment['name'],
+ -                    'size' => $attachment['size'],
+ -                    "disposition" => $attachment['disposition'],
+ -                    "reference" => $attachment['reference']
+ -               );
             }
         }
         return $names;
