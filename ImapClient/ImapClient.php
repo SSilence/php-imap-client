@@ -1,10 +1,6 @@
 <?php
 namespace SSilence\ImapClient;
 
-use SSilence\ImapClient\ImapClientException;
-use SSilence\ImapClient\ImapConnect;
-
-
 /**
  * Helper class for imap access
  *
@@ -100,7 +96,7 @@ class ImapClient
      * @param string $username
      * @param string $password
      * @param string $encryption use ImapClient::ENCRYPT_SSL or ImapClient::ENCRYPT_TLS
-     * @return void
+     * @throws \SSilence\ImapClient\ImapClientException
      */
     public function __construct($mailbox = null, $username = null, $password = null, $encryption = null)
     {
@@ -208,7 +204,11 @@ class ImapClient
      * Saves the email into a file
      * Note: If your server does not have alot of RAM, this may break
      *
+     * @param string $file
+     * @param int $id
+     * @param string|null $part
      * @return bool true on sucesss
+     * @throws \SSilence\ImapClient\ImapClientException
      */
      public function saveEmail($file = null, $id = null, $part = null)
      {
@@ -241,19 +241,24 @@ class ImapClient
          $saveFile = fopen($file,'w');
          if($parts)
          {
-             imap_savebody($this->imap, $savefile, $id, $part);
+             imap_savebody($this->imap, $saveFile, $id, $part);
          }
          else {
-             imap_savebody($this->imap, $savefile, $id);
+             imap_savebody($this->imap, $saveFile, $id);
          }
      }
 
-     /**
-      * Saves the email into a file
-      * Note: This is safer then saveEmail for slower servers
-      *
-      * @return bool true on sucesss
-      */
+    /**
+     * Saves the email into a file
+     * Note: This is safer then saveEmail for slower servers
+     *
+     * @param string $file
+     * @param int $id
+     * @param string|null $part
+     * @param string $streamFilter
+     * @return bool true on sucesss
+     * @throws \SSilence\ImapClient\ImapClientException
+     */
       public function saveEmailSafe($file = null, $id = null, $part = null, $streamFilter = 'convert.base64-decode')
       {
 
@@ -283,13 +288,13 @@ class ImapClient
               throw new ImapClientException('$id must be a integer for saveEmailSafe()');
           }
           $saveFile = fopen($file,'w');
-          stream_filter_append($savefile, $streamFilter, STREAM_FILTER_WRITE);
+          stream_filter_append($saveFile, $streamFilter, STREAM_FILTER_WRITE);
           if($parts)
           {
-              imap_savebody($this->imap, $savefile, $id, $part);
+              imap_savebody($this->imap, $saveFile, $id, $part);
           }
           else {
-              imap_savebody($this->imap, $savefile, $id);
+              imap_savebody($this->imap, $saveFile, $id);
           }
       }
 
@@ -483,8 +488,7 @@ class ImapClient
 
             foreach ($ids as $id)
             {
-                $emails[] = $this->
-			Message($id, $withbody, $embed_images);
+                $emails[] = $this->formatMessage($id, $withbody, $embed_images);
             }
         }
 
@@ -938,7 +942,7 @@ class ImapClient
     /**
      * converts imap given array of addresses in strings
      *
-     * @param $addresses imap given addresses as array
+     * @param array $addresses imap given addresses as array
      * @return array with strings (e.g. ["Name <email@bla.de>", "Name2 <email2@bla.de>"]
      */
     protected function arrayToAddress($addresses) {
