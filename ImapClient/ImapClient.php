@@ -1,10 +1,6 @@
 <?php
 namespace SSilence\ImapClient;
 
-use SSilence\ImapClient\ImapClientException;
-use SSilence\ImapClient\ImapConnect;
-
-
 /**
  * Helper class for imap access
  *
@@ -87,10 +83,10 @@ class ImapClient
      */
     protected $inline = false;
 
-    /**
-     * Images Embed in HTML
-     * @var bool
-     */
+	/**
+	 * Images Embed in HTML
+	 * @var bool
+	 */
     protected $embed = false;
 
     /**
@@ -214,44 +210,43 @@ class ImapClient
      * @return bool true on sucesss
      * @throws \SSilence\ImapClient\ImapClientException
      */
-    public function saveEmail($file = null, $id = null, $part = null)
-    {
+     public function saveEmail($file = null, $id = null, $part = null)
+     {
 
-        // Null checks
-        if($file === null)
-        {
-            throw new ImapClientException('File must be specified for saveEmail()');
-        }
-        if($id === null)
-        {
-            throw new ImapClientException('Email id must be specified for saveEmail()');
-        }
-        if($part === null)
-        {
-            $parts = false;
-        }
-        else {
-            $parts = true;
-        }
-        // Is type checks
-        if(!is_string($file))
-        {
-            throw new ImapClientException('File must be a string for saveEmail()');
-        }
-        if(!is_int($id))
-        {
-            throw new ImapClientException('$id must be a integer for saveEmail()');
-        }
-        $saveFile = fopen($file,'w');
-        if($parts)
-        {
-            imap_savebody($this->imap, $savefile, $id, $part);
-        }
-        else {
-            imap_savebody($this->imap, $savefile, $id);
-        }
-    }
-
+         // Null checks
+         if($file === null)
+         {
+             throw new ImapClientException('File must be specified for saveEmail()');
+         }
+         if($id === null)
+         {
+             throw new ImapClientException('Email id must be specified for saveEmail()');
+         }
+         if($part === null)
+         {
+             $parts = false;
+         }
+         else {
+             $parts = true;
+         }
+         // Is type checks
+         if(!is_string($file))
+         {
+             throw new ImapClientException('File must be a string for saveEmail()');
+         }
+         if(!is_int($id))
+         {
+             throw new ImapClientException('$id must be a integer for saveEmail()');
+         }
+         $saveFile = fopen($file,'w');
+         if($parts)
+         {
+             imap_savebody($this->imap, $saveFile, $id, $part);
+         }
+         else {
+             imap_savebody($this->imap, $saveFile, $id);
+         }
+     }
 
     /**
      * Saves the email into a file
@@ -267,41 +262,41 @@ class ImapClient
       public function saveEmailSafe($file = null, $id = null, $part = null, $streamFilter = 'convert.base64-decode')
       {
 
-        // Null checks
-        if($file === null)
-        {
-            throw new ImapClientException('File must be specified for saveEmailSafe()');
-        }
-        if($id === null)
-        {
-            throw new ImapClientException('Email id must be specified for saveEmailSafe()');
-        }
-        if($part === null)
-        {
-            $parts = false;
-        }
-        else {
-            $parts = true;
-        }
-        // Is type checks
-        if(!is_string($file))
-        {
-            throw new ImapClientException('File must be a string for saveEmailSafe()');
-        }
-        if(!is_int($id))
-        {
-            throw new ImapClientException('$id must be a integer for saveEmailSafe()');
-        }
-        $saveFile = fopen($file,'w');
-        stream_filter_append($savefile, $streamFilter, STREAM_FILTER_WRITE);
-        if($parts)
-        {
-            imap_savebody($this->imap, $savefile, $id, $part);
-        }
-        else {
-            imap_savebody($this->imap, $savefile, $id);
-        }
-    }
+          // Null checks
+          if($file === null)
+          {
+              throw new ImapClientException('File must be specified for saveEmailSafe()');
+          }
+          if($id === null)
+          {
+              throw new ImapClientException('Email id must be specified for saveEmailSafe()');
+          }
+          if($part === null)
+          {
+              $parts = false;
+          }
+          else {
+              $parts = true;
+          }
+          // Is type checks
+          if(!is_string($file))
+          {
+              throw new ImapClientException('File must be a string for saveEmailSafe()');
+          }
+          if(!is_int($id))
+          {
+              throw new ImapClientException('$id must be a integer for saveEmailSafe()');
+          }
+          $saveFile = fopen($file,'w');
+          stream_filter_append($saveFile, $streamFilter, STREAM_FILTER_WRITE);
+          if($parts)
+          {
+              imap_savebody($this->imap, $saveFile, $id, $part);
+          }
+          else {
+              imap_savebody($this->imap, $saveFile, $id);
+          }
+      }
 
     /**
      * returns last imap error
@@ -364,8 +359,8 @@ class ImapClient
     }
 
     /**
-     * Set embeded or not
-     *
+    * Set embeded or not
+    *
      * @param bool|false $val
      */
     public function setEmbed($val = false) {
