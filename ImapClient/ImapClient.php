@@ -907,11 +907,11 @@ class ImapClient
                 );
             } else {
                	$names[] = array(
- -                    'name' => $attachment['name'],
- -                    'size' => $attachment['size'],
- -                    "disposition" => $attachment['disposition'],
- -                    "reference" => $attachment['reference']
- -               );
+                     'name' => $attachment['name'],
+                     'size' => $attachment['size'],
+                     "disposition" => $attachment['disposition'],
+                     "reference" => $attachment['reference']
+                );
             }
         }
         return $names;
