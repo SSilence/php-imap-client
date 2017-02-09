@@ -105,7 +105,7 @@ array(2) {
   }
 }
 ```
-To mark an email as red/SEEN, run:
+To mark an email as read/SEEN, run:
 ```
 $imap->setUnseenMessage($emails[$i]['uid']);
 ```
