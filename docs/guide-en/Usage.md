@@ -105,6 +105,10 @@ array(2) {
   }
 }
 ```
+To mark an email as red/SEEN, run:
+```
+$imap->setUnseenMessage($emails[$i]['uid']);
+```
 You can also add/rename/delete folders. Lets add a new folder:
 
 ```php
