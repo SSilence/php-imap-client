@@ -895,23 +895,25 @@ class ImapClient
      * @return array
      */
     protected function attachments2name($attachments) {
+
         $names = array();
-        foreach ($attachments as $attachment) {
-            if (isset($attachment[0]['name'])) {
+
+        if (isset($attachments[0]['name'])) {
+            foreach ($attachments as $attachment) {
                 $names[] = array(
-                    'name' => $attachment[0]['name'],
-                    'size' => $attachment[0]['size'],
-                    "disposition" => $attachment['disposition'],
-                    "reference" => $attachment['reference']
-                );
-            } else {
-               	$names[] = array(
-                     'name' => $attachment['name'],
-                     'size' => $attachment['size'],
-                     "disposition" => $attachment['disposition'],
-                     "reference" => $attachment['reference']
-                );
-            }
+                'name' => $attachment['name'],
+                'size' => $attachment['size'],
+                "disposition" => $attachment['disposition'],
+                "reference" => $attachment['reference']
+            );
+        }
+        } else {
+            $names[] = array(
+            'name' => $attachments['name'],
+            'size' => $attachments['size'],
+            "disposition" => $attachments['disposition'],
+            "reference" => $attachments['reference']
+            );
         }
         return $names;
     }
