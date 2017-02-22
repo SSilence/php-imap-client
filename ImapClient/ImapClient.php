@@ -538,7 +538,7 @@ class ImapClient
         $subject = $this->convertToUtf8($subject);
         $email = array(
             'to'        => isset($header->to) ? $this->arrayToAddress($header->to) : '',
-            'from' => $header->fromaddress,
+            'from'      => $header->fromaddress,
             'date'      => $header->date,
             'udate'     => $header->udate,
             'subject'   => $subject,
