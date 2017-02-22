@@ -48,3 +48,7 @@ local.properties
 
 #Tests
 tests/local-test.php
+
+#Composer dependencies
+composer.lock
+vendor
