@@ -504,8 +504,7 @@ class ImapClient
      * @return array
      */
     public function getMessage($id, $withbody = true, $embed_images = false) {
-        $msg_number = imap_msgno($this->imap,$id);
-        return $this->formatMessage($msg_number, $withbody, $embed_images);
+        return $this->formatMessage($id, $withbody, $embed_images);
     }
 
     /**
@@ -538,7 +537,7 @@ class ImapClient
         $subject = $this->convertToUtf8($subject);
         $email = array(
             'to'        => isset($header->to) ? $this->arrayToAddress($header->to) : '',
-            'from'      => $header->fromaddress,
+            'from'      => $header->from[0],
             'date'      => $header->date,
             'udate'     => $header->udate,
             'subject'   => $subject,
