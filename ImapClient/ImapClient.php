@@ -423,8 +423,13 @@ class ImapClient
      */
     public function getMessagesByCriteria($criteria = '', $number = 0, $start = 0, $order = 'DESC', $withbody = FALSE, $embed_images = FALSE)
     {
-        $emails = array();
-        $result = array_reverse(imap_search($this->imap, $criteria));
+		$result = imap_search($this->imap, $criteria);
+		if (!$result) {
+			return array();
+		}
+		
+		$emails = array();
+        $result = array_reverse($result);
         if ($number == 0)
         {
             $number = count($result);
