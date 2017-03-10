@@ -350,7 +350,8 @@ class ImapClient
                         $outArray[$kv['key']] = array_merge($outArray[$kv['key']], $kv['value']);
                     };
                 }else{
-                    $outArray[$subFolders[0]] = [];
+			if (!isset($outArray[$subFolders[0]]))
+                    		$outArray[$subFolders[0]] = [];
                 };
             };
             return $outArray;
