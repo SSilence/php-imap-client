@@ -1,15 +1,19 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Мария
- * Date: 22.03.2017
- * Time: 1:21
- */
 
 namespace SSilence\ImapClient;
 
 
 class TypeBody
 {
+    public $types;
 
+    public function __construct()
+    {
+        $this->types = ['PLAIN', 'HTML'];
+    }
+
+    public function get()
+    {
+        return $this->types;
+    }
 }

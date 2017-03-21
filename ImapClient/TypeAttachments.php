@@ -1,15 +1,19 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Мария
- * Date: 22.03.2017
- * Time: 1:14
- */
 
 namespace SSilence\ImapClient;
 
 
 class TypeAttachments
 {
+    public $types;
 
+    public function __construct()
+    {
+        $this->types = ['JPEG', 'PNG', 'PDF', 'X-MPEG'];
+    }
+
+    public function get()
+    {
+        return $this->types;
+    }
 }
