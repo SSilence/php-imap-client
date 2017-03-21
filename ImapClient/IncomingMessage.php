@@ -197,4 +197,5 @@ class IncomingMessage
         };
         return imap_fetch_overview($this->imapStream, $sequence, $options);
     }
+
 }

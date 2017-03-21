@@ -16,4 +16,5 @@ class TypeAttachments
     {
         return $this->types;
     }
+
 }

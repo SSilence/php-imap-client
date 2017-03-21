@@ -16,4 +16,5 @@ class TypeBody
     {
         return $this->types;
     }
+
 }

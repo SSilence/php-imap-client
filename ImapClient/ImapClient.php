@@ -551,6 +551,7 @@ class ImapClient
      *
      * @param int $id
      * @return object
+     * 
      */
     public function getMessage($id)
     {
