@@ -105,10 +105,6 @@ array(2) {
   }
 }
 ```
-To mark an email as read/SEEN, run:
-```
-$imap->setUnseenMessage($emails[$i]['uid']);
-```
 You can also add/rename/delete folders. Lets add a new folder:
 
 ```php
