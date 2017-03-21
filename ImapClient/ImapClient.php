@@ -1,6 +1,11 @@
 <?php
 namespace SSilence\ImapClient;
 
+use SSilence\ImapClient\ImapClientException;
+use SSilence\ImapClient\ImapConnect;
+use SSilence\ImapClient\IncomingMessage;
+
+
 /**
  * Helper class for imap access
  *
@@ -47,7 +52,7 @@ class ImapClient
 
     /**
      * Imap connection
-     * @var bool
+     * @var ImapConnect
      */
     protected $imap = false;
 
@@ -89,6 +94,8 @@ class ImapClient
 	 */
     protected $embed = false;
 
+    public $message;
+
     /**
      * Initialize imap helper
      *
@@ -96,7 +103,7 @@ class ImapClient
      * @param string $username
      * @param string $password
      * @param string $encryption use ImapClient::ENCRYPT_SSL or ImapClient::ENCRYPT_TLS
-     * @throws \SSilence\ImapClient\ImapClientException
+     * @return void
      */
     public function __construct($mailbox = null, $username = null, $password = null, $encryption = null)
     {
@@ -204,11 +211,7 @@ class ImapClient
      * Saves the email into a file
      * Note: If your server does not have alot of RAM, this may break
      *
-     * @param string $file
-     * @param int $id
-     * @param string|null $part
      * @return bool true on sucesss
-     * @throws \SSilence\ImapClient\ImapClientException
      */
      public function saveEmail($file = null, $id = null, $part = null)
      {
@@ -241,24 +244,19 @@ class ImapClient
          $saveFile = fopen($file,'w');
          if($parts)
          {
-             imap_savebody($this->imap, $saveFile, $id, $part);
+             imap_savebody($this->imap, $savefile, $id, $part);
          }
          else {
-             imap_savebody($this->imap, $saveFile, $id);
+             imap_savebody($this->imap, $savefile, $id);
          }
      }
 
-    /**
-     * Saves the email into a file
-     * Note: This is safer then saveEmail for slower servers
-     *
-     * @param string $file
-     * @param int $id
-     * @param string|null $part
-     * @param string $streamFilter
-     * @return bool true on sucesss
-     * @throws \SSilence\ImapClient\ImapClientException
-     */
+     /**
+      * Saves the email into a file
+      * Note: This is safer then saveEmail for slower servers
+      *
+      * @return bool true on sucesss
+      */
       public function saveEmailSafe($file = null, $id = null, $part = null, $streamFilter = 'convert.base64-decode')
       {
 
@@ -288,13 +286,13 @@ class ImapClient
               throw new ImapClientException('$id must be a integer for saveEmailSafe()');
           }
           $saveFile = fopen($file,'w');
-          stream_filter_append($saveFile, $streamFilter, STREAM_FILTER_WRITE);
+          stream_filter_append($savefile, $streamFilter, STREAM_FILTER_WRITE);
           if($parts)
           {
-              imap_savebody($this->imap, $saveFile, $id, $part);
+              imap_savebody($this->imap, $savefile, $id, $part);
           }
           else {
-              imap_savebody($this->imap, $saveFile, $id);
+              imap_savebody($this->imap, $savefile, $id);
           }
       }
 
@@ -350,8 +348,7 @@ class ImapClient
                         $outArray[$kv['key']] = array_merge($outArray[$kv['key']], $kv['value']);
                     };
                 }else{
-			if (!isset($outArray[$subFolders[0]]))
-                    		$outArray[$subFolders[0]] = [];
+                    $outArray[$subFolders[0]] = [];
                 };
             };
             return $outArray;
@@ -369,7 +366,7 @@ class ImapClient
     }
 
     /**
-     * returns the number of messages in the current folder
+     * Returns the number of messages in the current folder
      *
      * @return int message count
      */
@@ -424,13 +421,8 @@ class ImapClient
      */
     public function getMessagesByCriteria($criteria = '', $number = 0, $start = 0, $order = 'DESC', $withbody = FALSE, $embed_images = FALSE)
     {
-	$result = imap_search($this->imap, $criteria);
-	if (!$result) 
-	{
-		return array();
-	}		
-	$emails = array();
-        $result = array_reverse($result);
+        $emails = array();
+        $result = imap_search($this->imap, $criteria);
         if ($number == 0)
         {
             $number = count($result);
@@ -442,7 +434,8 @@ class ImapClient
             {
                 $ids[] = $i;
             }
-            $ids = array_slice($ids, $start, $number);
+            $ids = array_chunk($ids, $number);
+            $ids = array_slice($ids[0], $start, $number);
 
             $emails = array();
             foreach ($ids as $id)
@@ -493,7 +486,7 @@ class ImapClient
 
             foreach ($ids as $id)
             {
-                $emails[] = $this->getMessage($id, $withbody, $embed_images);
+                $emails[] = $this->formatMessage($id, $withbody, $embed_images);
             }
         }
 
@@ -509,8 +502,73 @@ class ImapClient
      *
      * @return array
      */
+    /*
     public function getMessage($id, $withbody = true, $embed_images = false) {
         return $this->formatMessage($id, $withbody, $embed_images);
+    }
+    */
+
+
+    /*
+     * Returns one email by given id
+     *
+     * Examples:
+     *
+     * 1. Structure
+     * $imap = new ImapClient();
+     * $imap->getMessage(5);
+     *
+     * you can see all structure that
+     * var_dump($imap->message)
+     *
+     * but use like this
+     * $imap->message->header->subject
+     * $imap->message->header->from
+     * $imap->message->header->to
+     * and other ... var_dump($imap->message->header)
+     *
+     * next Text or Html body
+     * $imap->message->message->html
+     * $imap->message->message->plain
+     * $imap->message->message->info it is array
+     *
+     * next
+     * $imap->message->attachment it is array attachments
+     *
+     * $imap->message->attachment[0] have
+     * $imap->message->attachment[0]->structure and
+     * $imap->message->attachment[0]->body
+     *
+     * Count section
+     * $imap->message->section
+     *
+     * And structure all message
+     * $imap->message->structure
+     *
+     * 2. Save all attachments
+     * $imap->getMessage(5);
+     * $imap->saveAttachments();
+     *
+     * @param int $id
+     * @return object
+     * 
+     */
+    public function getMessage($id)
+    {
+        $this->checkMessageId($id);
+        $this->message = new IncomingMessage($this->imap, $id);
+        return $this;
+    }
+
+    public function saveAttachments($dir = null)
+    {
+        if(!isset($dir)){
+            $dir = __DIR__.DIRECTORY_SEPARATOR;
+        };
+        foreach ($this->message->attachment as $key => $attachment) {
+            $newFileName = $key.'.'.$attachment->structure->subtype;
+            file_put_contents($dir.$newFileName, $attachment->body);
+        };
     }
 
     /**
@@ -524,7 +582,6 @@ class ImapClient
      */
     protected function formatMessage($id, $withbody = true, $embed_images = true) {
         $header = imap_headerinfo($this->imap, $id);
-
         // fetch unique uid
         $uid = imap_uid($this->imap, $id);
 
@@ -543,7 +600,7 @@ class ImapClient
         $subject = $this->convertToUtf8($subject);
         $email = array(
             'to'        => isset($header->to) ? $this->arrayToAddress($header->to) : '',
-            'from'      => $header->from[0],
+            'from'      => $this->toAddress($header->from[0]),
             'date'      => $header->date,
             'udate'     => $header->udate,
             'subject'   => $subject,
@@ -616,7 +673,7 @@ class ImapClient
      */
     public function deleteMessages($ids) {
         foreach ($ids as $id) {
-            imap_delete($this->imap, $id);
+            imap_delete($this->imap, $id, FT_UID);
         }
         /*
         if( imap_mail_move($this->imap, implode(",", $ids), $this->getTrash(), CP_UID) == false)
@@ -877,7 +934,7 @@ class ImapClient
     }
 
     /**
-     * fetch message by id
+     * Fetch message by id
      *
      * @param int $id of the message
      * @return false|object header
@@ -895,31 +952,24 @@ class ImapClient
     }
 
     /**
-     * convert attachment in array(name => ..., size => ...).
+     * Convert attachment in array(name => ..., size => ...).
      *
      * @param array $attachments with name and size
      * @return array
      */
     protected function attachments2name($attachments) {
-
         $names = array();
-
-        if (isset($attachments[0]['name'])) {
-            foreach ($attachments as $attachment) {
+        foreach ($attachments as $attachment) {
+            if (isset($attachment[0]['name'])) {
                 $names[] = array(
-                'name' => $attachment['name'],
-                'size' => $attachment['size'],
-                "disposition" => $attachment['disposition'],
-                "reference" => $attachment['reference']
-            );
-        }
-        } else {
-            $names[] = array(
-            'name' => $attachments['name'],
-            'size' => $attachments['size'],
-            "disposition" => $attachments['disposition'],
-            "reference" => $attachments['reference']
-            );
+                    'name' => $attachment[0]['name'],
+                    'size' => $attachment[0]['size'],
+                    "disposition" => $attachment['disposition'],
+                    "reference" => $attachment['reference']
+                );
+            } else {
+                throw new ImapClientException('Your attachments do not have a name. This should NOT be happening');
+            }
         }
         return $names;
     }
@@ -936,20 +986,23 @@ class ImapClient
         if (isset($headerinfos->mailbox) && isset($headerinfos->host)) {
             $email = $headerinfos->mailbox . "@" . $headerinfos->host;
         }
+
         if (!empty($headerinfos->personal)) {
             $name = imap_mime_header_decode($headerinfos->personal);
             $name = $name[0]->text;
         } else {
             $name = $email;
         }
+
         $name = $this->convertToUtf8($name);
+
         return $name . " <" . $email . ">";
     }
 
     /**
      * converts imap given array of addresses in strings
      *
-     * @param array $addresses imap given addresses as array
+     * @param $addresses imap given addresses as array
      * @return array with strings (e.g. ["Name <email@bla.de>", "Name2 <email2@bla.de>"]
      */
     protected function arrayToAddress($addresses) {
@@ -1038,7 +1091,7 @@ class ImapClient
     }
 
     /**
-     * extract mimetype
+     * Extract mimetype
      * taken from http://www.sitepoint.com/exploring-phps-imap-library-2/
      *
      * @param object $structure
@@ -1151,21 +1204,21 @@ class ImapClient
     }
 
     /**
-     * Identify encoding by charset attribute in header
-     *
-     * @param $id
-     * @return string
-     */
+    * Identify encoding by charset attribute in header
+    *
+    * @param $id
+    * @return string
+    */
     protected function setEncoding($id)
     {
         $header = imap_fetchstructure($this->imap, $id);
         $params = $header->parameters ?: [];
 
-        foreach ($params as $k => $v) {
-            if (stristr($v->attribute, 'charset')) {
-                return $v->value;
+            foreach ($params as $k => $v) {
+                if (stristr($v->attribute, 'charset')) {
+                    return $v->value;
+                }
             }
-        }
 
         return 'utf-8';
     }
@@ -1203,9 +1256,9 @@ class ImapClient
     }
 
     /**
-     * Unsubscribe from a mail box
-     * @return bool
-     */
+    * Unsubscribe from a mail box
+    * @return bool
+    */
     public function unSubscribe()
     {
         if (imap_unsubscribe($this->imap, $this->mailbox)) {
@@ -1268,5 +1321,43 @@ class ImapClient
             };
         };
         return $out;
+    }
+
+    /*
+     * Get uid from id
+     *
+     * @var int $id
+     */
+    public function getUid($id)
+    {
+        return imap_uid($this->imap, $id);
+    }
+
+    /*
+     * Get id from uid
+     *
+     * @var int $uid
+     */
+    public function getId($uid)
+    {
+        return imap_msgno($this->imap, $uid);
+    }
+
+    /*
+     * Check message id
+     *
+     * @return void
+     */
+    private function checkMessageId($id)
+    {
+        if(!is_int($id)){
+            throw new ImapClientException('Bad message number');
+        };
+        if($id <= 0){
+            throw new ImapClientException('Bad message number');
+        };
+        if($id > $this->countMessages()){
+            throw new ImapClientException('Bad message number');
+        }
     }
 }

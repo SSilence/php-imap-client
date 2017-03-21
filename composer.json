@@ -87,9 +87,7 @@
   ],
   "minimum-stability": "dev",
   "require": {
-    "php": ">=5.6",
-    "ext-imap": "*",
-    "ext-mbstring": "*"
+    "php": ">=5.6"
   },
   "autoload": {
     "psr-4": { "SSilence\\ImapClient\\" : "ImapClient" }
