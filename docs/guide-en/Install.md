@@ -11,5 +11,8 @@ Untill Big o' 2.0 is ready, use the following command to install PHP-imap-librar
 require_once "path/to/ImapClientException.php";
 require_once "path/to/ImapConnect.php";
 require_once "path/to/ImapClient.php";
+require_once "path/to/IncomingMessage.php";
+require_once "path/to/TypeAttachments.php";
+require_once "path/to/TypeBody.php";
 ```
 You may then use connect etc
