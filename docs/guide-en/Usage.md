@@ -48,7 +48,12 @@ $imap->getMessage(82)
 ```
 Save all of the attachmets in this letter.
 ```php
-$imap->saveAttachments()
+$imap->saveAttachments();
+```
+or save attachment like this
+```php
+$message = $imap->getMessage(82);
+$imap->saveAttachments(['dir' => "your/path/", 'incomingMessage' => $message]);
 ```
 Get all unread messages.
 ```php
