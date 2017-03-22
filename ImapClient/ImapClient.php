@@ -379,6 +379,36 @@ class ImapClient
         return imap_num_msg($this->imap);
     }
 
+    /*
+     * Returns an array of brief information about each message in the current mailbox.
+     *
+     * Structure return array arrays
+     * $array = [
+     *     [ 'id'=>4, 'info'=>'brief info' ]
+     *     [ 'id'=>5, 'info'=>'brief info' ]
+     * ]
+     *
+     * @return array.
+     */
+    public function getBriefInfoMessages()
+    {
+        $array = imap_headers($this->imap);
+        $newArray = [];
+        foreach ($array as $key => $string) {
+            $newArray[] = ['id'=>$key+1, 'info' => $string];
+        };
+        return $newArray;
+
+        /*
+        $array = imap_headers($this->imap);
+        foreach ($array as $key => $string) {
+            if(preg_match('#\d+\)#', $string, $matches)){
+                echo $matches[0];
+            };
+        }
+        */
+    }
+
     /**
      * returns the number of unread messages in the current folder
      *
@@ -393,12 +423,13 @@ class ImapClient
     }
 
     /**
-     * returns unseen emails in the current folder
+     * Returns unseen emails in the current folder
      *
      * @return array messages
      * @param bool|true $withbody without body
      * @param string|UNSEEN set what will be used to find unread emails
      */
+    /*
     public function getUnreadMessages($withbody = true, $standard = "UNSEEN") {
         $emails = array();
         $result = imap_search($this->imap, $standard);
@@ -407,6 +438,28 @@ class ImapClient
                 $emails[]= $this->formatMessage($i, $withbody);
             }
         }
+        return $emails;
+    }
+    */
+    public function getUnreadMessages($read = true) {
+        $emails = [];
+        $result = imap_search($this->imap, 'UNSEEN');
+        if(!$result){
+            throw new ImapClientException('No read messages were found.');
+        };
+        $ids = ''; $countId = count($result);
+        foreach($result as $key=>$id) {
+            $emails[]= $this->getMessage($id);
+            if(($countId-1) == $key){
+                $ids .= $id;
+            }else{
+                $ids .= $id.',';
+            };
+        }
+        /* Set flag UNSEEN */
+        if(!$read){
+            $this->setUnseenMessage($ids);
+        };
         return $emails;
     }
 
@@ -562,6 +615,12 @@ class ImapClient
         $this->checkMessageId($id);
         $this->incomingMessage = new IncomingMessage($this->imap, $id);
         return $this;
+    }
+
+    public function getSection($id, $section)
+    {
+        $incomingMessage = new IncomingMessage($this->imap, $id);
+        return $incomingMessage->getSection($section);
     }
 
     /*
@@ -726,6 +785,7 @@ class ImapClient
      * @param bool|true $seen true = message is read, false = message is unread
      * @return bool success or not
      */
+    /*
     public function setUnseenMessage($id, $seen = true) {
         $header = $this->getMessageHeader($id);
         if ($header == false) {
@@ -742,6 +802,17 @@ class ImapClient
         //echo "\n<br />".$id.": ".$flags;
         imap_clearflag_full($this->imap, $id, '\\Seen', ST_UID);
         return imap_setflag_full($this->imap, $id, trim($flags), ST_UID);
+    }
+    */
+
+    /*
+     * Delete flag message SEEN
+     *
+     * @param int $ids or string like 1,2,3,4,5 or string like 1:5
+     */
+    public function setUnseenMessage($ids)
+    {
+        imap_clearflag_full($this->imap, $ids, "\\Seen");
     }
 
     /**
