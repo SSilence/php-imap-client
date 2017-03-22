@@ -614,7 +614,7 @@ class ImapClient
     {
         $this->checkMessageId($id);
         $this->incomingMessage = new IncomingMessage($this->imap, $id);
-        return $this;
+        return $this->incomingMessage;
     }
 
     public function getSection($id, $section)
@@ -632,12 +632,19 @@ class ImapClient
      * @param int $dir it is directory for save attachments
      * @return void
      */
-    public function saveAttachments($dir = null)
+    public function saveAttachments($options = null)
     {
-        if(!isset($dir)){
+        if(!isset($options['dir'])){
             $dir = __DIR__.DIRECTORY_SEPARATOR;
+        }else{
+            $dir = $options['dir'];
         };
-        foreach ($this->incomingMessage->attachment as $key => $attachment) {
+        if(!isset($options['incomingMessage'])){
+            $incomingMessage = $this->incomingMessage;
+        }else{
+            $incomingMessage = $options['incomingMessage'];
+        };
+        foreach ($incomingMessage->attachment as $key => $attachment) {
             $newFileName = $key.'.'.$attachment->structure->subtype;
             file_put_contents($dir.$newFileName, $attachment->body);
         };
