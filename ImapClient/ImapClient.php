@@ -50,6 +50,13 @@ class ImapClient
      */
     public static $connectConfig;
 
+    /*
+     * Incoming message
+     *
+     * @var object IncomingMessage
+     */
+    public $incomingMessage;
+
     /**
      * Imap connection
      * @var ImapConnect
@@ -93,8 +100,6 @@ class ImapClient
 	 * @var bool
 	 */
     protected $embed = false;
-
-    public $message;
 
     /**
      * Initialize imap helper
@@ -519,31 +524,31 @@ class ImapClient
      * $imap->getMessage(5);
      *
      * you can see all structure that
-     * var_dump($imap->message)
+     * var_dump($imap->incomingMessage)
      *
      * but use like this
-     * $imap->message->header->subject
-     * $imap->message->header->from
-     * $imap->message->header->to
-     * and other ... var_dump($imap->message->header)
+     * $imap->incomingMessage->header->subject
+     * $imap->incomingMessage->header->from
+     * $imap->incomingMessage->header->to
+     * and other ... var_dump($imap->incomingMessage->header)
      *
      * next Text or Html body
-     * $imap->message->message->html
-     * $imap->message->message->plain
-     * $imap->message->message->info it is array
+     * $imap->incomingMessage->message->html
+     * $imap->incomingMessage->message->plain
+     * $imap->incomingMessage->message->info it is array
      *
      * next
-     * $imap->message->attachment it is array attachments
+     * $imap->incomingMessage->attachment it is array attachments
      *
-     * $imap->message->attachment[0] have
-     * $imap->message->attachment[0]->structure and
-     * $imap->message->attachment[0]->body
+     * $imap->incomingMessage->attachment[0] have
+     * $imap->incomingMessage->attachment[0]->structure and
+     * $imap->incomingMessage->attachment[0]->body
      *
      * Count section
-     * $imap->message->section
+     * $imap->incomingMessage->section
      *
      * And structure all message
-     * $imap->message->structure
+     * $imap->incomingMessage->structure
      *
      * 2. Save all attachments
      * $imap->getMessage(5);
@@ -551,21 +556,29 @@ class ImapClient
      *
      * @param int $id
      * @return object
-     * 
      */
     public function getMessage($id)
     {
         $this->checkMessageId($id);
-        $this->message = new IncomingMessage($this->imap, $id);
+        $this->incomingMessage = new IncomingMessage($this->imap, $id);
         return $this;
     }
 
+    /*
+     * Save attachments one incoming message
+     *
+     * The allowed types are TypeAttachments
+     * You can add your own
+     *
+     * @param int $dir it is directory for save attachments
+     * @return void
+     */
     public function saveAttachments($dir = null)
     {
         if(!isset($dir)){
             $dir = __DIR__.DIRECTORY_SEPARATOR;
         };
-        foreach ($this->message->attachment as $key => $attachment) {
+        foreach ($this->incomingMessage->attachment as $key => $attachment) {
             $newFileName = $key.'.'.$attachment->structure->subtype;
             file_put_contents($dir.$newFileName, $attachment->body);
         };

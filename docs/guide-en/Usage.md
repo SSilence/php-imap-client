@@ -7,11 +7,15 @@ $mailbox = 'my.imapserver.com';
 $username = 'myuser';
 $password = 'secret';
 $encryption = Imap::ENCRYPT_SSL; // or ImapClient::ENCRYPT_SSL or ImapClient::ENCRYPT_TLS or null
-$imap = new Imap($mailbox, $username, $password, $encryption);
 
-if($imap->isConnected()===false) {
-    die($imap->getError());
-}                     
+try{
+
+$imap = new Imap($mailbox, $username, $password, $encryption);
+# ... and further code ...
+
+}catch (ImapClientException $error){
+    echo $error->getInfo();
+};              
 ```
 The above code connects you to a mail server and makes sure it connected. Change the variables to your informatin
 #### After connection
@@ -105,6 +109,11 @@ array(2) {
   }
 }
 ```
+
+The structure of a single message when it is received by the method getMessage()
+it by the look here [Incoming Message](IncomingMessage.md)
+
+
 You can also add/rename/delete folders. Lets add a new folder:
 
 ```php
