@@ -117,7 +117,22 @@ class IncomingMessage
             $obj = $this->getSection($section);
             if(!isset($obj->structure->subtype)){continue;};
             if(in_array($obj->structure->subtype, $types, false)){
-                $obj->body = imap_base64($obj->body);
+                #$obj->body = imap_base64($obj->body);
+                switch ($obj->structure->encoding) {
+                    case 0:
+                    case 1:
+                        $obj->body = imap_8bit($obj->body);
+                        break;
+                    case 2:
+                        $obj->body = imap_binary($obj->body);
+                        break;
+                    case 3:
+                        $obj->body = imap_base64($obj->body);
+                        break;
+                    case 4:
+                        $obj->body = quoted_printable_decode($obj->body);
+                        break;
+                };
                 $attachments[] = $obj;
             };
         }
@@ -138,7 +153,25 @@ class IncomingMessage
             $obj = $this->getSection($section);
             if(!isset($obj->structure->subtype)){continue;};
             if(in_array($obj->structure->subtype, $types, false)){
-                $obj->body = imap_base64($obj->body);
+
+                #$obj->body = imap_base64($obj->body);
+
+                switch ($obj->structure->encoding) {
+                    case 0:
+                    case 1:
+                        $obj->body = imap_8bit($obj->body);
+                        break;
+                    case 2:
+                        $obj->body = imap_binary($obj->body);
+                        break;
+                    case 3:
+                        $obj->body = imap_base64($obj->body);
+                        break;
+                    case 4:
+                        $obj->body = quoted_printable_decode($obj->body);
+                        break;
+                };
+
                 $subtype = strtolower($obj->structure->subtype);
                 $objNew->$subtype = $obj->body;
                 $objNew->info[] = $obj;
@@ -148,6 +181,11 @@ class IncomingMessage
         $this->message = $objNew;
     }
 
+    /*
+     * Get section message
+     *
+     * @return object \stdClass
+     */
     public function getSection($section)
     {
         $stdClass = new \stdClass();
