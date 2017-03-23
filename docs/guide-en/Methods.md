@@ -11,7 +11,7 @@ The following methods are currently available.
 * ``countMessages()`` count messages in current folder
 * ``countUnreadMessages()`` count unread messages in current folder
 * ``getMessages($withbody = true, $standard = "UNSEEN")`` get emails in current folder
-* ``getMessage($id, $withbody = true)`` get email by given id
+* ``getMessage($id)`` get email by given id
 * ``getUnreadMessages($withbody = true)`` get unread messages in current folder
 * ``deleteMessage($id)`` delete message with given id
 * ``deleteMessages($ids)`` delete messages with given ids (as array)
