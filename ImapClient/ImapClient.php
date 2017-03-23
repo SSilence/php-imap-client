@@ -332,6 +332,7 @@ class ImapClient
      * If 0 return nested array, if 1 return an array of strings.
      * @return array with folder names
      */
+    /*
     public function getFolders($separator = null, $type = 0) {
         $folders = imap_list($this->imap, $this->mailbox, "*");
         if($type == 1){
@@ -358,6 +359,54 @@ class ImapClient
             };
             return $outArray;
         };
+        return null;
+    }
+    */
+
+    /**
+     * Returns all available folders
+     *
+     * Works correctly if the configuration does not have the mailbox_name setting.
+     * Like this
+     * ['flags' => [...], 'mailbox' => ['mailbox_name' => '',], 'connect' => [...]]
+     *
+     * @param string $separator. Default is '.'
+     * @param int $type. Has three meanings 0,1,2.
+     * If 0 return nested array, if 1 return an array of strings, if 2 return raw imap_list()
+     * @return array with folder names
+     */
+    public function getFolders($separator = null, $type = 0)
+    {
+        $folders = imap_list($this->imap, $this->mailbox, "*");
+
+        if ($type == 2) {
+            return $folders;
+        };
+        if ($type == 1) {
+            return str_replace($this->mailbox, "", $folders);
+        };
+        if ($type == 0) {
+            $arrayRaw = str_replace($this->mailbox, "", $folders);
+            if (!isset($separator)) {
+                $separator = '.';
+            };
+            $arrayNew = [];
+            foreach ($arrayRaw as $string) {
+                $array = explode($separator, $string);
+                $count = count($array);
+                $count = $count-1;
+                $cache = false;
+                for($i=$count; $i>=0; $i--){
+                    if($i == $count){
+                        $cache = [$array[$i]=>[]];
+                    }else{
+                        $cache = [$array[$i] => $cache];
+                    };
+                };
+                $arrayNew = array_merge_recursive($arrayNew, $cache);
+            };
+            return $arrayNew;
+        }
         return null;
     }
 
@@ -1398,6 +1447,7 @@ class ImapClient
      * @param array $subFolders
      * @return array
      */
+    /*
     protected function makeArrayFolders(array $subFolders)
     {
         $count = count($subFolders);
@@ -1413,6 +1463,7 @@ class ImapClient
         };
         return $out;
     }
+    */
 
     /*
      * Get uid from id
