@@ -492,6 +492,13 @@ class ImapClient
         return $emails;
     }
     */
+
+    /**
+     * Returns unseen emails in the current folder
+     *
+     * @param true|false $read. Mark message like SEEN or no.
+     * @return array objects
+     */
     public function getUnreadMessages($read = true) {
         $emails = [];
         $result = imap_search($this->imap, 'UNSEEN');
@@ -558,6 +565,30 @@ class ImapClient
         }
 
         return $emails;
+    }
+
+    /*
+     * Save Attachmets Messages By Subject
+     *
+     * @param text $subject
+     * @param text $dir for save attachments
+     * @param text $charset for search
+     * @return void
+     */
+    public function saveAttachmetsMessagesBySubject($subject, $dir = null, $charset = null)
+    {
+        $criteria = 'SUBJECT "'.$subject.'"';
+        $ids = imap_search($this->imap, $criteria, null, $charset);
+        if(!$ids){
+            throw new ImapClientException('Messages not found. Or this criteria not supported on your email server.');
+        };
+        foreach ($ids as $id) {
+            $this->getMessage($id);
+            if(isset($dir)){
+                $dir = ['dir'=>$dir];
+            };
+            $this->saveAttachments($dir);
+        };
     }
 
     /**
