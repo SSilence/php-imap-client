@@ -9,7 +9,7 @@ class TypeAttachments
 
     public function __construct()
     {
-        $this->types = ['JPEG', 'PNG', 'PDF', 'X-MPEG', 'MSWORD', 'OCTET-STREAM'];
+        $this->types = ['JPEG', 'PNG', 'GIF', 'PDF', 'X-MPEG', 'MSWORD', 'OCTET-STREAM'];
     }
 
     public function get()
