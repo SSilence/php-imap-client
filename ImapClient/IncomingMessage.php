@@ -42,6 +42,11 @@ class IncomingMessage
         $this->init();
     }
 
+    /*
+     * Main process
+     *
+     * @return void
+     */
     private function init()
     {
         $header = $this->imapFetchOverview();
@@ -55,14 +60,26 @@ class IncomingMessage
         $this->getCountSection();
         $this->getAttachment();
         $this->getBody();
-        #$this->debug();
     }
 
+    /*
+     * Returns current object
+     *
+     * Set $this->debug
+     * @return void
+     */
     public function debug()
     {
         $this->debug = $this;
     }
 
+    /*
+     * Get count section
+     *
+     * Set $this->section
+     * and
+     * @return array sections
+     */
     private function getCountSection()
     {
         $this->getRecursiveSections($this->structure);
@@ -86,8 +103,10 @@ class IncomingMessage
     }
 
     /*
+     * Bypasses the recursive parts current message
+     * Set $this->section
      *
-     * @return
+     * @return void
      */
     private function getRecursiveSections($obj, $recursive = 1)
     {
@@ -104,6 +123,7 @@ class IncomingMessage
     }
 
     /*
+     * Get attachments current message
      *
      * @return array
      */
@@ -111,13 +131,11 @@ class IncomingMessage
     {
         $types = new TypeAttachments();
         $types = $types->get();
-
         $attachments = [];
         foreach ($this->section as $section) {
             $obj = $this->getSection($section);
             if(!isset($obj->structure->subtype)){continue;};
             if(in_array($obj->structure->subtype, $types, false)){
-                #$obj->body = imap_base64($obj->body);
                 switch ($obj->structure->encoding) {
                     case 0:
                     case 1:
@@ -140,22 +158,19 @@ class IncomingMessage
     }
 
     /*
-     * @return array
+     * Get body current message
+     *
+     * @return object
      */
     private function getBody()
     {
         $types = new TypeBody();
         $types = $types->get();
-
-        #$messages = [];
         $objNew = new \stdClass();
         foreach ($this->section as $section) {
             $obj = $this->getSection($section);
             if(!isset($obj->structure->subtype)){continue;};
             if(in_array($obj->structure->subtype, $types, false)){
-
-                #$obj->body = imap_base64($obj->body);
-
                 switch ($obj->structure->encoding) {
                     case 0:
                     case 1:
@@ -175,7 +190,6 @@ class IncomingMessage
                 $subtype = strtolower($obj->structure->subtype);
                 $objNew->$subtype = $obj->body;
                 $objNew->info[] = $obj;
-                #$messages[] = $obj;
             };
         }
         $this->message = $objNew;
@@ -196,6 +210,8 @@ class IncomingMessage
 
     /*
      * Get specific section
+     *
+     * @return string
      */
     private function imapFetchbody($section)
     {
@@ -204,6 +220,8 @@ class IncomingMessage
 
     /*
      * Structure all message
+     *
+     * @return object
      */
     private function imapFetchstructure()
     {
@@ -212,12 +230,21 @@ class IncomingMessage
 
     /*
      * Structure specific section
+     *
+     * @return object
      */
     private function imapBodystruct($section)
     {
         return imap_bodystruct($this->imapStream, $this->id, $section);
     }
 
+    /*
+     * imapFetchOverview()
+     * from
+     * http://php.net/manual/ru/function.imap-fetch-overview.php
+     *
+     * @return object
+     */
     private function imapFetchOverview()
     {
         if(isset($this->id) && isset($this->uid)){

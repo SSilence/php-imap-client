@@ -38,14 +38,17 @@ Once you selected a folder you can count the messages in this folder:
 $overallMessages = $imap->countMessages();
 $unreadMessages = $imap->countUnreadMessages();
 ```
+
 Get a brief summary of all messages in the current folder, including the message ID.
 ```php
 $imap->getBriefInfoMessages()
 ```
+
 Get the message with ID 82
 ```php
 $imap->getMessage(82)
 ```
+
 Save all of the attachmets in this letter.
 ```php
 $imap->saveAttachments();
@@ -55,12 +58,18 @@ or save attachment like this
 $message = $imap->getMessage(82);
 $imap->saveAttachments(['dir' => "your/path/", 'incomingMessage' => $message]);
 ```
+
+It is also possible to save all attachments for messages with a special word in the message subject.
+```php
+$imap->saveAttachmetsMessagesBySubject('Special text', 'path/to/save/attach');
+```
+
 Get all unread messages.
 ```php
 $imap->getUnreadMessages()
 ```
-Okay, now lets fetch all emails in the currently selected folder (in our example the "Inbox"):
 
+Okay, now lets fetch all emails in the currently selected folder (in our example the "Inbox"):
 ```php
 $emails = $imap->getMessages();
 var_dump($emails);
