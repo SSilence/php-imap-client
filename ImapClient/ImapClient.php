@@ -413,8 +413,8 @@ class ImapClient
     }
 
     /**
-    * Set embeded or not
-    *
+     * Set embeded or not
+     *
      * @param bool|false $val
      */
     public function setEmbed($val = false) {
@@ -461,7 +461,7 @@ class ImapClient
     }
 
     /**
-     * returns the number of unread messages in the current folder
+     * Returns the number of unread messages in the current folder
      *
      * @return int message count
      */
