@@ -602,7 +602,8 @@ class ImapClient
      *
      * @return array
      */
-    public function getMessages($withbody = true, $number = 0, $start = 0, $order = 'DESC', $embed_images = false) {
+    #public function getMessages($withbody = true, $number = 0, $start = 0, $order = 'DESC', $embed_images = false) {
+    public function getMessages($number = 0, $start = 0, $order = 'DESC') {
         if ($number == 0)
         {
             $number = $this->countMessages();
@@ -626,7 +627,8 @@ class ImapClient
 
             foreach ($ids as $id)
             {
-                $emails[] = $this->formatMessage($id, $withbody, $embed_images);
+                #$emails[] = $this->formatMessage($id, $withbody, $embed_images);
+                $emails[] = $this->getMessage($id);
             }
         }
 
