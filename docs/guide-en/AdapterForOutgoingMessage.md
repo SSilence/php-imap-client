@@ -67,8 +67,6 @@ $imap = new ImapClient([
     'connect' => [
         'username' => 'user@gmail.com',
         'password' => 'password',
-        'toEmail' => ,
-        'toEmailName' => ,
     ]
 ]);
 
@@ -77,6 +75,8 @@ $imap = new ImapClient([
 AdapterForOutgoingMessage::setOptions([
     'fromEmail' => 'from@gmail.com',
     'fromEmailName' => 'fromUser',
+    'toEmail' => 'to@gmail.com',
+    'toEmailName' => 'toUser',
     'fileName' => 'file',
     'subject' => 'subject',
     'messageHtml' => 'message html',
