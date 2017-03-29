@@ -22,9 +22,16 @@ The above code connects you to a mail server and makes sure it connected. Change
 There are many things you can do after the code above.
 For example you can get and echo all folders
 ```php
-$folders = $imap->getFolders(); // returns array of strings
+$folders = $imap->getFolders();
+var_dump($folders);
+# and
 foreach($folders as $folder) {
     echo $folder;
+}
+# or
+foreach($folders as $folder => $subFolder) {
+    echo $folder.PHP_EOL;
+    echo $subFolder.PHP_EOL;
 }
 ```
 Now you can select a folder:
@@ -72,77 +79,19 @@ $imap->getUnreadMessages()
 Okay, now lets fetch all emails in the currently selected folder (in our example the "Inbox"):
 ```php
 $emails = $imap->getMessages();
-var_dump($emails);
 ```
-WARNING!!!!: getMessages() will not mark emails as read! It will return the following structure without changing the emails. In this example two emails are in the Inbox.
+Now $emails it is array objects.
 
-```
-array(2) {
-  [0]=>
-  array(8) {
-    ["to"]=>
-    array(1) {
-      [0]=>
-      string(30) "Tobias Zeising <tobias.zeising@aditu.de>"
-    }
-    ["from"]=>
-    string(30) "Karl Mustermann <karl.mustermann@aditu.de>"
-    ["date"]=>
-    string(31) "Fri, 27 Dec 2013 18:44:52 +0100"
-    ["subject"]=>
-    string(12) "Test Subject"
-    ["id"]=>
-    int(15)
-    ["unread"]=>
-    bool(true)
-    ["answered"]=>
-    bool(false)
-    ["body"]=>
-    string(240) "<p>This is a test body.</p>
-
-    <p>With a bit <em><u>html</u></em>.</p>
-
-    <p>and without <span style="color:#008000"><span style="font-size:14px"><span style="font-family:arial,helvetica,sans-serif">attachment</span></span></span></p>
-    "
-  }
-  [1]=>
-  array(9) {
-    ["to"]=>
-    array(1) {
-      [0]=>
-      string(29) "tobias.zeising@aditu.de <tobias.zeising@aditu.de>"
-    }
-    ["from"]=>
-    string(40) "Karl Ruediger <karl.ruediger@aditu.de>"
-    ["date"]=>
-    string(31) "Thu, 19 Dec 2013 17:45:37 +0100"
-    ["subject"]=>
-    string(19) "Test mit Attachment"
-    ["id"]=>
-    int(14)
-    ["unread"]=>
-    bool(false)
-    ["answered"]=>
-    bool(false)
-    ["body"]=>
-    string(18) "Anbei eine Datei"
-    ["attachments"]=>
-    array(1) {
-      [0]=>
-      array(2) {
-        ["name"]=>
-        string(24) "640 x 960 (iPhone 4).jpg"
-        ["size"]=>
-        int(571284)
-      }
-    }
-  }
-}
-```
-
-The structure of a single message when it is received by the method getMessage()
+The structure of a single message when it is received by the method getMessage() or getMessages()
 it by the look here [Incoming Message](IncomingMessage.md)
 
+For example get subject and simple text messages
+```php
+foreach($emails as $email){
+    echo $email->header->subject.PHP_EOL;
+    echo $email->message->plain.PHP_EOL;
+};
+```
 
 You can also add/rename/delete folders. Lets add a new folder:
 
