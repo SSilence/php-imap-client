@@ -115,6 +115,13 @@ We also can save emails
 $imap->saveEmail('archive/users/johndoe/email_1.eml', 1);
 ```
 
+You can use the method of sending messages.
+```php
+$imap->sendMail();
+```
+But for this you need to take several steps.
+[Adapter for outgoing message. Use in 3 steps.](AdapterForOutgoingMessage.md)
+
 For a full list of methods you can do check [current list of methods](Methods.md).
 
 #### Advanced connecting
