@@ -1520,6 +1520,12 @@ class ImapClient
         return imap_msgno($this->imap, $uid);
     }
 
+    public function sendMail()
+    {
+        $outMessage = new AdapterForOutgoingMessage(self::$connectConfig);
+        $outMessage->send();
+    }
+
     /*
      * Check message id
      *
