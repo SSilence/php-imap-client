@@ -34,3 +34,4 @@ The following methods are currently available.
 * ``saveEmailSafe($file , $id, $part, $streamFilter)`` saves an email to the $file file. This is recommended for servers with low amounts of RAM. Stream filter is set to convert.base64-decode by default
 * ``saveAttachmetsMessagesBySubject($subject, $dir = null, $charset = null)`` Save Attachmets Messages By Subject
 * ``getBriefInfoMessages()`` Get a short information about the messages in the current folder.
+* ``sendMail()`` Send a message via the adapter.
