@@ -1,22 +1,26 @@
-# Adapter for outgoing message. Use in 3 steps.
+# Adapter for outgoing messages
 
 The IMAP protocol is designed to read messages and does not support the sending of messages.
-But if you want ImapClient to send messages, then use AdapterForOutgoingMessage class.
-And install any library for sending messages, for example [PhpMailer](https://github.com/PHPMailer/PHPMailer).
+But if you want ImapClient to send messages, then use the AdapterForOutgoingMessage class.
+To do this you will also need to install PHPMailer
 
 ## First step
-Install library for sending messages.
-In our example, this is PhpMailer.
+The first step is to install php mailer. You can do so in two ways.
+
+1) Composer
 ```php
 composer require phpmailer/phpmailer
 ```
+2) Minimal 
+Read [PHPMailer's guide on a minimal installation](https://github.com/PHPMailer/PHPMailer#minimal-installation)
 
 ## Second step
 Turn phpmailer into an adapter.
 File AdapterForOutgoingMessage.php
-To do this, we rewrite send() method.
+To do this, we rewrite send() method. 
+Note this is note safe yet and may be re written in the future.
 ```php
-# add namespace
+# Be sure to add a namespace
 use \PHPMailer;
 
 class AdapterForOutgoingMessage

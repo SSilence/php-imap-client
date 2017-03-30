@@ -1,5 +1,5 @@
-# English Guide
-Hello and welcome to the english guide of PHP-imap-client
+# Docs
+Ready to use our client? Read out links below!
 
 ### Install
 Ready to install? Read [our install guide](Install.md)

@@ -1,6 +1,6 @@
 # Usage
 #### After install prep
-After you install this library, however you did it make sure the file you want to do the connecting with includes the required classes
+After you install this library ensure you have added the required classes.
 A basic connection may look like this:
 ```php
 $mailbox = 'my.imapserver.com';
@@ -17,7 +17,7 @@ $imap = new Imap($mailbox, $username, $password, $encryption);
     echo $error->getInfo();
 };              
 ```
-The above code connects you to a mail server and makes sure it connected. Change the variables to your informatin
+The above code connects you to a mail server and makes sure it connected. Change the variables to your information
 #### After connection
 There are many things you can do after the code above.
 For example you can get and echo all folders
@@ -34,19 +34,19 @@ foreach($folders as $folder => $subFolder) {
     echo $subFolder.PHP_EOL;
 }
 ```
-Now you can select a folder:
+You can also select folders
 
 ```php
 $imap->selectFolder("Inbox");
 ```
-Once you selected a folder you can count the messages in this folder:
+Once you selected a folder you can count the number of messages in the folder:
 
 ```php
 $overallMessages = $imap->countMessages();
 $unreadMessages = $imap->countUnreadMessages();
 ```
 
-Get a brief summary of all messages in the current folder, including the message ID.
+To get a brief summary of all messages in the current folder, including the message ID you can use this
 ```php
 $imap->getBriefInfoMessages()
 ```
@@ -56,11 +56,11 @@ Get the message with ID 82
 $imap->getMessage(82)
 ```
 
-Save all of the attachmets in this letter.
+Save all of the attachmets in this email.
 ```php
 $imap->saveAttachments();
 ```
-or save attachment like this
+or save the attachment(s) like this
 ```php
 $message = $imap->getMessage(82);
 $imap->saveAttachments(['dir' => "your/path/", 'incomingMessage' => $message]);
@@ -80,7 +80,7 @@ Okay, now lets fetch all emails in the currently selected folder (in our example
 ```php
 $emails = $imap->getMessages();
 ```
-Now $emails it is array objects.
+Now $emails it is array object.
 
 The structure of a single message when it is received by the method getMessage() or getMessages()
 it by the look here [Incoming Message](IncomingMessage.md)
@@ -150,5 +150,5 @@ $imap = new ImapClient([
 ]);
 ```
  All connecting options you can see in example-connect.php file
- or go [Advanced connecting](docs/guide-en/AdvancedConnecting.md)
+ or go [Advanced connecting](AdvancedConnecting.md)
  or you can see code ImapConnect class.

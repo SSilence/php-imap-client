@@ -10,17 +10,19 @@ use SSilence\ImapClient\ImapClientException;
 use SSilence\ImapClient\ImapConnect;
 use SSilence\ImapClient\ImapClient;
 
-$mailbox = 'my.imapserver.com';
-$username = 'username';
-$password = 'secret';
+$mailbox = 'my.imapserver.com'; // Your iamp server address. If you have a specific port specify it here
+$username = 'username'; // Your imap server user name 
+$password = 'secret'; // Super secret passsword
 $encryption = ImapClient::ENCRYPT_TLS; // or ImapClient::ENCRYPT_SSL or ImapClient::ENCRYPT_TLS or null
 
 /*
- * Default connect
+ * Default connection
+ * This is the default way to connect to an IMAP server using this
  */
 
+// Encryption
 $imap = new ImapClient($mailbox, $username, $password, $encryption);
-/* or */
+// No Encryption
 $imap = new ImapClient($mailbox, $username, $password);
 
 /*
@@ -29,14 +31,18 @@ $imap = new ImapClient($mailbox, $username, $password);
  * Options flags same like in ImapConnect::prepareFlags() method
  * Options mailbox same like in ImapConnect::prepareMailbox() method
  * Options connect same like in ImapConnect::connect() method
- *
  */
 
-/* Example 1 Like Default connect*/
+/* Example 1
+ * Example 1 is the advanced default connection method
+ */
 $imap = new ImapClient([
     'flags' => [
         'service' => ImapConnect::SERVICE_IMAP,
         'encrypt' => ImapConnect::ENCRYPT_SSL,
+        /* This NOVALIDATE_CERT is used when the server connecting to the imao
+         * servers is not https but the imap is. This ignores the failure.
+         */
         'validateCertificates' => ImapConnect::NOVALIDATE_CERT,
     ],
     'mailbox' => [
@@ -48,12 +54,15 @@ $imap = new ImapClient([
     ]
 ]);
 
-/* Example 2 */
+/* Example 2
+ * Get debug messages
+ */
 $imap = new ImapClient([
     'flags' => [
         'service' => ImapConnect::SERVICE_IMAP,
         'encrypt' => ImapConnect::ENCRYPT_SSL,
         'validateCertificates' => ImapConnect::VALIDATE_CERT,
+        // Turns debug on or off
         'debug' => ImapConnect::DEBUG,
     ],
     'mailbox' => [
@@ -66,7 +75,9 @@ $imap = new ImapClient([
     ]
 ]);
 
-/* Example 3 */
+/* Example 3 
+ * You can also set the config then connects
+ */
 ImapClient::setConnectAdvanced();
 ImapClient::setConnectConfig([
     'flags' => [
@@ -77,13 +88,9 @@ ImapClient::setConnectConfig([
 ]);
 $imap = new ImapClient();
 
-/* Example 4 */
-ImapClient::setConnectDefault();
-$imap = new ImapClient($mailbox, $username, $password, $encryption);
-/* or just */
-$imap = new ImapClient($mailbox, $username, $password, $encryption);
-
-/* Example 5 All options*/
+/* Example 5
+ * Here you can see all the options
+ */
 $imap = new ImapClient([
     'flags' => [
         'service' => ImapConnect::SERVICE_IMAP, # ImapConnect::SERVICE_IMAP ,ImapConnect::SERVICE_POP3, ImapConnect::SERVICE_NNTP

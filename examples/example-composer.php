@@ -11,57 +11,40 @@ use SSilence\ImapClient\ImapClient as Imap;
 $mailbox = 'my.imapserver.com';
 $username = 'username';
 $password = 'secret';
-$encryption = Imap::ENCRYPT_SSL; // or ImapClient::ENCRYPT_SSL or ImapClient::ENCRYPT_TLS or null
-// open connection
+$encryption = Imap::ENCRYPT_SSL;
+
+// Open connection
 try{
     $imap = new Imap($mailbox, $username, $password, $encryption);
-
-    /*
-     * Or use advanced connect option like this
-     *
-    $imap = new ImapClient([
-        'flags' => [
-            'service' => ImapConnect::SERVICE_IMAP,
-            'encrypt' => ImapConnect::ENCRYPT_SSL,
-            'validateCertificates' => ImapConnect::VALIDATE_CERT,
-        ],
-        'mailbox' => [
-            'remote_system_name' => 'imap.server.ru',
-            'port' => 431,
-        ],
-        'connect' => [
-            'username' => 'user',
-            'password' => 'pass'
-        ]
-    ]);
-    */
+    // You can also check out example-connect.php for more connection options
 
 }catch (ImapClientException $error){
     echo $error->getMessage().PHP_EOL;
-    die();
+    die(); // Oh no :( we failed
 }
 
-// get all folders as array of strings
+// Get all folders as array of strings
 $folders = $imap->getFolders();
-foreach($folders as $folder)
+foreach($folders as $folder) {
     echo $folder;
+}
 
-// select folder Inbox
+// Select the folder Inbox
 $imap->selectFolder('INBOX');
 
-// count messages in current folder
+// Count the messages in current folder
 $overallMessages = $imap->countMessages();
 $unreadMessages = $imap->countUnreadMessages();
 
-// fetch all messages in the current folder
+// Fetch all the messages in the current folder
 $emails = $imap->getMessages();
 var_dump($emails);
 
-// add new folder for archive
+// Create a new folder named "archive"
 $imap->addFolder('archive');
 
-// move the first email to archive
+// Move the first email to our new folder
 $imap->moveMessage($emails[0]['uid'], 'archive');
 
-// delete second message
+// Delete the second message
 $imap->deleteMessage($emails[1]['uid']);

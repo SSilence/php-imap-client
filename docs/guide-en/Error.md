@@ -1,13 +1,13 @@
 # Errors
 
-Many errors can be throw while using the library, if you cant seem to find what an error means or what you are doing wrong, take a look here.
+Many errors may be throw while using the library, if you cant seem to find what an error means or what you are doing wrong, take a look here.
 Everything is structured like this:
 #### [Error name]
 [How error occurs]
 [fix]
 #### Imap function not available
 PHP does not support connections to web servers via imap
-To fix this download the php_imap.dll and enable it by putting the following in php.ini `extension=php_gettext.dll`
+To fix this download the php_imap.dll and enable it by putting the following text in php.ini `extension=php_gettext.dll`
 #### Mailbox is not installed
 No mail box was provided
 Confirm that the $mailbox variable is filled when connecting
