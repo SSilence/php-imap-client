@@ -320,7 +320,7 @@ class IncomingMessage
 	 *
 	 * @return object
 	 */
-	public funtion getHeaderInfo($msgnumber) {
+	public function getHeaderInfo($msgnumber) {
 		return imap_headerinfo($this->imapStream, $msgnumber);
 	}
 }
