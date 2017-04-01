@@ -280,4 +280,16 @@ class IncomingMessage
         return imap_fetch_overview($this->imapStream, $sequence, $options);
     }
 
+	/*
+	 * This function is used to get the header info on a message.
+	 * Its return values can be found here: 
+	 * http://php.net/manual/en/function.imap-headerinfo.php#refsect1-function.imap-headerinfo-returnvalues
+	 * 
+	 * WARNING: This function may be moved to an internal call later
+	 *
+	 * @return object
+	 */
+	public funtion getHeaderInfo($msgnumber) {
+		return imap_headerinfo($this->imapStream, $msgnumber);
+	}
 }
