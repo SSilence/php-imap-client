@@ -20,8 +20,14 @@ namespace SSilence\ImapClient;
  */
 class TypeAttachments
 {
+	/**
+	 * Types of attachments
+	 */
     public $types;
 
+	/**
+	 * Class builder
+	 */  
     public function __construct()
     {
         /*
@@ -30,7 +36,7 @@ class TypeAttachments
         $this->types = ['JPEG', 'PNG', 'GIF', 'PDF', 'X-MPEG', 'MSWORD', 'OCTET-STREAM'];
     }
 
-    /*
+    /**
      * Get the allowed types.
      *
      * @return array

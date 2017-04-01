@@ -24,7 +24,7 @@ class Helper
     const OUT_OBJECT = 'object';
     const OUT_ARRAY = 'array';
 
-    /*
+    /**
      * Preparing properties
      *
      * Return object like this

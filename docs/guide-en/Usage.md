@@ -71,6 +71,11 @@ It is also possible to save all attachments for messages with a special word in 
 $imap->saveAttachmetsMessagesBySubject('Special text', 'path/to/save/attach');
 ```
 
+Get the header info like cc and bcc
+```php
+var_dump(getHeaderInfo(1));
+```
+
 Get all unread messages.
 ```php
 $imap->getUnreadMessages()

@@ -19,6 +19,10 @@ namespace SSilence\ImapClient;
  * @author     Tobias Zeising <tobias.zeising@aditu.de>
  */
 
+ /**
+  * Due to the fact that this class is a W.I.P, i have not added
+  * comments as I assume they will be added later...
+  */
 class OutgoingMessage
 {
 

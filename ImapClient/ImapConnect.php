@@ -4,51 +4,7 @@ namespace SSilence\ImapClient;
 
 use SSilence\ImapClient\ImapClientException;
 
-/*
- * Class for connecting to imap server
- *
- * Examples:
- *
- * 1. Direct mailbox setup
- * $connect = new ImapConnect();
- * $connect->connect('{server.imap:431/imap/ssl/novalidate-cert}INBOX', 'user', 'pass');
- * $imap = $connect->getImap();
- * $mailbox = $connect->getResponseMailbox();
- *
- * 2. Same as above
- * $connect = new ImapConnect();
- * $connect->setMailbox('{server.imap:431/imap/ssl/novalidate-cert}INBOX');
- * $connect->connect(null, 'user', 'pass');
- * $imap = $connect->getImap();
- * $mailbox = $connect->getResponseMailbox();
- *
- * 3. A more convenient way for IDE
- * $connect = new ImapConnect();
- * $connect->prepareFlags(ImapConnect::SERVICE_IMAP, ImapConnect::ENCRYPT_SSL, ImapConnect::NOVALIDATE_CERT);
- * $connect->prepareMailbox('server.imap', 431);
- * $connect->connect(null, 'user', 'pass');
- * $imap = $connect->getImap();
- * $mailbox = $connect->getResponseMailbox();
- *
- * 4. Same as above in 3 example
- * $connect = new ImapConnect();
- * $connect->prepareFlags([
- *     'service' => ImapConnect::SERVICE_IMAP,
- *     'encrypt' => ImapConnect::ENCRYPT_SSL,
- *     'validateCertificates' => ImapConnect::NOVALIDATE_CERT
- * ]);
- * $connect->prepareMailbox([
- *     'remote_system_name' => 'server.imap',
- *     'port' => 431
- * ]);
- * $connect->connect([
- *     'username' => 'user',
- *     'password' => 'pass'
- * ]);
- * $imap = $connect->getImap();
- * $mailbox = $connect->getResponseMailbox();
- *
- * To view the current mailbox string you can use everywhere getMailbox() method.
+/**
  *
  * Copyright (C) 2016-2017  SSilence
  * This program is free software: you can redistribute it and/or modify
@@ -84,7 +40,7 @@ class ImapConnect
     public $mailbox;
     public $flags;
 
-    /*
+    /**
      * The connection to the server
      *
      * Description of the method imap_open() to look at the link below
@@ -192,7 +148,7 @@ class ImapConnect
         };
     }
 
-    /*
+    /**
      * Set string mailbox
      *
      * @param string $mailbox
@@ -203,15 +159,17 @@ class ImapConnect
         $this->mailbox = $mailbox;
     }
 
-    /*
+    /**
      * Get string mailbox
+	 * 
+	 * @return object
      */
     public function getMailbox()
     {
         return $this->mailbox;
     }
 
-    /*
+    /**
      * Get string response mailbox
      *
      * @return string
@@ -222,23 +180,23 @@ class ImapConnect
         return $imap_obj->Mailbox;
     }
 
-    /*
-     * Get resource imap
+    /**
+     * Get the imap reasource
      */
     public function getImap()
     {
         return $this->imap;
     }
 
-    /*
-     * Get string flags
+    /**
+     * Get the flag string
      */
     public function getFlags()
     {
         return $this->flags;
     }
 
-    /*
+    /**
      * Prepare Mailbox string
      *
      * Sets $this->mailbox to this type of
@@ -308,7 +266,7 @@ class ImapConnect
         $this->mailbox = '{'.$remote_system_name.$port.$flags.'}'.$mailbox_name;
     }
 
-    /*
+    /**
      * Prepare Flags
      *
      * http://php.net/manual/ru/function.imap-open.php
