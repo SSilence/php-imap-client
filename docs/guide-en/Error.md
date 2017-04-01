@@ -60,3 +60,5 @@ Make sure your $file is a string *not* a open file
 #### $id must be a integer for saveEmail()
 The provided email id is an integer
 Make sure your $id is an integer
+#### What to use id or uid?
+You did not let us know weather to use id or uuids
