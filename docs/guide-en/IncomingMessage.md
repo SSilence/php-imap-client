@@ -1,8 +1,10 @@
 # Incoming Message
+
 ## Structure
-Incoming Message it is object(SSilence\ImapClient\IncomingMessage) has 5 basic properties
+Incoming Message it is object(SSilence\ImapClient\IncomingMessage) has 6 basic properties
 ```
 $imap->incomingMessage->header
+$imap->incomingMessage->headerDetail
 $imap->incomingMessage->message
 $imap->incomingMessage->attachment
 $imap->incomingMessage->section
@@ -51,6 +53,13 @@ Header properties typically looks like
 ```
 To get the subject of the message, use
 $imap->incomingMessage->header->subject
+
+### HeaderDetail properties
+HeaderDetail properties have more properties like this
+[imap_headerinfo](http://php.net/manual/ru/function.imap-headerinfo.php).
+If there is no property in the returned object, then it is not present in this letter.
+To get the subject of the message, use
+$imap->incomingMessage->headerDetail->subject
 
 ### Message properties
 Message properties look like this:
