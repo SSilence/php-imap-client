@@ -5,7 +5,6 @@ use SSilence\ImapClient\ImapClientException;
 use SSilence\ImapClient\ImapConnect;
 use SSilence\ImapClient\IncomingMessage;
 
-
 /**
  * Helper class for imap access
  *
@@ -25,32 +24,32 @@ use SSilence\ImapClient\IncomingMessage;
 
 class ImapClient
 {
-    /*
+    /**
      * Use the Secure Socket Layer to encrypt the session
      */
     const ENCRYPT_SSL = 'ssl';
-    /*
+    /**
      * Force use of start-TLS to encrypt the session, and reject connection to servers that do not support it
      */
     const ENCRYPT_TLS = 'tls';
     const CONNECT_ADVANCED = 'connectAdvanced';
     const CONNECT_DEFAULT = 'connectDefault';
 
-    /*
+    /**
      * Connect status or advanced or default
      *
      * @var string
      */
     public static $connect;
 
-    /*
+    /**
      * Config for advanced connect
      *
      * @var array
      */
     public static $connectConfig;
 
-    /*
+    /**
      * Incoming message
      *
      * @var object IncomingMessage
@@ -128,22 +127,37 @@ class ImapClient
         };
     }
 
+	/**
+	 * Set connection to advanced
+	 *
+	 * @return void
+	 */
     public static function setConnectAdvanced()
     {
         static::$connect = self::CONNECT_ADVANCED;
     }
 
+	/**
+	 * Set connection to default
+	 *
+	 * @return void
+	 */
     public static function setConnectDefault()
     {
         static::$connect = self::CONNECT_DEFAULT;
     }
 
+	/**
+	 * Set connection config
+	 *
+	 * @return void
+	 */
     public static function setConnectConfig(array $config)
     {
         static::$connectConfig = $config;
     }
 
-    /*
+    /**
      * The default connection.
      * Not used a lot of imap connection options.
      * Use only ENCRYPT_SSL and VALIDATE_CERT.
@@ -172,7 +186,7 @@ class ImapClient
         $this->mailbox = $connect->getMailbox();
     }
 
-    /*
+    /**
      * Advanced connect
      *
      * @param array $config
@@ -195,6 +209,7 @@ class ImapClient
 
     /**
      * Close connection
+	 * Also called during garbage collection
      */
     public function __destruct() {
         if (is_resource($this->imap))
@@ -204,7 +219,7 @@ class ImapClient
     }
 
     /**
-     * returns true after successfull connection
+     * Returns true after successfull connection
      *
      * @return bool true on success
      */
@@ -302,7 +317,7 @@ class ImapClient
       }
 
     /**
-     * returns last imap error
+     * Returns the last imap error
      *
      * @return string error message
      */
@@ -311,7 +326,7 @@ class ImapClient
     }
 
     /**
-     * select given folder
+     * Select the given folder folder
      *
      * @param string $folder name
      * @return bool successfull opened folder
@@ -325,6 +340,11 @@ class ImapClient
     }
 
     /**
+	
+	///
+	/// This NEEDS to be decided. New function or this!
+	///
+	
      * Returns all available folders
      *
      * @param string $separator. Default is '.'
@@ -430,7 +450,7 @@ class ImapClient
         return imap_num_msg($this->imap);
     }
 
-    /*
+    /**
      * Returns an array of brief information about each message in the current mailbox.
      *
      * Structure return array arrays
@@ -567,7 +587,7 @@ class ImapClient
         return $emails;
     }
 
-    /*
+    /**
      * Save Attachmets Messages By Subject
      *
      * @param text $subject
@@ -651,7 +671,7 @@ class ImapClient
     */
 
 
-    /*
+    /**
      * Returns one email by given id
      *
      * Examples:
@@ -701,13 +721,28 @@ class ImapClient
         return $this->incomingMessage;
     }
 
+	/**
+	 * Get a section of the message
+	 *
+	 * @return object
+	 */ 
     public function getSection($id, $section)
     {
         $incomingMessage = new IncomingMessage($this->imap, $id);
         return $incomingMessage->getSection($section);
     }
 
-    /*
+	/**
+	 * Get the header info of an email
+	 *
+	 * @return object
+	 */
+	public function getHeaderInfo($id)
+	{
+		$incomingMessage = new IncomingMessage($this->imap, $id);
+		return $incomingMessage->getHeaderInfo($id);
+	}
+    /**
      * Save attachments one incoming message
      *
      * The allowed types are TypeAttachments
@@ -819,7 +854,7 @@ class ImapClient
     }
 
     /**
-     * delete given message
+     * Delete the given message
      *
      * @param int $id of the message
      * @return bool success or not
@@ -829,7 +864,7 @@ class ImapClient
     }
 
     /**
-     * delete messages
+     * Delete messages
      *
      * @return bool success or not
      * @param $ids array of ids
@@ -846,7 +881,7 @@ class ImapClient
     }
 
     /**
-     * move given message in new folder
+     * Move given message in new folder
      *
      * @param int $id of the message
      * @param string $target new folder
@@ -857,7 +892,7 @@ class ImapClient
     }
 
     /**
-     * move given message in new folder
+     * Move given message in new folder
      *
      * @param array $ids array of message ids
      * @param string $target new folder
@@ -896,7 +931,7 @@ class ImapClient
     }
     */
 
-    /*
+    /**
      * Delete flag message SEEN
      *
      * @param int $ids or string like 1,2,3,4,5 or string like 1:5
@@ -907,6 +942,11 @@ class ImapClient
     }
 
     /**
+	
+    ///
+    /// THIS IS REPLACED IF IM CORRECT??
+    ///	
+	
      * Return content of messages attachment
      * Save the attachment in a optional path or get the binary code in the content index
      *
@@ -972,7 +1012,7 @@ class ImapClient
     }
 
     /**
-     * add new folder
+     * Add a new folder
      *
      * @param string $name of the folder
      * @param bool|false $subscribe immediately subscribe to folder
@@ -989,7 +1029,7 @@ class ImapClient
     }
 
     /**
-     * remove folder
+     * Remove a folder
      *
      * @param string $name of the folder
      * @return bool success or not
@@ -999,7 +1039,7 @@ class ImapClient
     }
 
     /**
-     * rename folder
+     * Rename a folder
      *
      * @param string $name of the folder
      * @param string $newname of the folder
@@ -1010,7 +1050,7 @@ class ImapClient
     }
 
     /**
-     * clean trash and spam folder
+     * Clean up trash and spam folder
      *
      * @return bool success or not
      */
@@ -1032,7 +1072,7 @@ class ImapClient
     }
 
     /**
-     * returns all email addresses
+     * Returns all email addresses
      *
      * @return array with all email addresses or false on error
      */
@@ -1054,7 +1094,7 @@ class ImapClient
     }
 
     /**
-     * save email in sent
+     * Save email in sent
      *
      * @param string $header
      * @param string $body
@@ -1065,7 +1105,7 @@ class ImapClient
     }
 
     /**
-     * explicitly close imap connection
+     * Explicitly close imap connection
      */
     public function close() {
         if ($this->imap !== false) {
@@ -1074,7 +1114,7 @@ class ImapClient
     }
 
     /**
-     * get trash folder name or create new trash folder
+     * Get trash folder
      *
      * @return string trash folder name
      */
@@ -1092,7 +1132,7 @@ class ImapClient
     }
 
     /**
-     * get sent folder name or create new sent folder
+     * Get sent
      *
      * @return string sent folder name
      */
@@ -1129,6 +1169,11 @@ class ImapClient
     /**
      * Convert attachment in array(name => ..., size => ...).
      *
+	 
+	/// 
+	/// This has been replaced correct?
+	///
+	
      * @param array $attachments with name and size
      * @return array
      */
@@ -1150,7 +1195,7 @@ class ImapClient
     }
 
     /**
-     * convert imap given address in string
+     * Convert imap given address into string
      *
      * @param object $headerinfos the infos given by imap
      * @return string in format "Name <email@bla.de>"
@@ -1175,7 +1220,7 @@ class ImapClient
     }
 
     /**
-     * converts imap given array of addresses in strings
+     * Converts imap given array of addresses as strings
      *
      * @param $addresses imap given addresses as array
      * @return array with strings (e.g. ["Name <email@bla.de>", "Name2 <email2@bla.de>"]
@@ -1189,7 +1234,7 @@ class ImapClient
     }
 
     /**
-     * returns body of the email. First search for html version of the email, then the plain part.
+     * Returns the body of the email. First search for html version of the email, then the plain part.
      *
      * @param int $uid message id
      * @return string email body
@@ -1207,7 +1252,7 @@ class ImapClient
     }
 
     /**
-     * convert to utf8 if necessary.
+     * Convert to utf8 if necessary.
      *
      * @param string $str utf8 encoded string
      * @return bool
@@ -1221,7 +1266,7 @@ class ImapClient
     }
 
     /**
-     * returns a part with a given mimetype
+     * Returns a part with a given mimetype
      * taken from http://www.sitepoint.com/exploring-phps-imap-library-2/
      *
      * @param false|resource $imap imap stream
@@ -1282,7 +1327,7 @@ class ImapClient
     }
 
     /**
-     * get attachments of given email
+     * Get attachments of given email
      * taken from http://www.sitepoint.com/exploring-phps-imap-library-2/
      *
      * @param int    $mailNum The message number
@@ -1479,6 +1524,11 @@ class ImapClient
      * to
      * ['one'=>['two'=>['three'=>['four'=>['five'=>[...] ]]]]]
      *
+	
+	/// 
+	/// Does this need to be removed?
+	///
+	
      * @param array $subFolders
      * @return array
      */
@@ -1500,7 +1550,7 @@ class ImapClient
     }
     */
 
-    /*
+    /**
      * Get uid from id
      *
      * @var int $id
@@ -1510,7 +1560,7 @@ class ImapClient
         return imap_uid($this->imap, $id);
     }
 
-    /*
+    /**
      * Get id from uid
      *
      * @var int $uid
@@ -1520,13 +1570,18 @@ class ImapClient
         return imap_msgno($this->imap, $uid);
     }
 
+	/**
+	 * Send an email
+	 *
+	 * @return void
+	 */
     public function sendMail()
     {
         $outMessage = new AdapterForOutgoingMessage(self::$connectConfig);
         $outMessage->send();
     }
 
-    /*
+    /**
      * Check message id
      *
      * @return void

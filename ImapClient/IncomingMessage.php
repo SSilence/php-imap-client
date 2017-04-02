@@ -6,20 +6,70 @@ use SSilence\ImapClient\ImapClientException;
 use SSilence\ImapClient\TypeAttachments;
 use SSilence\ImapClient\TypeBody;
 
+/**
+ * Class for all imcoming messages
+ *
+ * Copyright (C) 2016-2017  SSilence
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * @package    protocols
+ * @copyright  Copyright (c) Tobias Zeising (http://www.aditu.de)
+ * @author     Tobias Zeising <tobias.zeising@aditu.de>
+ */
+
 class IncomingMessage
 {
+	/**
+	 * Header of the message
+	 */
     public $header;
+	/**
+	 * The message
+	 */
     public $message;
+	/**
+	 * Attachment
+	 */
     public $attachment;
+	/**
+	 * Section of the message
+	 */
     public $section;
+	/**
+	 * Structure of the message
+	 */
     public $structure;
+	/**
+	 * Debug on or off
+	 */
     public $debug;
 
+	/**
+	 * The imap string
+	 */
     private $imapStream;
+	/**
+	 * ID of the message
+	 */
     private $id;
+	/**
+	 * UID of the message 
+	 */
     private $uid;
+	/**
+	 * Count the attachments
+	 */
     private $countAttachment;
 
+	/**
+	 * Called when the class has a new instance made of it
+	 */
     public function __construct($imapStream, $id)
     {
         $this->imapStream = $imapStream;
@@ -42,7 +92,7 @@ class IncomingMessage
         $this->init();
     }
 
-    /*
+    /**
      * Main process
      *
      * @return void
@@ -62,7 +112,7 @@ class IncomingMessage
         $this->getBody();
     }
 
-    /*
+    /**
      * Returns current object
      *
      * Set $this->debug
@@ -73,7 +123,7 @@ class IncomingMessage
         $this->debug = $this;
     }
 
-    /*
+    /**
      * Get count section
      *
      * Set $this->section
@@ -102,7 +152,7 @@ class IncomingMessage
         return $this->section;
     }
 
-    /*
+    /**
      * Bypasses the recursive parts current message
      * Set $this->section
      *
@@ -122,8 +172,8 @@ class IncomingMessage
         };
     }
 
-    /*
-     * Get attachments current message
+    /**
+     * Get attachments in the current message
      *
      * @return array
      */
@@ -157,7 +207,7 @@ class IncomingMessage
         $this->attachment = $attachments;
     }
 
-    /*
+    /**
      * Get body current message
      *
      * @return object
@@ -195,8 +245,8 @@ class IncomingMessage
         $this->message = $objNew;
     }
 
-    /*
-     * Get section message
+    /**
+     * Get a section message
      *
      * @return object \stdClass
      */
@@ -208,8 +258,8 @@ class IncomingMessage
         return $stdClass;
     }
 
-    /*
-     * Get specific section
+    /**
+     * Get a specific section
      *
      * @return string
      */
@@ -218,8 +268,8 @@ class IncomingMessage
         return imap_fetchbody($this->imapStream, $this->id, $section);
     }
 
-    /*
-     * Structure all message
+    /**
+     * Structure all messages
      *
      * @return object
      */
@@ -228,7 +278,7 @@ class IncomingMessage
         return imap_fetchstructure($this->imapStream, $this->id);
     }
 
-    /*
+    /**
      * Structure specific section
      *
      * @return object
@@ -238,10 +288,8 @@ class IncomingMessage
         return imap_bodystruct($this->imapStream, $this->id, $section);
     }
 
-    /*
-     * imapFetchOverview()
-     * from
-     * http://php.net/manual/ru/function.imap-fetch-overview.php
+    /**
+     * Fetch a quick "Overview" on a message
      *
      * @return object
      */
@@ -263,4 +311,16 @@ class IncomingMessage
         return imap_fetch_overview($this->imapStream, $sequence, $options);
     }
 
+	/**
+	 * This function is used to get the header info on a message.
+	 * Its return values can be found here: 
+	 * http://php.net/manual/en/function.imap-headerinfo.php#refsect1-function.imap-headerinfo-returnvalues
+	 * 
+	 * WARNING: This function may be moved to an internal call later
+	 *
+	 * @return object
+	 */
+	public function getHeaderInfo($msgnumber) {
+		return imap_headerinfo($this->imapStream, $msgnumber);
+	}
 }

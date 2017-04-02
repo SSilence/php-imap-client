@@ -35,3 +35,4 @@ The following methods are currently available.
 * ``saveAttachmetsMessagesBySubject($subject, $dir = null, $charset = null)`` Save Attachmets Messages By Subject
 * ``getBriefInfoMessages()`` Get a short information about the messages in the current folder.
 * ``sendMail()`` Send a message via the adapter.
+* ``getHeaderInfo($msgnumber)`` Get the header info via the message number. http://php.net/manual/en/function.imap-headerinfo.php#refsect1-function.imap-headerinfo-returnvalues
