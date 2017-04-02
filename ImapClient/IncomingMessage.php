@@ -29,6 +29,10 @@ class IncomingMessage
 	 * Header of the message
 	 */
     public $header;
+    /**
+     * Detail header of the message
+     */
+    public $headerDetail;
 	/**
 	 * The message
 	 */
@@ -101,6 +105,7 @@ class IncomingMessage
     {
         $header = $this->imapFetchOverview();
         $this->header = $header[0];
+        $this->headerDetail = $this->imapHeaderInfo();
         $structure = $this->imapFetchstructure();
         $this->structure = $structure;
         if(isset($structure->parts)){
@@ -311,16 +316,15 @@ class IncomingMessage
         return imap_fetch_overview($this->imapStream, $sequence, $options);
     }
 
-	/**
-	 * This function is used to get the header info on a message.
-	 * Its return values can be found here: 
-	 * http://php.net/manual/en/function.imap-headerinfo.php#refsect1-function.imap-headerinfo-returnvalues
-	 * 
-	 * WARNING: This function may be moved to an internal call later
-	 *
-	 * @return object
-	 */
-	public function getHeaderInfo($msgnumber) {
-		return imap_headerinfo($this->imapStream, $msgnumber);
-	}
+    /*
+     * Imap Header Info
+     *
+     * Wrapper for http://php.net/manual/ru/function.imap-headerinfo.php
+     *
+     * @return object
+     */
+    private function imapHeaderInfo()
+    {
+        return imap_headerinfo($this->imapStream, $this->id);
+    }
 }
