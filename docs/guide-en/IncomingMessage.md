@@ -58,8 +58,10 @@ $imap->incomingMessage->header->subject
 HeaderDetail properties have more properties like this
 [imap_headerinfo](http://php.net/manual/ru/function.imap-headerinfo.php).
 If there is no property in the returned object, then it is not present in this letter.
-To get the subject of the message, use
-$imap->incomingMessage->headerDetail->subject
+To get the CC or BCC of the message, use
+$imap->incomingMessage->headerDetail->cc
+or
+$imap->incomingMessage->headerDetail->bcc
 
 ### Message properties
 Message properties look like this:
