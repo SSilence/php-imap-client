@@ -6,7 +6,7 @@ The following methods are currently available.
 * ``isConnected()`` check whether the imap connection could be opened successfully
 * ``getError()`` returns the last error message
 * ``selectFolder($folder)`` select current folder
-* ``getFolders()`` get all available folders
+* ``getFolders($seperator, $type)`` @param string $separator. Default is '.' @param int $type. Has three meanings 0,1,2.If 0 return nested array, if 1 return an array of strings, if 2 return raw imap_list()
 * ``setEmbed($val)`` If true, embed all 'inline' images into body HTML, accesible in 'body_embed'
 * ``countMessages()`` count messages in current folder
 * ``countUnreadMessages()`` count unread messages in current folder
