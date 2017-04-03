@@ -227,6 +227,7 @@ class IncomingMessage
             if(!isset($obj->structure->subtype)){continue;};
             if(in_array($obj->structure->subtype, $types, false)){
                 switch ($obj->structure->encoding) {
+                    /*
                     case 0:
                     case 1:
                         $obj->body = imap_8bit($obj->body);
@@ -234,6 +235,7 @@ class IncomingMessage
                     case 2:
                         $obj->body = imap_binary($obj->body);
                         break;
+                    */
                     case 3:
                         $obj->body = imap_base64($obj->body);
                         break;
@@ -326,5 +328,19 @@ class IncomingMessage
     private function imapHeaderInfo()
     {
         return imap_headerinfo($this->imapStream, $this->id);
+    }
+
+    /**
+     * Convert to utf8 if necessary.
+     *
+     * @param string $str utf8 encoded string
+     * @return string
+     */
+    private function convertToUtf8($str) {
+        if (mb_detect_encoding($str, "UTF-8, ISO-8859-1, GBK")!="UTF-8") {
+            $str = utf8_encode($str);
+        }
+        $str = iconv('UTF-8', 'UTF-8//IGNORE', $str);
+        return $str;
     }
 }
