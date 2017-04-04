@@ -1,10 +1,9 @@
 # Incoming Message
 
 ## Structure
-Incoming Message it is object(SSilence\ImapClient\IncomingMessage) has 6 basic properties
+Incoming Message it is object(SSilence\ImapClient\IncomingMessage) has 5 basic properties
 ```
 $imap->incomingMessage->header
-$imap->incomingMessage->headerDetail
 $imap->incomingMessage->message
 $imap->incomingMessage->attachment
 $imap->incomingMessage->section
@@ -54,14 +53,19 @@ Header properties typically looks like
 To get the subject of the message, use
 $imap->incomingMessage->header->subject
 
-### HeaderDetail properties
-HeaderDetail properties have more properties like this
-[imap_headerinfo](http://php.net/manual/ru/function.imap-headerinfo.php).
+To get the CC or BCC use the property
+```php
+$imap->incomingMessage->header->details
+```
+It is object.
+Header details properties have more properties like this [imap_headerinfo](http://php.net/manual/ru/function.imap-headerinfo.php).
 If there is no property in the returned object, then it is not present in this letter.
 To get the CC or BCC of the message, use
-$imap->incomingMessage->headerDetail->cc
-or
-$imap->incomingMessage->headerDetail->bcc
+```php
+$imap->incomingMessage->header->details->cc
+# or
+$imap->incomingMessage->header->details->bcc
+```
 
 ### Message properties
 Message properties look like this:
