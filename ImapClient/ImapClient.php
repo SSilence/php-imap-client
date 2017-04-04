@@ -1518,39 +1518,6 @@ class ImapClient
     }
 
     /**
-     * Make an array of strings, a nested array.
-     * From
-     * ['one', 'two', 'three', 'four', 'five' ...]
-     * to
-     * ['one'=>['two'=>['three'=>['four'=>['five'=>[...] ]]]]]
-     *
-	
-	/// 
-	/// Does this need to be removed?
-	///
-	
-     * @param array $subFolders
-     * @return array
-     */
-    /*
-    protected function makeArrayFolders(array $subFolders)
-    {
-        $count = count($subFolders);
-        $array = $subFolders;
-        $out = [];
-        for($i = $count; $i >= 2; $i--){
-            if(empty($out)){
-                $out[$array[$i-2]] = [$array[$i-1]=>[]];
-            }else{
-                $out[$array[$i-2]] = $out;
-                unset($out[$array[$i-1]]);
-            };
-        };
-        return $out;
-    }
-    */
-
-    /**
      * Get uid from id
      *
      * @var int $id
