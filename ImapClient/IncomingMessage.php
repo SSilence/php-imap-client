@@ -29,10 +29,6 @@ class IncomingMessage
 	 * Header of the message
 	 */
     public $header;
-    /**
-     * Detail header of the message
-     */
-    public $headerDetail;
 	/**
 	 * The message
 	 */
@@ -105,7 +101,7 @@ class IncomingMessage
     {
         $header = $this->imapFetchOverview();
         $this->header = $header[0];
-        $this->headerDetail = $this->imapHeaderInfo();
+        $this->header->details = $this->imapHeaderInfo();
         $structure = $this->imapFetchstructure();
         $this->structure = $structure;
         if(isset($structure->parts)){
@@ -115,6 +111,7 @@ class IncomingMessage
         $this->getCountSection();
         $this->getAttachment();
         $this->getBody();
+        $this->decode();
     }
 
     /**
@@ -192,6 +189,7 @@ class IncomingMessage
             if(!isset($obj->structure->subtype)){continue;};
             if(in_array($obj->structure->subtype, $types, false)){
                 switch ($obj->structure->encoding) {
+                    /*
                     case 0:
                     case 1:
                         $obj->body = imap_8bit($obj->body);
@@ -199,6 +197,7 @@ class IncomingMessage
                     case 2:
                         $obj->body = imap_binary($obj->body);
                         break;
+                    */
                     case 3:
                         $obj->body = imap_base64($obj->body);
                         break;
@@ -227,6 +226,7 @@ class IncomingMessage
             if(!isset($obj->structure->subtype)){continue;};
             if(in_array($obj->structure->subtype, $types, false)){
                 switch ($obj->structure->encoding) {
+                    /*
                     case 0:
                     case 1:
                         $obj->body = imap_8bit($obj->body);
@@ -234,11 +234,12 @@ class IncomingMessage
                     case 2:
                         $obj->body = imap_binary($obj->body);
                         break;
+                    */
                     case 3:
                         $obj->body = imap_base64($obj->body);
                         break;
                     case 4:
-                        $obj->body = quoted_printable_decode($obj->body);
+                        $obj->body = imap_qprint($obj->body);
                         break;
                 };
 
@@ -326,5 +327,64 @@ class IncomingMessage
     private function imapHeaderInfo()
     {
         return imap_headerinfo($this->imapStream, $this->id);
+    }
+
+    /**
+     * Convert to utf8 if necessary.
+     *
+     * @param string $str utf8 encoded string
+     * @return string
+     */
+    private function convertToUtf8($str) {
+        if (mb_detect_encoding($str, "UTF-8, ISO-8859-1, GBK")!="UTF-8") {
+            $str = utf8_encode($str);
+        }
+        $str = iconv('UTF-8', 'UTF-8//IGNORE', $str);
+        return $str;
+    }
+
+    /*
+     * Wrapper for imap_mime_header_decode()
+     * http://php.net/manual/ru/function.imap-mime-header-decode.php
+     *
+     * @param string $string
+     * @return array
+     */
+    private function imapMimeHeaderDecode($string)
+    {
+        return imap_mime_header_decode($string);
+    }
+    
+    /*
+     * Decodes and glues the title bar
+     * http://php.net/manual/ru/function.imap-mime-header-decode.php
+     * 
+     * @param string $string
+     * @return string
+     */
+    private function mimeHeaderDecode($string)
+    {
+        $cache = null;
+        $array = $this->imapMimeHeaderDecode($string);
+        foreach ($array as $object) {
+            $cache .= $object->text;
+        };
+        return $cache;
+    }
+
+    /*
+     * Decode incoming message
+     */
+    private function decode()
+    {
+        if(isset($this->header->subject)){
+            $this->header->subject = $this->mimeHeaderDecode($this->header->subject);
+        };
+        if(isset($this->header->details->subject)){
+            $this->header->details->subject = $this->mimeHeaderDecode($this->header->details->subject);
+        };
+        if(isset($this->header->details->Subject)){
+            $this->header->details->Subject = $this->mimeHeaderDecode($this->header->details->Subject);
+        };
     }
 }
