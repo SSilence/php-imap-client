@@ -48,6 +48,8 @@ Header properties typically looks like
     int(0)
     ["udate"]=>
     int(1490094157)
+    ["details"]=>
+        object(stdClass)#4 (20) {}
   }
 ```
 To get the subject of the message, use
@@ -65,6 +67,7 @@ To get the CC or BCC of the message, use
 $imap->incomingMessage->header->details->cc
 # or
 $imap->incomingMessage->header->details->bcc
+# cc and bcc it is array of objects with properties [personal, adl, mailbox, host]
 ```
 
 ### Message properties
