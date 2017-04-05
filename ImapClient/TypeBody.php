@@ -20,31 +20,20 @@ namespace SSilence\ImapClient;
  */
 class TypeBody
 {
-	
-	/** 
-	 * Types of body's
-	 */
-    public $types;
 
 	/**
-	 * Called when a new instace is made
+	 * Types of body's
 	 */
-    public function __construct()
-    {
-        /*
-         * Allowed types message body
-         */
-        $this->types = ['PLAIN', 'HTML'];
-    }
+    private static $types = ['PLAIN', 'HTML'];
 
     /**
      * Get the allowed types.
      *
      * @return array
      */
-    public function get()
+    public static function get()
     {
-        return $this->types;
+        return static::types;
     }
 
 }

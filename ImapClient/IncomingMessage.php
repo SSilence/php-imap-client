@@ -59,7 +59,7 @@ class IncomingMessage
 	 */
     private $id;
 	/**
-	 * UID of the message 
+	 * UID of the message
 	 */
     private $uid;
 	/**
@@ -181,8 +181,7 @@ class IncomingMessage
      */
     private function getAttachment()
     {
-        $types = new TypeAttachments();
-        $types = $types->get();
+        $types = TypeAttachments::get();
         $attachments = [];
         foreach ($this->section as $section) {
             $obj = $this->getSection($section);
@@ -218,8 +217,7 @@ class IncomingMessage
      */
     private function getBody()
     {
-        $types = new TypeBody();
-        $types = $types->get();
+        $types = TypeBody::get();
         $objNew = new \stdClass();
         foreach ($this->section as $section) {
             $obj = $this->getSection($section);
@@ -354,11 +352,11 @@ class IncomingMessage
     {
         return imap_mime_header_decode($string);
     }
-    
+
     /*
      * Decodes and glues the title bar
      * http://php.net/manual/ru/function.imap-mime-header-decode.php
-     * 
+     *
      * @param string $string
      * @return string
      */
