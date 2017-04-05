@@ -33,7 +33,7 @@ class TypeBody
      */
     public static function get()
     {
-        return static::types;
+        return static::$types;
     }
 
 }
