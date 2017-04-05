@@ -235,7 +235,9 @@ class IncomingMessage
                      $obj->body = quoted_printable_decode($obj->body);
                      break;
              };
-             $attachments[] = $obj;
+
+				 $attachment = new IncomingMessageAttachment($obj);
+             $attachments[] = $attachment;
         }
         $this->attachment = $attachments;
     }
