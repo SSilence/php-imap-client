@@ -174,6 +174,40 @@ class IncomingMessage
         };
     }
 
+	 /**
+	  * Gets all sections, or if parameter is specified sections by type
+	  * @param string $type
+	  * @return array
+	  */
+	 private function getSections ($type = null) {
+		 if (!$type) {
+			 return $this->section;
+		 };
+
+		 $types = null;
+		 switch ($type) {
+			 case 'attachments':
+			 	$types = TypeAttachments::get();
+				break;
+			 case 'body':
+			 	$types = TypeBody::get();
+				break;
+			 default:
+			 	throw new ImapClientException("Section type not recognised");
+				break;
+		 };
+
+		 $sections = [];
+		 foreach ($this->section as $section) {
+			 $obj = $this->getSection($section);
+			 if(!isset($obj->structure->subtype)){continue;};
+			 if(in_array($obj->structure->subtype, $types, false)){
+				 $sections[] = $section;
+			 };
+		 };
+		 return $sections;
+	 }
+
     /**
      * Get attachments in the current message
      *
@@ -181,31 +215,29 @@ class IncomingMessage
      */
     private function getAttachment()
     {
-        $types = TypeAttachments::get();
-        $attachments = [];
-        foreach ($this->section as $section) {
+		 $attachments = [];
+		 foreach ($this->getSections('attachments') as $section) {
             $obj = $this->getSection($section);
-            if(!isset($obj->structure->subtype)){continue;};
-            if(in_array($obj->structure->subtype, $types, false)){
-                switch ($obj->structure->encoding) {
-                    /*
-                    case 0:
-                    case 1:
-                        $obj->body = imap_8bit($obj->body);
-                        break;
-                    case 2:
-                        $obj->body = imap_binary($obj->body);
-                        break;
-                    */
-                    case 3:
-                        $obj->body = imap_base64($obj->body);
-                        break;
-                    case 4:
-                        $obj->body = quoted_printable_decode($obj->body);
-                        break;
-                };
-                $attachments[] = $obj;
-            };
+             switch ($obj->structure->encoding) {
+                 /*
+                 case 0:
+                 case 1:
+                     $obj->body = imap_8bit($obj->body);
+                     break;
+                 case 2:
+                     $obj->body = imap_binary($obj->body);
+                     break;
+                 */
+                 case 3:
+                     $obj->body = imap_base64($obj->body);
+                     break;
+                 case 4:
+                     $obj->body = quoted_printable_decode($obj->body);
+                     break;
+             };
+
+				 $attachment = new IncomingMessageAttachment($obj);
+             $attachments[] = $attachment;
         }
         $this->attachment = $attachments;
     }
@@ -217,34 +249,30 @@ class IncomingMessage
      */
     private function getBody()
     {
-        $types = TypeBody::get();
-        $objNew = new \stdClass();
-        foreach ($this->section as $section) {
+		 $objNew = new \stdClass();
+        foreach ($this->getSections('body') as $section) {
             $obj = $this->getSection($section);
-            if(!isset($obj->structure->subtype)){continue;};
-            if(in_array($obj->structure->subtype, $types, false)){
-                switch ($obj->structure->encoding) {
-                    /*
-                    case 0:
-                    case 1:
-                        $obj->body = imap_8bit($obj->body);
-                        break;
-                    case 2:
-                        $obj->body = imap_binary($obj->body);
-                        break;
-                    */
-                    case 3:
-                        $obj->body = imap_base64($obj->body);
-                        break;
-                    case 4:
-                        $obj->body = imap_qprint($obj->body);
-                        break;
-                };
+             switch ($obj->structure->encoding) {
+                 /*
+                 case 0:
+                 case 1:
+                     $obj->body = imap_8bit($obj->body);
+                     break;
+                 case 2:
+                     $obj->body = imap_binary($obj->body);
+                     break;
+                 */
+                 case 3:
+                     $obj->body = imap_base64($obj->body);
+                     break;
+                 case 4:
+                     $obj->body = imap_qprint($obj->body);
+                     break;
+             };
 
-                $subtype = strtolower($obj->structure->subtype);
-                $objNew->$subtype = $obj->body;
-                $objNew->info[] = $obj;
-            };
+             $subtype = strtolower($obj->structure->subtype);
+             $objNew->$subtype = $obj->body;
+             $objNew->info[] = $obj;
         }
         $this->message = $objNew;
     }
