@@ -576,7 +576,11 @@ class ImapClient
             $emails = array();
             foreach ($ids as $id)
             {
-                $emails[] = $this->formatMessage($id, $withbody, $embed_images);
+                $incomingMessage = $this->getMessage($id);
+                if($incomingMessage->header->seen == 0){
+                    $this->setUnseenMessage($id);
+                };
+                $emails[] = $incomingMessage;
             }
         }
         if ($order == 'DESC')
