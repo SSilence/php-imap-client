@@ -25,6 +25,13 @@ use SSilence\ImapClient\TypeBody;
 
 class IncomingMessage
 {
+
+	/**
+	 * Used to handle sections of the e-mail easier
+	 */
+	const SECTION_ATTACHMENTS = 1;
+	const SECTION_BODY = 2;
+
 	/**
 	 * Header of the message
 	 */
@@ -59,7 +66,7 @@ class IncomingMessage
 	 */
     private $id;
 	/**
-	 * UID of the message 
+	 * UID of the message
 	 */
     private $uid;
 	/**
@@ -174,6 +181,66 @@ class IncomingMessage
         };
     }
 
+	 /**
+	  * Gets all sections, or if parameter is specified sections by type
+	  * @param string $type
+	  * @return array
+	  */
+	 private function getSections ($type = null)
+	 {
+		 if (!$type)
+		 {
+			 return $this->section;
+		 };
+
+		 $types = null;
+		 switch ($type)
+		 {
+			 case self::SECTION_ATTACHMENTS:
+			 	$types = TypeAttachments::get();
+				break;
+			 case self::SECTION_BODY:
+			 	$types = TypeBody::get();
+				break;
+			 default:
+			 	throw new ImapClientException("Section type not recognised/supported");
+				break;
+		 };
+
+		 $sections = [];
+		 foreach ($this->section as $section)
+		 {
+			 $obj = $this->getSection($section);
+			 if (!isset($obj->structure->subtype))
+			 {
+				 continue;
+			 };
+			 if (in_array($obj->structure->subtype, $types, false))
+			 {
+				 $sections[] = $section;
+			 };
+		 };
+		 return $sections;
+	 }
+
+	 /**
+	  * OOP way of getting attachments as objects
+      * @return array|IncomingMessageAttachment
+	  */
+	 private $_attachments;
+	 public function getAttachments ()
+	 {
+		 if ($this->_attachments === null)
+		 {
+			 $this->_attachments = [];
+			 foreach ($this->attachment as $attachment)
+			 {
+				 $this->_attachments[] = new IncomingMessageAttachment($attachment);
+			 };
+			 return $this->_attachments;
+		 };
+	 }
+
     /**
      * Get attachments in the current message
      *
@@ -181,33 +248,21 @@ class IncomingMessage
      */
     private function getAttachment()
     {
-        $types = new TypeAttachments();
-        $types = $types->get();
         $attachments = [];
-        foreach ($this->section as $section) {
+        foreach ($this->getSections(self::SECTION_ATTACHMENTS) as $section)
+        {
             $obj = $this->getSection($section);
-            if(!isset($obj->structure->subtype)){continue;};
-            if(in_array($obj->structure->subtype, $types, false)){
-                switch ($obj->structure->encoding) {
-                    /*
-                    case 0:
-                    case 1:
-                        $obj->body = imap_8bit($obj->body);
-                        break;
-                    case 2:
-                        $obj->body = imap_binary($obj->body);
-                        break;
-                    */
-                    case 3:
-                        $obj->body = imap_base64($obj->body);
-                        break;
-                    case 4:
-                        $obj->body = quoted_printable_decode($obj->body);
-                        break;
-                };
-                $attachments[] = $obj;
+            switch ($obj->structure->encoding)
+            {
+                case 3:
+                    $obj->body = imap_base64($obj->body);
+                    break;
+                case 4:
+                    $obj->body = quoted_printable_decode($obj->body);
+                    break;
             };
-        }
+            $attachments[] = $obj;
+        };
         $this->attachment = $attachments;
     }
 
@@ -218,36 +273,24 @@ class IncomingMessage
      */
     private function getBody()
     {
-        $types = new TypeBody();
-        $types = $types->get();
         $objNew = new \stdClass();
-        foreach ($this->section as $section) {
+        foreach ($this->getSections(self::SECTION_BODY) as $section)
+        {
             $obj = $this->getSection($section);
-            if(!isset($obj->structure->subtype)){continue;};
-            if(in_array($obj->structure->subtype, $types, false)){
-                switch ($obj->structure->encoding) {
-                    /*
-                    case 0:
-                    case 1:
-                        $obj->body = imap_8bit($obj->body);
-                        break;
-                    case 2:
-                        $obj->body = imap_binary($obj->body);
-                        break;
-                    */
-                    case 3:
-                        $obj->body = imap_base64($obj->body);
-                        break;
-                    case 4:
-                        $obj->body = imap_qprint($obj->body);
-                        break;
-                };
-
-                $subtype = strtolower($obj->structure->subtype);
-                $objNew->$subtype = $obj->body;
-                $objNew->info[] = $obj;
+            switch ($obj->structure->encoding)
+            {
+                case 3:
+                    $obj->body = imap_base64($obj->body);
+                    break;
+                case 4:
+                    $obj->body = imap_qprint($obj->body);
+                    break;
             };
-        }
+
+            $subtype = strtolower($obj->structure->subtype);
+            $objNew->$subtype = $obj->body;
+            $objNew->info[] = $obj;
+        };
         $this->message = $objNew;
     }
 
@@ -354,11 +397,11 @@ class IncomingMessage
     {
         return imap_mime_header_decode($string);
     }
-    
+
     /*
      * Decodes and glues the title bar
      * http://php.net/manual/ru/function.imap-mime-header-decode.php
-     * 
+     *
      * @param string $string
      * @return string
      */

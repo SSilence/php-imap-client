@@ -23,27 +23,16 @@ class TypeAttachments
 	/**
 	 * Types of attachments
 	 */
-    public $types;
+    private static $types = ['JPEG', 'PNG', 'GIF', 'PDF', 'X-MPEG', 'MSWORD', 'OCTET-STREAM'];
 
-	/**
-	 * Class builder
-	 */  
-    public function __construct()
-    {
-        /*
-         * Allowed types attachments
-         */
-        $this->types = ['JPEG', 'PNG', 'GIF', 'PDF', 'X-MPEG', 'MSWORD', 'OCTET-STREAM'];
-    }
-
-    /**
+	 /**
      * Get the allowed types.
      *
      * @return array
      */
-    public function get()
+    public static function get()
     {
-        return $this->types;
+        return static::$types;
     }
 
 }
