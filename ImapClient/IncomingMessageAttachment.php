@@ -23,6 +23,8 @@ class IncomingMessageAttachment
 {
 
     private $raw;
+    private $_name;
+    private $_body;
 
     /**
      * The constructor
@@ -47,7 +49,6 @@ class IncomingMessageAttachment
      * Returns the name of the attachment along with file extension
      * @return string
      */
-    private $_name;
     public function getName ()
     {
         if ($this->_name === null)
@@ -68,7 +69,6 @@ class IncomingMessageAttachment
      * Returns the body of the e-mail
      * @return string
      */
-    private $_body;
     public function getBody ()
     {
         if ($this->_body === null)
