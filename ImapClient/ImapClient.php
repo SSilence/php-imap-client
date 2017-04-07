@@ -555,7 +555,7 @@ class ImapClient
      *
      * @return array
      */
-    public function getMessagesByCriteria($criteria = '', $number = 0, $start = 0, $order = 'DESC', $withbody = FALSE, $embed_images = FALSE)
+    public function getMessagesByCriteria($criteria = '', $number = 0, $start = 0, $order = 'DESC')
     {
         $emails = array();
         $result = imap_search($this->imap, $criteria);
