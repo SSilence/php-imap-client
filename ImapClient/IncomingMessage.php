@@ -225,6 +225,7 @@ class IncomingMessage
 
 	 /**
 	  * OOP way of getting attachments as objects
+      * @return array|IncomingMessageAttachment
 	  */
 	 private $_attachments;
 	 public function getAttachments ()
