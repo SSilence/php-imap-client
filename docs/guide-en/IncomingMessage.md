@@ -13,6 +13,10 @@ and one for debugging
 ```
 $imap->incomingMessage->debug
 ```
+It also has one public method for getting message attachments as objects
+```
+$imap->incomingMessage->getAttachments()
+```
 ### Header properties
 Header properties typically looks like
 ```
@@ -221,11 +225,11 @@ If the letter has attachments, then its return will look like as follows
         }
       }
       ["body"]=>string(173862) ""
-      
+
       ... and next object ...
       [1]=>
           object(stdClass)#18 (2) {}
-          
+
 ```
 The a ttachment object has 2 basic properties.
 $imap->incomingMessage->attachment[0]->structure
@@ -254,3 +258,20 @@ Section properties it is array sections of which the letter consists.
 Structure propertie is the complete structure of the email
 ### Debug properties
 Debug propertie can be used for debugging
+
+### Getting e-mail attachments
+Attachments can be retrieved as IncomingMessageAttachment objects, which provides a better API for accessing
+attachment data and is accessed as follows:
+```php
+$attachments = $imap->incomingMessage->getAttachments();
+```
+
+The attachment object has three basic methods: getName(); getBody() and getRaw().
+```php
+foreach ($attachments as $attachment)
+{
+    print $attachment->getName(); // outputs the name of the attachment
+    print $attachment->getBody(); // outputs the contents of the attachment
+    var_dump($attachment->getRaw()); // outputs the raw attachment array - see the attachments property above
+}
+```
