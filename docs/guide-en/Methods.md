@@ -10,7 +10,6 @@ The following methods are currently available.
 * ``getMessage($id)`` get email by given id.
 * ``getMessages($number, $start, $order)`` get emails in current folder.
 * ``getUnreadMessages($read)`` get unread messages in current folder and marks them like read. Use $read = false marks them like unread.
-* ``getAttachment($id, $index = 0)`` get attachment of the message with given id (getMessages returns all available attachments).
 * ``getQuota($user)`` Retrieve the quota level settings, and usage statics per mailbox.
 * ``getQuotaRoot($user)`` Retrieve the quota level settings, and usage statics per mailbox.
 * ``getAllEmailAddresses()`` returns all email addresses of all emails (for auto suggestion list).
@@ -18,6 +17,9 @@ The following methods are currently available.
 * ``getHeaderInfo($msgNumber)`` Get the header info via the message number. http://php.net/manual/en/function.imap-headerinfo.php#refsect1-function.imap-headerinfo-returnvalues
 * ``getMessagesByCriteria($criteria, $number, $start, $order)`` Get messages by criteria like 'FROM uncle'.
 * ``getBriefInfoMessages()`` Get a short information about the messages in the current folder.
+* ``getSection($id, $section)`` Get the section of the specified message.
+* ``getUid($id)`` Get uid through id.
+* ``getId($uid)`` Get id through uid.
 
 * ``setUnseenMessage($id, $seen = true)`` set unseen state of the message with given id.
 * ``setEmbed($val)`` If true, embed all 'inline' images into body HTML, accesible in 'body_embed'.
@@ -44,7 +46,8 @@ The following methods are currently available.
 
 * ``saveMessageInSent($header, $body)`` save a sent message in sent folder
 * ``saveEmail($file , $id, $part)`` saves an email to the $file file
-* ``saveEmailSafe($file , $id, $part, $streamFilter)`` saves an email to the $file file. This is recommended for servers with low amounts of RAM. Stream filter is set to convert.base64-decode by default
+* ``saveEmailSafe($file , $id, $part, $streamFilter)`` saves an email to the $file file. This is recommended for servers with low amounts of RAM. Stream filter is set to convert.base64-decode by default.
+* ``saveAttachments($options)`` Save attachments one incoming message. You can set any of the options: ``$options['dir'=>null, 'incomingMessage'=>null]``.
 * ``saveAttachmetsMessagesBySubject($subject, $dir = null, $charset = null)`` Save Attachmets Messages By Subject
 
 * ``sendMail()`` Send a message via the adapter.
