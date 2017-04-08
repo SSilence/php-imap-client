@@ -108,9 +108,6 @@ class IncomingMessage
      */
     private function init()
     {
-        $header = $this->imapFetchOverview();
-        $this->header = $header[0];
-        $this->header->details = $this->imapHeaderInfo();
         $structure = $this->imapFetchstructure();
         $this->structure = $structure;
         if(isset($structure->parts)){
@@ -121,6 +118,9 @@ class IncomingMessage
         $this->getAttachment();
         $this->getBody();
         $this->decode();
+        $header = $this->imapFetchOverview();
+        $this->header = $header[0];
+        $this->header->details = $this->imapHeaderInfo();
     }
 
     /**
