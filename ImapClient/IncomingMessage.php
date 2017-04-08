@@ -74,6 +74,8 @@ class IncomingMessage
 	 */
     private $countAttachment;
 
+    private $_attachments;
+
 	/**
 	 * Called when the class has a new instance made of it
 	 */
@@ -106,9 +108,6 @@ class IncomingMessage
      */
     private function init()
     {
-        $header = $this->imapFetchOverview();
-        $this->header = $header[0];
-        $this->header->details = $this->imapHeaderInfo();
         $structure = $this->imapFetchstructure();
         $this->structure = $structure;
         if(isset($structure->parts)){
@@ -119,6 +118,9 @@ class IncomingMessage
         $this->getAttachment();
         $this->getBody();
         $this->decode();
+        $header = $this->imapFetchOverview();
+        $this->header = $header[0];
+        $this->header->details = $this->imapHeaderInfo();
     }
 
     /**
@@ -181,65 +183,64 @@ class IncomingMessage
         };
     }
 
-	 /**
-	  * Gets all sections, or if parameter is specified sections by type
-	  * @param string $type
-	  * @return array
-	  */
-	 private function getSections ($type = null)
-	 {
-		 if (!$type)
-		 {
-			 return $this->section;
-		 };
+    /**
+     * Gets all sections, or if parameter is specified sections by type
+     *
+     * @param string $type
+     * @return array
+     */
+    private function getSections ($type = null)
+    {
+        if (!$type)
+        {
+            return $this->section;
+        };
+        $types = null;
+        switch ($type)
+        {
+            case self::SECTION_ATTACHMENTS:
+                $types = TypeAttachments::get();
+                break;
+            case self::SECTION_BODY:
+                $types = TypeBody::get();
+                break;
+            default:
+                throw new ImapClientException("Section type not recognised/supported");
+                break;
+        };
+        $sections = [];
+        foreach ($this->section as $section)
+        {
+            $obj = $this->getSection($section);
+            if (!isset($obj->structure->subtype))
+            {
+                continue;
+            };
+            if (in_array($obj->structure->subtype, $types, false))
+            {
+                $sections[] = $section;
+            };
+        };
+        return $sections;
+    }
 
-		 $types = null;
-		 switch ($type)
-		 {
-			 case self::SECTION_ATTACHMENTS:
-			 	$types = TypeAttachments::get();
-				break;
-			 case self::SECTION_BODY:
-			 	$types = TypeBody::get();
-				break;
-			 default:
-			 	throw new ImapClientException("Section type not recognised/supported");
-				break;
-		 };
-
-		 $sections = [];
-		 foreach ($this->section as $section)
-		 {
-			 $obj = $this->getSection($section);
-			 if (!isset($obj->structure->subtype))
-			 {
-				 continue;
-			 };
-			 if (in_array($obj->structure->subtype, $types, false))
-			 {
-				 $sections[] = $section;
-			 };
-		 };
-		 return $sections;
-	 }
-
-	 /**
-	  * OOP way of getting attachments as objects
-      * @return array|IncomingMessageAttachment
-	  */
-	 private $_attachments;
-	 public function getAttachments ()
-	 {
-		 if ($this->_attachments === null)
-		 {
-			 $this->_attachments = [];
-			 foreach ($this->attachment as $attachment)
-			 {
-				 $this->_attachments[] = new IncomingMessageAttachment($attachment);
-			 };
-			 return $this->_attachments;
-		 };
-	 }
+    /**
+     * OOP way of getting attachments as objects
+     *
+     * @return array. IncomingMessageAttachment object.
+     */
+    public function getAttachments ()
+    {
+        if ($this->_attachments === null)
+        {
+            $this->_attachments = [];
+            foreach ($this->attachment as $attachment)
+            {
+                $this->_attachments[] = new IncomingMessageAttachment($attachment);
+            };
+            return $this->_attachments;
+        };
+    }
 
     /**
      * Get attachments in the current message

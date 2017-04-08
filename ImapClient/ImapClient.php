@@ -340,50 +340,6 @@ class ImapClient
     }
 
     /**
-	
-	///
-	/// This NEEDS to be decided. New function or this!
-	///
-	
-     * Returns all available folders
-     *
-     * @param string $separator. Default is '.'
-     * @param int $type. Has two meanings 0 and 1.
-     * If 0 return nested array, if 1 return an array of strings.
-     * @return array with folder names
-     */
-    /*
-    public function getFolders($separator = null, $type = 0) {
-        $folders = imap_list($this->imap, $this->mailbox, "*");
-        if($type == 1){
-            return str_replace($this->mailbox, "", $folders);
-        };
-        if($type == 0){
-            $array = str_replace($this->mailbox, "", $folders);
-            if(!isset($separator)){ $separator = '.'; };
-            $outArray = [];
-            foreach ($array as $folders) {
-                $subFolders = explode($separator, $folders);
-                $countSubFolders = count($subFolders);
-                if($countSubFolders > 1){
-                    $arrMake = $this->makeArrayFolders($subFolders);
-                    $kv = each($arrMake);
-                    if(!isset($outArray[$kv['key']])){
-                        $outArray[$kv['key']] = $kv['value'];
-                    }else{
-                        $outArray[$kv['key']] = array_merge($outArray[$kv['key']], $kv['value']);
-                    };
-                }else{
-                    $outArray[$subFolders[0]] = [];
-                };
-            };
-            return $outArray;
-        };
-        return null;
-    }
-    */
-
-    /**
      * Returns all available folders
      *
      * @param string $separator. Default is '.'
@@ -469,15 +425,6 @@ class ImapClient
             $newArray[] = ['id'=>$key+1, 'info' => $string];
         };
         return $newArray;
-
-        /*
-        $array = imap_headers($this->imap);
-        foreach ($array as $key => $string) {
-            if(preg_match('#\d+\)#', $string, $matches)){
-                echo $matches[0];
-            };
-        }
-        */
     }
 
     /**
@@ -492,26 +439,6 @@ class ImapClient
         }
         return count($result);
     }
-
-    /**
-     * Returns unseen emails in the current folder
-     *
-     * @return array messages
-     * @param bool|true $withbody without body
-     * @param string|UNSEEN set what will be used to find unread emails
-     */
-    /*
-    public function getUnreadMessages($withbody = true, $standard = "UNSEEN") {
-        $emails = array();
-        $result = imap_search($this->imap, $standard);
-        if ($result) {
-            foreach($result as $k=>$i) {
-                $emails[]= $this->formatMessage($i, $withbody);
-            }
-        }
-        return $emails;
-    }
-    */
 
     /**
      * Returns unseen emails in the current folder
@@ -555,10 +482,13 @@ class ImapClient
      *
      * @return array
      */
-    public function getMessagesByCriteria($criteria = '', $number = 0, $start = 0, $order = 'DESC', $withbody = FALSE, $embed_images = FALSE)
+    public function getMessagesByCriteria($criteria = '', $number = 0, $start = 0, $order = 'DESC')
     {
         $emails = array();
         $result = imap_search($this->imap, $criteria);
+        if(!$result){
+            throw new ImapClientException('Messages not found. Or this criteria not supported on your email server.');
+        };
         if ($number == 0)
         {
             $number = count($result);
@@ -576,7 +506,7 @@ class ImapClient
             $emails = array();
             foreach ($ids as $id)
             {
-                $emails[] = $this->formatMessage($id, $withbody, $embed_images);
+                $emails[] = $this->getMessage($id);
             }
         }
         if ($order == 'DESC')
@@ -622,7 +552,6 @@ class ImapClient
      *
      * @return array
      */
-    #public function getMessages($withbody = true, $number = 0, $start = 0, $order = 'DESC', $embed_images = false) {
     public function getMessages($number = 0, $start = 0, $order = 'DESC') {
         if ($number == 0)
         {
@@ -647,29 +576,11 @@ class ImapClient
 
             foreach ($ids as $id)
             {
-                #$emails[] = $this->formatMessage($id, $withbody, $embed_images);
                 $emails[] = $this->getMessage($id);
             }
         }
-
         return $emails;
     }
-
-    /**
-     * Returns one email by given id
-     *
-     * @param int  $id           Message id
-     * @param bool $withbody     False if you want without body
-     * @param bool $embed_images If use $withbody TRUE and you want body embed images, set TRUE
-     *
-     * @return array
-     */
-    /*
-    public function getMessage($id, $withbody = true, $embed_images = false) {
-        return $this->formatMessage($id, $withbody, $embed_images);
-    }
-    */
-
 
     /**
      * Returns one email by given id
@@ -778,6 +689,7 @@ class ImapClient
      *
      * @return array
      */
+    /*
     protected function formatMessage($id, $withbody = true, $embed_images = true) {
         $header = imap_headerinfo($this->imap, $id);
         // fetch unique uid
@@ -852,6 +764,7 @@ class ImapClient
 
         return $email;
     }
+    */
 
     /**
      * Delete the given message
@@ -905,33 +818,6 @@ class ImapClient
     }
 
     /**
-     * mark message as read
-     *
-     * @param int $id of the message
-     * @param bool|true $seen true = message is read, false = message is unread
-     * @return bool success or not
-     */
-    /*
-    public function setUnseenMessage($id, $seen = true) {
-        $header = $this->getMessageHeader($id);
-        if ($header == false) {
-            return false;
-        }
-
-        $flags = "";
-        $flags .= (strlen(trim($header->Answered))>0 ? "\\Answered " : '');
-        $flags .= (strlen(trim($header->Flagged))>0 ? "\\Flagged " : '');
-        $flags .= (strlen(trim($header->Deleted))>0 ? "\\Deleted " : '');
-        $flags .= (strlen(trim($header->Draft))>0 ? "\\Draft " : '');
-        $flags .= (($seen == true) ? '\\Seen ' : ' ');
-
-        //echo "\n<br />".$id.": ".$flags;
-        imap_clearflag_full($this->imap, $id, '\\Seen', ST_UID);
-        return imap_setflag_full($this->imap, $id, trim($flags), ST_UID);
-    }
-    */
-
-    /**
      * Delete flag message SEEN
      *
      * @param int $ids or string like 1,2,3,4,5 or string like 1:5
@@ -942,11 +828,7 @@ class ImapClient
     }
 
     /**
-	
-    ///
-    /// THIS IS REPLACED IF IM CORRECT??
-    ///	
-	
+
      * Return content of messages attachment
      * Save the attachment in a optional path or get the binary code in the content index
      *
@@ -956,6 +838,7 @@ class ImapClient
      *
      * @return array|bool False if attachment could not be get
      */
+    /*
     public function getAttachment($id, $index = 0, $tmp_path = '') {
 
         $messageIndex = imap_msgno($this->imap, imap_uid($this->imap, $id));
@@ -1010,6 +893,7 @@ class ImapClient
 
         return $file;
     }
+    */
 
     /**
      * Add a new folder
@@ -1073,6 +957,8 @@ class ImapClient
 
     /**
      * Returns all email addresses
+     *
+     * !!! NEED FIX IT !!!
      *
      * @return array with all email addresses or false on error
      */
@@ -1169,14 +1055,10 @@ class ImapClient
     /**
      * Convert attachment in array(name => ..., size => ...).
      *
-	 
-	/// 
-	/// This has been replaced correct?
-	///
-	
      * @param array $attachments with name and size
      * @return array
      */
+    /*
     protected function attachments2name($attachments) {
         $names = array();
         foreach ($attachments as $attachment) {
@@ -1193,6 +1075,7 @@ class ImapClient
         }
         return $names;
     }
+    */
 
     /**
      * Convert imap given address into string
@@ -1239,6 +1122,7 @@ class ImapClient
      * @param int $uid message id
      * @return string email body
      */
+    /*
     protected function getBody($uid) {
         $body = $this->get_part($this->imap, $uid, "TEXT/HTML");
         $html = true;
@@ -1250,6 +1134,7 @@ class ImapClient
         $body = $this->convertToUtf8($body);
         return array( 'body' => $body, 'html' => $html);
     }
+   */
 
     /**
      * Convert to utf8 if necessary.
@@ -1276,6 +1161,7 @@ class ImapClient
      * @param bool|false $partNumber part number
      * @return bool|string email body
      */
+    /*
     protected function get_part($imap, $uid, $mimetype, $structure = false, $partNumber = false) {
         if (!$structure) {
             $structure = imap_fetchstructure($imap, $uid, FT_UID);
@@ -1309,6 +1195,7 @@ class ImapClient
         }
         return false;
     }
+    */
 
     /**
      * Extract mimetype
@@ -1317,6 +1204,7 @@ class ImapClient
      * @param object $structure
      * @return string mimetype
      */
+    /*
     protected function get_mime_type($structure) {
         $primaryMimetype = array("TEXT", "MULTIPART", "MESSAGE", "APPLICATION", "AUDIO", "IMAGE", "VIDEO", "OTHER");
 
@@ -1325,6 +1213,7 @@ class ImapClient
         }
         return "TEXT/PLAIN";
     }
+    */
 
     /**
      * Get attachments of given email
@@ -1336,6 +1225,7 @@ class ImapClient
      *
      * @return array          Array of attachments
      */
+    /*
     protected function getAttachments($mailNum, $part, $partNum) {
         $attachments = array();
 
@@ -1422,6 +1312,7 @@ class ImapClient
         }
         return $attachments;
     }
+    */
 
     /**
     * Identify encoding by charset attribute in header
@@ -1445,6 +1336,8 @@ class ImapClient
 
     /**
      * HTML embed inline images
+     *
+     * !!! NEED FIX IT !!!
      *
      * @param array $email
      * @return string
