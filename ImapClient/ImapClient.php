@@ -559,6 +559,9 @@ class ImapClient
     {
         $emails = array();
         $result = imap_search($this->imap, $criteria);
+        if(!$result){
+            throw new ImapClientException('Messages not found. Or this criteria not supported on your email server.');
+        };
         if ($number == 0)
         {
             $number = count($result);
@@ -576,11 +579,7 @@ class ImapClient
             $emails = array();
             foreach ($ids as $id)
             {
-                $incomingMessage = $this->getMessage($id);
-                if($incomingMessage->header->seen == 0){
-                    $this->setUnseenMessage($id);
-                };
-                $emails[] = $incomingMessage;
+                $emails[] = $this->getMessage($id);
             }
         }
         if ($order == 'DESC')
