@@ -238,8 +238,8 @@ class IncomingMessage
             {
                 $this->_attachments[] = new IncomingMessageAttachment($attachment);
             };
-            return $this->_attachments;
         };
+	return $this->_attachments;
     }
 
     /**
