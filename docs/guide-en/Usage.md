@@ -28,12 +28,13 @@ var_dump($folders);
 foreach($folders as $folder) {
     echo $folder;
 }
-# or
+# or 
 foreach($folders as $folder => $subFolder) {
     echo $folder.PHP_EOL;
     echo $subFolder.PHP_EOL;
 }
 ```
+See [getFolders()](Methods.md) method settings.
 You can also select folders
 
 ```php
@@ -59,6 +60,10 @@ $imap->getMessage(82)
 Save all of the attachmets in this email.
 ```php
 $imap->saveAttachments();
+```
+or
+```php
+$imap->saveAttachments(['dir'=>'dir/to/save']);
 ```
 or save the attachment(s) like this
 ```php
