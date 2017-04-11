@@ -61,6 +61,10 @@ Save all of the attachmets in this email.
 ```php
 $imap->saveAttachments();
 ```
+or
+```php
+$imap->saveAttachments(['dir'=>'dir/to/save']);
+```
 or save the attachment(s) like this
 ```php
 $message = $imap->getMessage(82);

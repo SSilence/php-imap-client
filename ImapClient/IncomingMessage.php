@@ -41,9 +41,9 @@ class IncomingMessage
 	 */
     public $message;
 	/**
-	 * Attachment
+	 * Attachments
 	 */
-    public $attachment;
+    public $attachments;
 	/**
 	 * Section of the message
 	 */
@@ -73,8 +73,6 @@ class IncomingMessage
 	 * Count the attachments
 	 */
     private $countAttachment;
-
-    private $_attachments;
 
 	/**
 	 * Called when the class has a new instance made of it
@@ -115,7 +113,7 @@ class IncomingMessage
             $this->countAttachment = $countSection-1;
         };
         $this->getCountSection();
-        $this->getAttachment();
+        $this->getAttachments();
         $this->getBody();
         $this->getHeader();
         $this->decode();
@@ -123,6 +121,10 @@ class IncomingMessage
 
     /*
      * Get headers in the current message
+     *
+     * Set
+     * $this->header
+     * $this->header->details
      *
      * @return void
      */
@@ -137,6 +139,7 @@ class IncomingMessage
      * Returns current object
      *
      * Set $this->debug
+     *
      * @return void
      */
     public function debug()
@@ -148,7 +151,7 @@ class IncomingMessage
      * Get count section
      *
      * Set $this->section
-     * and
+     *
      * @return array sections
      */
     private function getCountSection()
@@ -161,20 +164,19 @@ class IncomingMessage
                 unset($mas[$key]);
             };
         };
-
         foreach ($mas as $key => $section) {
             $obj = $this->getSection($section);
             if(empty($obj->body)){
                 unset($mas[$key]);
             };
         };
-
         $this->section = $mas;
         return $this->section;
     }
 
     /**
      * Bypasses the recursive parts current message
+     *
      * Set $this->section
      *
      * @return void
@@ -235,29 +237,16 @@ class IncomingMessage
     }
 
     /**
-     * OOP way of getting attachments as objects
-     *
-     * @return array. IncomingMessageAttachment object.
-     */
-    public function getAttachments ()
-    {
-        if ($this->_attachments === null)
-        {
-            $this->_attachments = [];
-            foreach ($this->attachment as $attachment)
-            {
-                $this->_attachments[] = new IncomingMessageAttachment($attachment);
-            };
-        };
-	return $this->_attachments;
-    }
-
-    /**
      * Get attachments in the current message
+     *
+     * Set
+     * $this->attachments->name
+     * $this->attachments->body
+     * $this->attachments->info
      *
      * @return array
      */
-    private function getAttachment()
+    private function getAttachments()
     {
         $attachments = [];
         foreach ($this->getSections(self::SECTION_ATTACHMENTS) as $section)
@@ -272,13 +261,23 @@ class IncomingMessage
                     $obj->body = quoted_printable_decode($obj->body);
                     break;
             };
-            $attachments[] = $obj;
+            $attachment = new IncomingMessageAttachment($obj);
+            $objNew = new \stdClass();
+            $objNew->name = $attachment->name;
+            $objNew->body = $attachment->body;
+            $objNew->info = $obj;
+            $attachments[] = $objNew;
         };
-        $this->attachment = $attachments;
+        $this->attachments = $attachments;
     }
 
     /**
      * Get body current message
+     *
+     * Set
+     * $this->message->$subtype
+     * $this->message->text
+     * $this->message->info[]
      *
      * @return object
      */
@@ -302,20 +301,29 @@ class IncomingMessage
             $objNew->$subtype = $obj->body;
             $objNew->info[] = $obj;
         };
+        if(isset($objNew->plain)){
+            $objNew->text = $objNew->plain;
+        }else{
+            $objNew->text = null;
+        };
         $this->message = $objNew;
     }
 
     /**
      * Get a section message
      *
-     * @return object \stdClass
+     * Return object with 2 properties:
+     * $obj->structure
+     * $obj->body
+     *
+     * @return \SSilence\ImapClient\Section object
      */
     public function getSection($section)
     {
-        $stdClass = new \stdClass();
-        $stdClass->structure = $this->imapBodystruct($section);
-        $stdClass->body = $this->imapFetchbody($section);
-        return $stdClass;
+        $sectionObj = new Section();
+        $sectionObj->structure = $this->imapBodystruct($section);
+        $sectionObj->body = $this->imapFetchbody($section);
+        return $sectionObj;
     }
 
     /**
@@ -440,5 +448,13 @@ class IncomingMessage
         if(isset($this->header->details->Subject)){
             $this->header->details->Subject = $this->mimeHeaderDecode($this->header->details->Subject);
         };
+        $this->decodeAttachments();
+    }
+
+    private function decodeAttachments()
+    {
+        foreach ($this->attachments as $key => $attachment) {
+            $this->attachments[$key]->name = $this->mimeHeaderDecode($attachment->name);
+        }
     }
 }

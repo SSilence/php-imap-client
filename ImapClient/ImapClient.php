@@ -518,14 +518,14 @@ class ImapClient
     }
 
     /**
-     * Save Attachmets Messages By Subject
+     * Save Attachments Messages By Subject
      *
-     * @param text $subject
-     * @param text $dir for save attachments
-     * @param text $charset for search
+     * @param string $subject
+     * @param string $dir for save attachments
+     * @param string $charset for search
      * @return void
      */
-    public function saveAttachmetsMessagesBySubject($subject, $dir = null, $charset = null)
+    public function saveAttachmentsMessagesBySubject($subject, $dir = null, $charset = null)
     {
         $criteria = 'SUBJECT "'.$subject.'"';
         $ids = imap_search($this->imap, $criteria, null, $charset);
@@ -674,9 +674,9 @@ class ImapClient
         }else{
             $incomingMessage = $options['incomingMessage'];
         };
-        foreach ($incomingMessage->attachment as $key => $attachment) {
-            $newFileName = $key.'.'.$attachment->structure->subtype;
-            file_put_contents($dir.$newFileName, $attachment->body);
+        foreach ($incomingMessage->attachments as $key => $attachment) {
+            $newFileName = $attachment->name;
+            file_put_contents($dir.DIRECTORY_SEPARATOR.$newFileName, $attachment->body);
         };
     }
 

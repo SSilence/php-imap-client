@@ -22,60 +22,46 @@ namespace SSilence\ImapClient;
 class IncomingMessageAttachment
 {
 
-    private $raw;
-    private $_name;
-    private $_body;
+    public $name;
+    public $body;
+
+    private $_incomingObject;
 
     /**
      * The constructor
-     * @param array The raw attachment array
+     *
+     * @param object
      */
-    public function __construct ($raw)
+    public function __construct (Section $incomingObject)
     {
-        $this->raw = $raw;
-    }
-
-    /**
-     * Returns the raw attachment array for those who want
-     * to use it for things that aren't implemented yet
-     * @return array
-     */
-    public function getRaw ()
-    {
-        return $this->raw;
+        $this->_incomingObject = $incomingObject;
+        $this->getName();
+        $this->getBody();
     }
 
     /**
      * Returns the name of the attachment along with file extension
+     *
      * @return string
      */
-    public function getName ()
+    private function getName ()
     {
-        if ($this->_name === null)
-        {
-            foreach ($this->raw->structure->dparameters as $param)
-            {
-                if ($param->attribute == 'filename')
-                {
-                    $this->_name = $param->value;
-                    break;
-                };
+        foreach ($this->_incomingObject->structure->dparameters as $param) {
+            if ($param->attribute == 'filename') {
+                $this->name = $param->value;
+                break;
             };
-        };
-        return $this->_name;
+        }
     }
 
     /**
      * Returns the body of the e-mail
+     *
      * @return string
      */
-    public function getBody ()
+    private function getBody ()
     {
-        if ($this->_body === null)
-        {
-            $this->_body = $this->raw->body;
-        };
-        return $this->_body;
+        $this->body = $this->_incomingObject->body;
     }
 
 };
