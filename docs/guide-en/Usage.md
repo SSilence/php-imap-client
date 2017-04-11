@@ -28,12 +28,13 @@ var_dump($folders);
 foreach($folders as $folder) {
     echo $folder;
 }
-# or
+# or 
 foreach($folders as $folder => $subFolder) {
     echo $folder.PHP_EOL;
     echo $subFolder.PHP_EOL;
 }
 ```
+See [getFolders()](Methods.md) method settings.
 You can also select folders
 
 ```php

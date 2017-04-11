@@ -5,7 +5,7 @@ The following methods are currently available.
 * ``__construct($mailbox, $username, $password, $encryption)`` open new imap connection
 * ``isConnected()`` check whether the imap connection was opened successfully
 * ``getError()`` returns the last error message.
-* ``getFolders($seperator, $type)`` @param string $separator. Default is '.' @param int $type. Has three meanings 0,1,2.If 0 returns a nested array, if 1 it returns an array of strings, if 2 returns raw data from imap_list().
+* ``getFolders($seperator, $type)`` @param string $separator. Default is '.' @param int $type. Has three meanings 0,1,2. If 0 returns a nested array, if 1 it returns an array of strings, if 2 returns raw data from imap_list().
 * ``getMessage($id)`` get email by given id.
 * ``getMessages($number, $start, $order)`` get emails in current folder.
 * ``getUnreadMessages($read)`` get unread messages in current folder and mark them read. Use $read = false marks them unread.
