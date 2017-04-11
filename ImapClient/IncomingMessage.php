@@ -117,7 +117,17 @@ class IncomingMessage
         $this->getCountSection();
         $this->getAttachment();
         $this->getBody();
+        $this->getHeader();
         $this->decode();
+    }
+
+    /*
+     * Get headers in the current message
+     *
+     * @return void
+     */
+    private function getHeader()
+    {
         $header = $this->imapFetchOverview();
         $this->header = $header[0];
         $this->header->details = $this->imapHeaderInfo();
