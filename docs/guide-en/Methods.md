@@ -38,5 +38,5 @@ The following methods are currently available.
 * ``saveEmail($file , $id, $part)`` saves an email to the $file file
 * ``saveEmailSafe($file , $id, $part, $streamFilter)`` saves an email to the $file file. This is recommended for servers with low amounts of RAM. Stream filter is set to convert.base64-decode by default.
 * ``saveAttachments($options)`` Save attachments one incoming message. You can set any of the options: ``$options['dir'=>null, 'incomingMessage'=>null]``.
-* ``saveAttachmetsMessagesBySubject($subject, $dir = null, $charset = null)`` Save Attachmets Messages By Subject
+* ``saveAttachmentsMessagesBySubject($subject, $dir = null, $charset = null)`` Save Attachmets Messages By Subject
 * ``sendMail()`` Send a message using the adapter.
