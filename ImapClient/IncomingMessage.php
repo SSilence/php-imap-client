@@ -492,6 +492,12 @@ class IncomingMessage
         if(isset($this->header->details->Subject)){
             $this->header->details->Subject = $this->mimeHeaderDecode($this->header->details->Subject);
         };
+        if(isset($this->header->from)){
+            $this->header->from = $this->mimeHeaderDecode($this->header->from);
+        };
+        if(isset($this->header->to)){
+            $this->header->to = $this->mimeHeaderDecode($this->header->to);
+        };
     }
 
     private function decodeAttachments()
