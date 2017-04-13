@@ -1,10 +1,5 @@
 <?php
-
-namespace SSilence\ImapClient;
-
 /**
- * Class for all incoming message attachments
- *
  * Copyright (C) 2016-2017  SSilence
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,12 +8,17 @@ namespace SSilence\ImapClient;
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
+ */
+
+namespace SSilence\ImapClient;
+
+/**
+ * Class IncomingMessageAttachment for all incoming message attachments
  *
- * @package    protocols
+ * @package SSilence\ImapClient
  * @copyright  Copyright (c) Tobias Zeising (http://www.aditu.de)
  * @author     Tobias Zeising <tobias.zeising@aditu.de>
  */
-
 class IncomingMessageAttachment
 {
 
@@ -51,6 +51,7 @@ class IncomingMessageAttachment
      * Set $this->name and $this->body
      *
      * @param Section $incomingObject
+     * @return void
      */
     public function __construct (Section $incomingObject)
     {
@@ -84,4 +85,4 @@ class IncomingMessageAttachment
         $this->body = $this->_incomingObject->body;
     }
 
-};
+}

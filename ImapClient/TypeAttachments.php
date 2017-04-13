@@ -1,10 +1,5 @@
 <?php
-
-namespace SSilence\ImapClient;
-
 /**
- * Class that holds attachment types
- *
  * Copyright (C) 2016-2017  SSilence
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,8 +8,14 @@ namespace SSilence\ImapClient;
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
+ */
+
+namespace SSilence\ImapClient;
+
+/**
+ * Class TypeAttachments that holds attachment types
  *
- * @package    protocols
+ * @package    SSilence\ImapClient
  * @copyright  Copyright (c) Tobias Zeising (http://www.aditu.de)
  * @author     Tobias Zeising <tobias.zeising@aditu.de>
  */
@@ -22,6 +23,8 @@ class TypeAttachments
 {
 	/**
 	 * Types of attachments
+     *
+     * @var array
 	 */
     private static $types = ['JPEG', 'PNG', 'GIF', 'PDF', 'X-MPEG', 'MSWORD', 'OCTET-STREAM'];
 
@@ -34,5 +37,4 @@ class TypeAttachments
     {
         return static::$types;
     }
-
 }

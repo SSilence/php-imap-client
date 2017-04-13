@@ -1,11 +1,5 @@
 <?php
-
-namespace SSilence\ImapClient;
-
-use SSilence\ImapClient\ImapClientException;
-
 /**
- *
  * Copyright (C) 2016-2017  SSilence
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,8 +8,14 @@ use SSilence\ImapClient\ImapClientException;
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
+ */
+
+namespace SSilence\ImapClient;
+
+/**
+ * Class ImapConnect. Connect with imap servers.
  *
- * @package    protocols
+ * @package    SSilence\ImapClient
  * @copyright  Copyright (c) Tobias Zeising (http://www.aditu.de)
  * @author     Tobias Zeising <tobias.zeising@aditu.de>
  */
@@ -36,8 +36,25 @@ class ImapConnect
     const ANONYMOUS = 'anonymous';
 
 
+    /**
+     * Current imap stream
+     *
+     * @var ImapConnect
+     */
     public $imap;
+
+    /**
+     * Current mailbox
+     *
+     * @var string
+     */
     public $mailbox;
+
+    /**
+     * Current flags connecting
+     *
+     * @var string
+     */
     public $flags;
 
     /**
@@ -61,7 +78,8 @@ class ImapConnect
      * @param int $options
      * @param int $n_retries
      * @param array $params
-     * @return void|ImapClientException
+     * @return void
+     * @throws ImapClientException
      */
     public function connect($mailbox, $username = null, $password = null, $options = 0, $n_retries = 0, $params = [])
     {
@@ -182,6 +200,8 @@ class ImapConnect
 
     /**
      * Get the imap reasource
+     *
+     * @return ImapConnect
      */
     public function getImap()
     {
@@ -190,6 +210,8 @@ class ImapConnect
 
     /**
      * Get the flag string
+     *
+     * @return string
      */
     public function getFlags()
     {
@@ -215,6 +237,7 @@ class ImapConnect
      * @param string $flags can use prepareFlags() method but not necessarily
      * @param string $mailbox_name
      * @return void
+     * @throws ImapClientException
      */
     public function prepareMailbox($remote_system_name = null, $port = null, $flags = null, $mailbox_name = null)
     {
