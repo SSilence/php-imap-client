@@ -64,4 +64,9 @@ class Section
     {
         throw new ImapClientException('Section object not supported unset.');
     }
+
+    public function __toString()
+    {
+        return $this->_body;
+    }
 }

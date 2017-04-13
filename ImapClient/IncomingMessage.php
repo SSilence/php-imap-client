@@ -30,7 +30,21 @@ class IncomingMessage
 	 * Used to handle sections of the e-mail easier
 	 */
 	const SECTION_ATTACHMENTS = 1;
+
+    /**
+     * Used to handle sections of the e-mail easier
+     */
 	const SECTION_BODY = 2;
+
+    /**
+     * Do not use decode incoming message
+     */
+    const NOT_DECODE = 'not_decode';
+
+    /**
+     * Use decode incoming message
+     */
+    const DECODE = 'decode';
 
 	/**
 	 * Header of the message
@@ -74,10 +88,12 @@ class IncomingMessage
 	 */
     private $countAttachment;
 
+    private $_decode;
+
 	/**
 	 * Called when the class has a new instance made of it
 	 */
-    public function __construct($imapStream, $id)
+    public function __construct($imapStream, $id, $decode = self::DECODE)
     {
         $this->imapStream = $imapStream;
         if(is_array($id)){
@@ -94,6 +110,10 @@ class IncomingMessage
         };
         if(is_int($id)){
             $this->id = $id;
+        };
+
+        if(isset($decode)){
+            $this->_decode = $decode;
         };
 
         $this->init();
@@ -116,7 +136,9 @@ class IncomingMessage
         $this->getAttachments();
         $this->getBody();
         $this->getHeader();
-        $this->decode();
+        if($this->_decode == self::DECODE){
+            $this->decode();
+        };
     }
 
     /*
@@ -252,15 +274,6 @@ class IncomingMessage
         foreach ($this->getSections(self::SECTION_ATTACHMENTS) as $section)
         {
             $obj = $this->getSection($section);
-            switch ($obj->structure->encoding)
-            {
-                case 3:
-                    $obj->body = imap_base64($obj->body);
-                    break;
-                case 4:
-                    $obj->body = quoted_printable_decode($obj->body);
-                    break;
-            };
             $attachment = new IncomingMessageAttachment($obj);
             $objNew = new \stdClass();
             $objNew->name = $attachment->name;
@@ -276,33 +289,47 @@ class IncomingMessage
      *
      * Set
      * $this->message->$subtype
+     * $this->message->$subtype->charset
      * $this->message->text
      * $this->message->info[]
+     * $this->message->types[]
      *
      * @return object
      */
     private function getBody()
     {
-        $objNew = new \stdClass();
+        $objNew = new \stdClass(); $i = 1;
         foreach ($this->getSections(self::SECTION_BODY) as $section)
         {
-            $obj = $this->getSection($section);
-            switch ($obj->structure->encoding)
-            {
-                case 3:
-                    $obj->body = imap_base64($obj->body);
-                    break;
-                case 4:
-                    $obj->body = imap_qprint($obj->body);
-                    break;
-            };
-
+            $obj = $this->getSection($section, ['class'=>SubtypeBody::class]);
             $subtype = strtolower($obj->structure->subtype);
-            $objNew->$subtype = $obj->body;
+            if(!isset($objNew->$subtype)){
+                $objNew->$subtype = $obj;
+            }else{
+                $subtype = $subtype.'_'.$i;
+                $objNew->$subtype = $obj;
+                $i++;
+            };
             $objNew->info[] = $obj;
+            $objNew->types[] = $subtype;
+            /*
+             * Set charset
+             */
+            foreach ($objNew->$subtype->structure->parameters as $parameter) {
+                $attribute = strtolower($parameter->attribute);
+                if($attribute == 'charset'){
+                    $value = strtolower($parameter->value);
+                    /*
+                     * Here must be array, but
+                     */
+                    #$objNew->$subtype->charset[] = $value;
+                    $objNew->$subtype->charset = $value;
+                };
+            };
         };
         if(isset($objNew->plain)){
             $objNew->text = $objNew->plain;
+            $objNew->types[] = 'text';
         }else{
             $objNew->text = null;
         };
@@ -316,11 +343,21 @@ class IncomingMessage
      * $obj->structure
      * $obj->body
      *
+     * @param string $section
+     * @param array $options. Nave one option $options['class']. It create object, which must be instance \SSilence\ImapClient\Section.
      * @return \SSilence\ImapClient\Section object
      */
-    public function getSection($section)
+    public function getSection($section, $options = null)
     {
-        $sectionObj = new Section();
+        if(isset($options['class'])){
+            $sectionObj = new $options['class'];
+            if($sectionObj instanceof Section){
+            }else{
+                throw new ImapClientException('Incoming class not instance \SSilence\ImapClient\Section');
+            };
+        }else{
+            $sectionObj = new Section();
+        };
         $sectionObj->structure = $this->imapBodystruct($section);
         $sectionObj->body = $this->imapFetchbody($section);
         return $sectionObj;
@@ -439,6 +476,13 @@ class IncomingMessage
      */
     private function decode()
     {
+        $this->decodeHeader();
+        $this->decodeBody();
+        $this->decodeAttachments();
+    }
+
+    private function decodeHeader()
+    {
         if(isset($this->header->subject)){
             $this->header->subject = $this->mimeHeaderDecode($this->header->subject);
         };
@@ -448,13 +492,63 @@ class IncomingMessage
         if(isset($this->header->details->Subject)){
             $this->header->details->Subject = $this->mimeHeaderDecode($this->header->details->Subject);
         };
-        $this->decodeAttachments();
+        if(isset($this->header->from)){
+            $this->header->from = $this->mimeHeaderDecode($this->header->from);
+        };
+        if(isset($this->header->to)){
+            $this->header->to = $this->mimeHeaderDecode($this->header->to);
+        };
     }
 
     private function decodeAttachments()
     {
         foreach ($this->attachments as $key => $attachment) {
+            /*
+             * Decode body
+             */
+            switch ($attachment->info->structure->encoding)
+            {
+                case 3:
+                    $this->attachments[$key]->body = imap_base64($attachment->body);
+                    break;
+                case 4:
+                    $this->attachments[$key]->body = quoted_printable_decode($attachment->body);
+                    break;
+            };
+            /*
+             * Decode name
+             */
             $this->attachments[$key]->name = $this->mimeHeaderDecode($attachment->name);
         }
+    }
+
+    private function decodeBody()
+    {
+        foreach ($this->message->types as $typeMessage) {
+
+            switch ($this->message->$typeMessage->structure->encoding)
+            {
+                case 3:
+                    $this->message->$typeMessage->body = imap_base64($this->message->$typeMessage->body);
+                    break;
+                case 4:
+                    $this->message->$typeMessage->body = imap_qprint($this->message->$typeMessage->body);
+                    break;
+            };
+
+        }
+
+    }
+
+    public function __debugInfo()
+    {
+        return [
+            'header' => $this->header,
+            'message' => $this->message,
+            'attachments' => $this->attachments,
+            'section' => $this->section,
+            'structure' => $this->structure,
+            'debug' => $this->debug,
+        ];
     }
 }
