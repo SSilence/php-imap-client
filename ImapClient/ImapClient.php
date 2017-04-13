@@ -625,10 +625,10 @@ class ImapClient
      * @param int $id
      * @return object
      */
-    public function getMessage($id)
+    public function getMessage($id, $decode = IncomingMessage::DECODE)
     {
         $this->checkMessageId($id);
-        $this->incomingMessage = new IncomingMessage($this->imap, $id);
+        $this->incomingMessage = new IncomingMessage($this->imap, $id, $decode);
         return $this->incomingMessage;
     }
 

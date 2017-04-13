@@ -22,15 +22,35 @@ namespace SSilence\ImapClient;
 class IncomingMessageAttachment
 {
 
+    /**
+     * Name current attachment
+     *
+     * @var string
+     */
     public $name;
+
+    /**
+     * Body current attachment
+     *
+     * @var string
+     */
     public $body;
 
+    /**
+     * Incoming object
+     *
+     * Incoming SSilence\ImapClient\Section object
+     *
+     * @var Section
+     */
     private $_incomingObject;
 
     /**
      * The constructor
      *
-     * @param object
+     * Set $this->name and $this->body
+     *
+     * @param Section $incomingObject
      */
     public function __construct (Section $incomingObject)
     {
