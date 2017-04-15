@@ -1,12 +1,5 @@
 <?php
-
-namespace SSilence\ImapClient;
-
-use SSilence\ImapClient\ImapClientException;
-
 /**
- * Adapter for outgoing messages
- *
  * Copyright (C) 2016-2017  SSilence
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,26 +8,42 @@ use SSilence\ImapClient\ImapClientException;
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
+ */
+
+namespace SSilence\ImapClient;
+
+/**
+ * Class AdapterForOutgoingMessage is adapter for outgoing messages
  *
- * @package    protocols
+ * @package    SSilence\ImapClient
  * @copyright  Copyright (c) Tobias Zeising (http://www.aditu.de)
  * @author     Tobias Zeising <tobias.zeising@aditu.de>
  */
-
 class AdapterForOutgoingMessage
 {
     /**
      * Connect config
+     *
+     * @var array
      */
     private $config;
 
     /**
+     * Options
+     *
      * Array ['to'=>'', 'subject'=>'' and other]
+     *
+     * @var array
      */
     private static $options;
 
 	/**
-	 * Called when the class is made. 
+     * Constructor
+     *
+	 * Called when the class is made.
+     *
+     * @param array $connectConfig
+     * @return void
 	 */
     public function __construct(array $connectConfig)
     {
@@ -43,6 +52,9 @@ class AdapterForOutgoingMessage
 
 	/**
 	 * Set the options of this class
+     *
+     * @param array $options
+     * @return void
 	 */
     public static function setOptions(array $options)
     {
@@ -50,7 +62,9 @@ class AdapterForOutgoingMessage
     }
 
 	/**
-	 * Send an email. Not impelmented
+	 * Send an email. Not implemented
+     *
+     * @throws ImapClientException
 	 */
     public function send()
     {

@@ -1,13 +1,5 @@
 <?php
-namespace SSilence\ImapClient;
-
-use SSilence\ImapClient\ImapClientException;
-use SSilence\ImapClient\ImapConnect;
-use SSilence\ImapClient\IncomingMessage;
-
 /**
- * Helper class for imap access
- *
  * Copyright (C) 2016-2017  SSilence
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,12 +8,17 @@ use SSilence\ImapClient\IncomingMessage;
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
+ */
+
+namespace SSilence\ImapClient;
+
+/**
+ * Class ImapClient is helper class for imap access
  *
  * @package    protocols
  * @copyright  Copyright (c) Tobias Zeising (http://www.aditu.de)
  * @author     Tobias Zeising <tobias.zeising@aditu.de>
  */
-
 class ImapClient
 {
     /**
@@ -58,12 +55,14 @@ class ImapClient
 
     /**
      * Imap connection
+     *
      * @var ImapConnect
      */
-    protected $imap = false;
+    protected $imap;
 
     /**
      * Mailbox url
+     *
      * @var string
      */
     protected $mailbox = "";

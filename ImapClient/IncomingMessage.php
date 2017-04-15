@@ -1,14 +1,5 @@
 <?php
-
-namespace SSilence\ImapClient;
-
-use SSilence\ImapClient\ImapClientException;
-use SSilence\ImapClient\TypeAttachments;
-use SSilence\ImapClient\TypeBody;
-
 /**
- * Class for all imcoming messages
- *
  * Copyright (C) 2016-2017  SSilence
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,12 +8,17 @@ use SSilence\ImapClient\TypeBody;
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
+ */
+
+namespace SSilence\ImapClient;
+
+/**
+ * Class for all incoming messages
  *
  * @package    protocols
  * @copyright  Copyright (c) Tobias Zeising (http://www.aditu.de)
- * @author     Tobias Zeising <tobias.zeising@aditu.de>
+ * @authors    Tobias Zeising <tobias.zeising@aditu.de>, sergey144010
  */
-
 class IncomingMessage
 {
 
@@ -48,50 +44,88 @@ class IncomingMessage
 
 	/**
 	 * Header of the message
+     *
+     * @var object
 	 */
     public $header;
+
 	/**
 	 * The message
+     *
+     * @var object
 	 */
     public $message;
+
 	/**
 	 * Attachments
+     *
+     * @var array
 	 */
     public $attachments;
+
 	/**
 	 * Section of the message
+     *
+     * @var string|array
 	 */
     public $section;
+
 	/**
 	 * Structure of the message
+     *
+     * @var object
 	 */
     public $structure;
+
 	/**
 	 * Debug on or off
+     *
+     * @var object
 	 */
     public $debug;
 
 	/**
 	 * The imap string
+     *
+     * @var ImapConnect
 	 */
     private $imapStream;
+
 	/**
 	 * ID of the message
-	 */
+     *
+     * @var integer
+     */
     private $id;
+
 	/**
 	 * UID of the message
-	 */
+     *
+     * @var integer
+     */
     private $uid;
+
 	/**
 	 * Count the attachments
-	 */
+     *
+     * @var integer
+     */
     private $countAttachment;
 
+    /**
+     * Disable/enable decode current incoming message
+     *
+     * @var string
+     */
     private $_decode;
 
 	/**
 	 * Called when the class has a new instance made of it
+     *
+     * @param ImapConnect $imapStream
+     * @param integer $id
+     * @param string $decode
+     * @return IncomingMessage
 	 */
     public function __construct($imapStream, $id, $decode = self::DECODE)
     {
