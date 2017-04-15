@@ -49,7 +49,7 @@ class ImapClient
     /**
      * Incoming message
      *
-     * @var object IncomingMessage
+     * @var IncomingMessage
      */
     public $incomingMessage;
 
@@ -83,18 +83,21 @@ class ImapClient
 
     /**
      * Current folder
+     *
      * @var string
      */
     protected $folder = "INBOX";
 
     /**
      * Have inline files
+     *
      * @var bool
      */
     protected $inline = false;
 
 	/**
 	 * Images Embed in HTML
+     *
 	 * @var bool
 	 */
     protected $embed = false;
@@ -642,16 +645,6 @@ class ImapClient
         return $incomingMessage->getSection($section);
     }
 
-	/**
-	 * Get the header info of an email
-	 *
-	 * @return object
-	 */
-	public function getHeaderInfo($id)
-	{
-		$incomingMessage = new IncomingMessage($this->imap, $id);
-		return $incomingMessage->getHeaderInfo($id);
-	}
     /**
      * Save attachments one incoming message
      *
