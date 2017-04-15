@@ -37,14 +37,13 @@ class AdapterForOutgoingMessage
      */
     private static $options;
 
-	/**
+    /**
      * Constructor
      *
-	 * Called when the class is made.
+     * Called when the class is made.
      *
      * @param array $connectConfig
-     * @return void
-	 */
+     */
     public function __construct(array $connectConfig)
     {
         $this->config = $connectConfig;

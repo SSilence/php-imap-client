@@ -15,7 +15,7 @@ namespace SSilence\ImapClient;
 /**
  * Class IncomingMessageAttachment for all incoming message attachments
  *
- * @package SSilence\ImapClient
+ * @package    SSilence\ImapClient
  * @copyright  Copyright (c) Tobias Zeising (http://www.aditu.de)
  * @author     Tobias Zeising <tobias.zeising@aditu.de>
  */
@@ -51,7 +51,7 @@ class IncomingMessageAttachment
      * Set $this->name and $this->body
      *
      * @param Section $incomingObject
-     * @return void
+     * @return IncomingMessageAttachment
      */
     public function __construct (Section $incomingObject)
     {

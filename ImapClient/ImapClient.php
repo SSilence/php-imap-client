@@ -56,7 +56,7 @@ class ImapClient
     /**
      * Imap connection
      *
-     * @var ImapConnect
+     * @var resource ImapConnect
      */
     protected $imap;
 
@@ -109,7 +109,6 @@ class ImapClient
      * @param string $username
      * @param string $password
      * @param string $encryption use ImapClient::ENCRYPT_SSL or ImapClient::ENCRYPT_TLS
-     * @return void
      */
     public function __construct($mailbox = null, $username = null, $password = null, $encryption = null)
     {
@@ -152,6 +151,7 @@ class ImapClient
 	/**
 	 * Set connection config
 	 *
+     * @param array $config
 	 * @return void
 	 */
     public static function setConnectConfig(array $config)
@@ -193,6 +193,7 @@ class ImapClient
      *
      * @param array $config
      * @return void
+     * @throws ImapClientException
      */
     public function connectAdvanced(array $config)
     {
@@ -211,7 +212,10 @@ class ImapClient
 
     /**
      * Close connection
+     *
 	 * Also called during garbage collection
+     *
+     * @return void
      */
     public function __destruct() {
         if (is_resource($this->imap))
@@ -221,7 +225,7 @@ class ImapClient
     }
 
     /**
-     * Returns true after successfull connection
+     * Returns true after successful connection
      *
      * @return bool true on success
      */
@@ -233,11 +237,14 @@ class ImapClient
      * Saves the email into a file
      * Note: If your server does not have alot of RAM, this may break
      *
-     * @return bool true on sucesss
+     * @param string $file
+     * @param integer $id
+     * @param string $part
+     * @return bool true on success
+     * @throws ImapClientException
      */
      public function saveEmail($file = null, $id = null, $part = null)
      {
-
          // Null checks
          if($file === null)
          {
@@ -266,22 +273,27 @@ class ImapClient
          $saveFile = fopen($file,'w');
          if($parts)
          {
-             imap_savebody($this->imap, $savefile, $id, $part);
+             imap_savebody($this->imap, $saveFile, $id, $part);
          }
          else {
-             imap_savebody($this->imap, $savefile, $id);
+             imap_savebody($this->imap, $saveFile, $id);
          }
+         fclose($saveFile);
      }
 
      /**
       * Saves the email into a file
       * Note: This is safer then saveEmail for slower servers
       *
-      * @return bool true on sucesss
+      * @param string $file
+      * @param integer $id
+      * @param string $part
+      * @param string $streamFilter
+      * @return bool true on success
+      * @throws ImapClientException
       */
       public function saveEmailSafe($file = null, $id = null, $part = null, $streamFilter = 'convert.base64-decode')
       {
-
           // Null checks
           if($file === null)
           {
@@ -308,14 +320,15 @@ class ImapClient
               throw new ImapClientException('$id must be a integer for saveEmailSafe()');
           }
           $saveFile = fopen($file,'w');
-          stream_filter_append($savefile, $streamFilter, STREAM_FILTER_WRITE);
+          stream_filter_append($saveFile, $streamFilter, STREAM_FILTER_WRITE);
           if($parts)
           {
-              imap_savebody($this->imap, $savefile, $id, $part);
+              imap_savebody($this->imap, $saveFile, $id, $part);
           }
           else {
-              imap_savebody($this->imap, $savefile, $id);
-          }
+              imap_savebody($this->imap, $saveFile, $id);
+          };
+          fclose($saveFile);
       }
 
     /**
@@ -329,9 +342,10 @@ class ImapClient
 
     /**
      * Select the given folder folder
+     * and set $this->folder
      *
      * @param string $folder name
-     * @return bool successfull opened folder
+     * @return bool successful opened folder
      */
     public function selectFolder($folder) {
         $result = imap_reopen($this->imap, $this->mailbox . $folder);
@@ -445,8 +459,9 @@ class ImapClient
     /**
      * Returns unseen emails in the current folder
      *
-     * @param true|false $read. Mark message like SEEN or no.
+     * @param bool $read. Mark message like SEEN or no.
      * @return array objects
+     * @throws ImapClientException
      */
     public function getUnreadMessages($read = true) {
         $emails = [];
@@ -474,15 +489,12 @@ class ImapClient
      * Get Messages by Criteria
      *
      * @see http://php.net/manual/en/function.imap-search.php
-     *
      * @param string $criteria ALL, UNSEEN, FLAGGED, UNANSWERED, DELETED, UNDELETED, etc (e.g. FROM "joey smith")
      * @param int    $number
      * @param int    $start
      * @param string $order
-     * @param bool   $withbody
-     * @param bool   $embed_images
-     *
      * @return array
+     * @throws ImapClientException
      */
     public function getMessagesByCriteria($criteria = '', $number = 0, $start = 0, $order = 'DESC')
     {
@@ -526,6 +538,7 @@ class ImapClient
      * @param string $dir for save attachments
      * @param string $charset for search
      * @return void
+     * @throws ImapClientException
      */
     public function saveAttachmentsMessagesBySubject($subject, $dir = null, $charset = null)
     {
@@ -549,9 +562,6 @@ class ImapClient
      * @param int    $number       Number of messages. 0 to get all
      * @param int    $start        Starting message number
      * @param string $order        ASC or DESC
-     * @param bool   $withbody     Get message body
-     * @param bool   $embed_images Get embed images in message body
-     *
      * @return array
      */
     public function getMessages($number = 0, $start = 0, $order = 'DESC') {
@@ -624,7 +634,8 @@ class ImapClient
      * $imap->getMessage(5);
      * $imap->saveAttachments();
      *
-     * @param int $id
+     * @param integer $id
+     * @param string IncomingMessage::DECODE or IncomingMessage::NOT_DECODE
      * @return object
      */
     public function getMessage($id, $decode = IncomingMessage::DECODE)
@@ -637,6 +648,8 @@ class ImapClient
 	/**
 	 * Get a section of the message
 	 *
+     * @param integer $id
+     * @param string $section
 	 * @return object
 	 */ 
     public function getSection($id, $section)
@@ -651,7 +664,9 @@ class ImapClient
      * The allowed types are TypeAttachments
      * You can add your own
      *
-     * @param int $dir it is directory for save attachments
+     * @param array $options.
+     * $options['dir'] it is directory for save attachments.
+     * $options['incomingMessage'] it is incomingMessage object
      * @return void
      */
     public function saveAttachments($options = null)
@@ -813,10 +828,11 @@ class ImapClient
      * Delete flag message SEEN
      *
      * @param int $ids or string like 1,2,3,4,5 or string like 1:5
+     * @return bool
      */
     public function setUnseenMessage($ids)
     {
-        imap_clearflag_full($this->imap, $ids, "\\Seen");
+        return imap_clearflag_full($this->imap, $ids, "\\Seen");
     }
 
     /**
@@ -1097,7 +1113,7 @@ class ImapClient
     /**
      * Converts imap given array of addresses as strings
      *
-     * @param $addresses imap given addresses as array
+     * @param array $addresses imap given addresses as array
      * @return array with strings (e.g. ["Name <email@bla.de>", "Name2 <email2@bla.de>"]
      */
     protected function arrayToAddress($addresses) {
@@ -1405,7 +1421,8 @@ class ImapClient
     /**
      * Get uid from id
      *
-     * @var int $id
+     * @var integer $id
+     * @return integer
      */
     public function getUid($id)
     {
@@ -1416,6 +1433,7 @@ class ImapClient
      * Get id from uid
      *
      * @var int $uid
+     * @return integer
      */
     public function getId($uid)
     {
@@ -1436,7 +1454,9 @@ class ImapClient
     /**
      * Check message id
      *
+     * @param integer $id
      * @return void
+     * @throws ImapClientException
      */
     private function checkMessageId($id)
     {

@@ -39,7 +39,7 @@ class ImapConnect
     /**
      * Current imap stream
      *
-     * @var ImapConnect
+     * @var resource
      */
     public $imap;
 
@@ -199,9 +199,9 @@ class ImapConnect
     }
 
     /**
-     * Get the imap reasource
+     * Get the imap resource
      *
-     * @return ImapConnect
+     * @return resource
      */
     public function getImap()
     {
