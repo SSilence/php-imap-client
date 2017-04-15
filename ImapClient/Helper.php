@@ -1,10 +1,5 @@
 <?php
-
-namespace SSilence\ImapClient;
-
 /**
- * Helper class the internals of php-imap-client
- *
  * Copyright (C) 2016-2017  SSilence
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,10 +8,16 @@ namespace SSilence\ImapClient;
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
+ */
+
+namespace SSilence\ImapClient;
+
+/**
+ * Helper class the internals of php-imap-client
  *
- * @package    protocols
+ * @package    SSilence\ImapClient
  * @copyright  Copyright (c) Tobias Zeising (http://www.aditu.de)
- * @author     Tobias Zeising <tobias.zeising@aditu.de>
+ * @author     Tobias Zeising <tobias.zeising@aditu.de>, sergey144010
  */
 
 class Helper
@@ -34,8 +35,8 @@ class Helper
      *
      * @param array $arrayCurrentPropertiesAndValues. Available properties like only ['subject'=>'val', 'message'=>'val']
      * @param array $arrayAllowedProperties. All need properties [... 'to', 'subject', 'message' ...]
-     * @param integer $outType. If Helper::OUT_OBJECT return object, if Helper::OUT_ARRAY return array.
-     * @return obj|array
+     * @param string $outType. If Helper::OUT_OBJECT return object, if Helper::OUT_ARRAY return array.
+     * @return object|array
      */
     public static function preparingProperties($arrayCurrentPropertiesAndValues, $arrayAllowedProperties, $outType = self::OUT_OBJECT)
     {
