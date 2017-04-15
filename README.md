@@ -22,7 +22,7 @@ Read [our current list of methods](docs/guide-en/Methods.md)
 Are you stuck on an error? Read [our error guide](docs/guide-en/Error.md)
 
 #### Feedback and Contributing
-Feel free to improve this class. You can use the pull request function of github for contributing improvments. The inner structure of this class is simple and easy. Don't hesitate and check it out ;). Note to contributers: If you make a edit and it gets accepted it is up to YOU to add your self to the composer.json file. *No one* will do this for you!
+Please read our [new contributor guide](docs/guide-en/Contributing.md)!
 
 #### License
 Copyright (c) 2016-2017 Tobias Zeising, tobias.zeising@aditu.de  

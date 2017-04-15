@@ -15,7 +15,7 @@ namespace SSilence\ImapClient;
 use \Exception;
 
 /**
- * Class ImapClientException for get errors in PHP-imap-client
+ * Class ImapClientException is used to make a custom Exception for our library
  *
  * @package    SSilence\ImapClient
  * @copyright  Copyright (c) Tobias Zeising (http://www.aditu.de)

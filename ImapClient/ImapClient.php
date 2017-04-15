@@ -93,10 +93,10 @@ class ImapClient
      */
     protected $inline = false;
 
-	/**
-	 * Images Embed in HTML
-	 * @var bool
-	 */
+    /**
+     * Images Embed in HTML
+     * @var bool
+     */
     protected $embed = false;
 
     /**
@@ -126,31 +126,31 @@ class ImapClient
         };
     }
 
-	/**
-	 * Set connection to advanced
-	 *
-	 * @return void
-	 */
+    /**
+     * Set connection to advanced
+     *
+     * @return void
+     */
     public static function setConnectAdvanced()
     {
         static::$connect = self::CONNECT_ADVANCED;
     }
 
-	/**
-	 * Set connection to default
-	 *
-	 * @return void
-	 */
+    /**
+     * Set connection to default
+     *
+     * @return void
+     */
     public static function setConnectDefault()
     {
         static::$connect = self::CONNECT_DEFAULT;
     }
 
-	/**
-	 * Set connection config
-	 *
-	 * @return void
-	 */
+    /**
+     * Set connection config
+     *
+     * @return void
+     */
     public static function setConnectConfig(array $config)
     {
         static::$connectConfig = $config;
@@ -207,8 +207,8 @@ class ImapClient
     }
 
     /**
-     * Close connection
-	 * Also called during garbage collection
+     * Close the connection
+     * Note: Also called during garbage collection
      */
     public function __destruct() {
         if (is_resource($this->imap))
@@ -442,7 +442,7 @@ class ImapClient
     /**
      * Returns unseen emails in the current folder
      *
-     * @param true|false $read. Mark message like SEEN or no.
+     * @param true|false $read. Mark message like SEEN or UNSEEN.
      * @return array objects
      */
     public function getUnreadMessages($read = true) {
@@ -586,6 +586,9 @@ class ImapClient
      *
      * Examples:
      *
+     * /// TODO
+     * THIS BIG BLOB NEEDS TO BE REMOVED TO A PROPER FORMAT ONCE WE ARE SURE IT IS DOCUMENTED!!!!!
+     * /// TODO
      * 1. Structure
      * $imap = new ImapClient();
      * $imap->getMessage(5);
@@ -630,28 +633,29 @@ class ImapClient
         $this->incomingMessage = new IncomingMessage($this->imap, $id, $decode);
         return $this->incomingMessage;
     }
-
-	/**
-	 * Get a section of the message
-	 *
-	 * @return object
-	 */ 
+	
+    /**
+     * Get a section of the message
+     *
+     * @return object
+     */ 
     public function getSection($id, $section)
     {
         $incomingMessage = new IncomingMessage($this->imap, $id);
         return $incomingMessage->getSection($section);
     }
 
-	/**
-	 * Get the header info of an email
-	 *
-	 * @return object
-	 */
-	public function getHeaderInfo($id)
-	{
+    /**
+     * Get the header info of an email
+     *
+     * @return object
+     */
+    public function getHeaderInfo($id)
+    {
 		$incomingMessage = new IncomingMessage($this->imap, $id);
 		return $incomingMessage->getHeaderInfo($id);
-	}
+    }
+	
     /**
      * Save attachments one incoming message
      *
@@ -681,6 +685,10 @@ class ImapClient
 
     /**
      * Create the final message array
+     *
+     * // TODO
+     * This is part of project 2.0. This needs to be removed or something...
+     * // TODO
      *
      * @param int  $id           Message uid
      * @param bool $withbody     Define if the output will get the message body
@@ -786,6 +794,7 @@ class ImapClient
             imap_delete($this->imap, $id, FT_UID);
         }
         /*
+	// TODO: Needed?
         if( imap_mail_move($this->imap, implode(",", $ids), $this->getTrash(), CP_UID) == false)
             return false;
         */
@@ -827,7 +836,9 @@ class ImapClient
     }
 
     /**
-
+     * /// TODO
+     * This is replaced by the new class correct? Remove is so
+     * /// TODO
      * Return content of messages attachment
      * Save the attachment in a optional path or get the binary code in the content index
      *
@@ -1052,6 +1063,9 @@ class ImapClient
     }
 
     /**
+     * // TODO KEEP OF REMOVE
+     * // TODO
+     * // TODO
      * Convert attachment in array(name => ..., size => ...).
      *
      * @param array $attachments with name and size
@@ -1118,6 +1132,7 @@ class ImapClient
     /**
      * Returns the body of the email. First search for html version of the email, then the plain part.
      *
+     * // TODO: needed?
      * @param int $uid message id
      * @return string email body
      */
@@ -1153,6 +1168,7 @@ class ImapClient
      * Returns a part with a given mimetype
      * taken from http://www.sitepoint.com/exploring-phps-imap-library-2/
      *
+     * // TODO: Needed?
      * @param false|resource $imap imap stream
      * @param int $uid id
      * @param string $mimetype Mime Type
@@ -1197,6 +1213,7 @@ class ImapClient
     */
 
     /**
+    * // TODO: Needed?
      * Extract mimetype
      * taken from http://www.sitepoint.com/exploring-phps-imap-library-2/
      *
@@ -1215,6 +1232,7 @@ class ImapClient
     */
 
     /**
+     * // TODO: Needed?
      * Get attachments of given email
      * taken from http://www.sitepoint.com/exploring-phps-imap-library-2/
      *
@@ -1336,7 +1354,9 @@ class ImapClient
     /**
      * HTML embed inline images
      *
-     * !!! NEED FIX IT !!!
+     * // TODO
+     * Needs to be fixed. Maybe moved aswel
+     * //TODO
      *
      * @param array $email
      * @return string
@@ -1429,11 +1449,11 @@ class ImapClient
         return imap_msgno($this->imap, $uid);
     }
 
-	/**
-	 * Send an email
-	 *
-	 * @return void
-	 */
+    /**
+     * Send an email
+     *
+     * @return void
+     */
     public function sendMail()
     {
         $outMessage = new AdapterForOutgoingMessage(self::$connectConfig);
@@ -1448,13 +1468,13 @@ class ImapClient
     private function checkMessageId($id)
     {
         if(!is_int($id)){
-            throw new ImapClientException('Bad message number');
+            throw new ImapClientException('$id must be an integer!');
         };
         if($id <= 0){
-            throw new ImapClientException('Bad message number');
+            throw new ImapClientException('$id must be greater then 0!');
         };
         if($id > $this->countMessages()){
-            throw new ImapClientException('Bad message number');
+            throw new ImapClientException('$id does not exist');
         }
     }
 }

@@ -149,6 +149,7 @@ class ImapConnect
         };
 
         /*
+	// TODO: Needed?
         $array = [$mailbox, $username , $password, $options, $n_retries, $params];
         foreach ($array as $val) {
             var_dump($val);
@@ -179,8 +180,8 @@ class ImapConnect
 
     /**
      * Get string mailbox
-	 * 
-	 * @return object
+     * 
+     * @return object
      */
     public function getMailbox()
     {
