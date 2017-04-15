@@ -1,10 +1,5 @@
 <?php
-
-namespace SSilence\ImapClient;
-
 /**
- * Classs for all outgoing messages
- *
  * Copyright (C) 2016-2017  SSilence
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,16 +8,20 @@ namespace SSilence\ImapClient;
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
- * @package    protocols
- * @copyright  Copyright (c) Tobias Zeising (http://www.aditu.de)
- * @author     Tobias Zeising <tobias.zeising@aditu.de>
  */
 
- /**
-  * Due to the fact that this class is a W.I.P, i have not added
-  * comments as I assume they will be added later...
-  */
+namespace SSilence\ImapClient;
+
+/**
+ * Class for all outgoing messages
+ *
+ * Due to the fact that this class is a W.I.P, i have not added
+ * comments as I assume they will be added later...
+ *
+ * @package    SSilence\ImapClient
+ * @copyright  Copyright (c) Tobias Zeising (http://www.aditu.de)
+ * @author     Tobias Zeising <tobias.zeising@aditu.de>, sergey144010
+ */
 class OutgoingMessage
 {
 
@@ -48,7 +47,7 @@ class OutgoingMessage
     /*
      * Send message via imap_mail
      *
-     * @return vooid
+     * @return void
      */
     public function send()
     {

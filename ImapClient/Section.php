@@ -1,15 +1,24 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: Sergey144010
- * Date: 11.04.2017
- * Time: 18:56
+ * Copyright (C) 2016-2017  SSilence
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  */
 
 namespace SSilence\ImapClient;
 
-use SSilence\ImapClient\ImapClientException;
-
+/**
+ * Class for all incoming messages
+ *
+ * @package    SSilence\ImapClient
+ * @copyright  Copyright (c) Tobias Zeising (http://www.aditu.de)
+ * @authors    Tobias Zeising <tobias.zeising@aditu.de>, sergey144010
+ */
 class Section
 {
     private $_structure;
