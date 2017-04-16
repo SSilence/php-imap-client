@@ -407,7 +407,7 @@ class ImapClient
     /**
      * Set embeded or not
      *
-     * @param bool|false $val
+     * @param bool $val
      */
     public function setEmbed($val = false) {
         $this->embed = boolval($val);
@@ -431,7 +431,7 @@ class ImapClient
      *     [ 'id'=>5, 'info'=>'brief info' ]
      * ]
      *
-     * @return array.
+     * @return array
      */
     public function getBriefInfoMessages()
     {
@@ -446,7 +446,7 @@ class ImapClient
     /**
      * Returns the number of unread messages in the current folder
      *
-     * @return int message count
+     * @return integer Message count
      */
     public function countUnreadMessages() {
         $result = imap_search($this->imap, 'UNSEEN');
@@ -459,8 +459,8 @@ class ImapClient
     /**
      * Returns unseen emails in the current folder
      *
-     * @param bool $read. Mark message like SEEN or no.
-     * @return array objects
+     * @param bool $read Mark message like SEEN or no.
+     * @return array objects IncomingMessage
      * @throws ImapClientException
      */
     public function getUnreadMessages($read = true) {
