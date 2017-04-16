@@ -49,22 +49,22 @@ class AdapterForOutgoingMessage
         $this->config = $connectConfig;
     }
 
-	/**
-	 * Set the options of this class
+    /**
+     * Set the options of this class
      *
      * @param array $options
      * @return void
-	 */
+     */
     public static function setOptions(array $options)
     {
         self::$options = $options;
     }
 
-	/**
-	 * Send an email. Not implemented
+    /**
+     * Send an email. Not implemented
      *
      * @throws ImapClientException
-	 */
+     */
     public function send()
     {
         throw new ImapClientException('Not implemented');

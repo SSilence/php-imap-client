@@ -95,11 +95,11 @@ class ImapClient
      */
     protected $inline = false;
 
-	/**
-	 * Images Embed in HTML
+    /**
+     * Images Embed in HTML
      *
-	 * @var bool
-	 */
+     * @var bool
+     */
     protected $embed = false;
 
     /**
@@ -148,12 +148,12 @@ class ImapClient
         static::$connect = self::CONNECT_DEFAULT;
     }
 
-	/**
-	 * Set connection config
-	 *
+    /**
+     * Set connection config
+     *
      * @param array $config
-	 * @return void
-	 */
+     * @return void
+     */
     public static function setConnectConfig(array $config)
     {
         static::$connectConfig = $config;
@@ -213,7 +213,7 @@ class ImapClient
     /**
      * Close connection
      *
-	 * Also called during garbage collection
+     * Also called during garbage collection
      *
      * @return void
      */
@@ -648,13 +648,13 @@ class ImapClient
         return $this->incomingMessage;
     }
 
-	/**
-	 * Get a section of the message
-	 *
+    /**
+     * Get a section of the message
+     *
      * @param integer $id
      * @param string $section
-	 * @return object
-	 */ 
+     * @return object
+     */
     public function getSection($id, $section)
     {
         $incomingMessage = new IncomingMessage($this->imap, $id);
