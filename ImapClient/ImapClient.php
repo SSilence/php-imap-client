@@ -407,7 +407,7 @@ class ImapClient
     /**
      * Set embeded or not
      *
-     * @param bool|false $val
+     * @param bool $val
      */
     public function setEmbed($val = false) {
         $this->embed = boolval($val);
@@ -431,7 +431,7 @@ class ImapClient
      *     [ 'id'=>5, 'info'=>'brief info' ]
      * ]
      *
-     * @return array.
+     * @return array
      */
     public function getBriefInfoMessages()
     {
@@ -446,7 +446,7 @@ class ImapClient
     /**
      * Returns the number of unread messages in the current folder
      *
-     * @return int message count
+     * @return integer Message count
      */
     public function countUnreadMessages() {
         $result = imap_search($this->imap, 'UNSEEN');
@@ -459,8 +459,8 @@ class ImapClient
     /**
      * Returns unseen emails in the current folder
      *
-     * @param bool $read. Mark message like SEEN or no.
-     * @return array objects
+     * @param bool $read Mark message like SEEN or no.
+     * @return array objects IncomingMessage
      * @throws ImapClientException
      */
     public function getUnreadMessages($read = true) {
@@ -603,43 +603,66 @@ class ImapClient
      * THIS BIG BLOB NEEDS TO BE REMOVED TO A PROPER FORMAT ONCE WE ARE SURE IT IS DOCUMENTED!!!!!
      * /// TODO
      * 1. Structure
-     * $imap = new ImapClient();
-     * $imap->getMessage(5);
+     *  ```php
+     *  $imap = new ImapClient();
+     *  $imap->getMessage(5);
+     *  ```
      *
-     * you can see all structure that
-     * var_dump($imap->incomingMessage)
+     *  You can see all structure that
+     *  ```php
+     *  var_dump($imap->incomingMessage)
+     *  ```
      *
-     * but use like this
-     * $imap->incomingMessage->header->subject
-     * $imap->incomingMessage->header->from
-     * $imap->incomingMessage->header->to
-     * and other ... var_dump($imap->incomingMessage->header)
+     *  But use like this
+     *  ```php
+     *  $imap->incomingMessage->header->subject
+     *  $imap->incomingMessage->header->from
+     *  $imap->incomingMessage->header->to
+     *  # cc or bcc
+     *  $imap->incomingMessage->header->details->cc
+     *  $imap->incomingMessage->header->details->bcc
+     *  # and other ...
+     *  var_dump($imap->incomingMessage->header)
+     *  ```
      *
-     * next Text or Html body
-     * $imap->incomingMessage->message->html
-     * $imap->incomingMessage->message->plain
-     * $imap->incomingMessage->message->info it is array
+     *  Next Text or Html body
+     *  ```php
+     *  $imap->incomingMessage->message->html
+     *  $imap->incomingMessage->message->plain
+     *  # below is array
+     *  $imap->incomingMessage->message->info
+     *  ```
      *
-     * next
-     * $imap->incomingMessage->attachment it is array attachments
+     *  Array attachments
+     *  ```php
+     *  $imap->incomingMessage->attachment
+     *  ```
+     *  Attachment have structure and body
+     *  ```php
+     *  $imap->incomingMessage->attachment[0]
+     *  $imap->incomingMessage->attachment[0]->structure
+     *  $imap->incomingMessage->attachment[0]->body
+     *  ```
      *
-     * $imap->incomingMessage->attachment[0] have
-     * $imap->incomingMessage->attachment[0]->structure and
-     * $imap->incomingMessage->attachment[0]->body
+     *  Count section
+     *  ```php
+     *  $imap->incomingMessage->section
+     *  ```
      *
-     * Count section
-     * $imap->incomingMessage->section
-     *
-     * And structure all message
-     * $imap->incomingMessage->structure
+     *  And structure all message
+     *  ```php
+     *  $imap->incomingMessage->structure
+     *  ```
      *
      * 2. Save all attachments
-     * $imap->getMessage(5);
-     * $imap->saveAttachments();
-     *
+     *  ```php
+     *  $imap->getMessage(5);
+     *  $imap->saveAttachments();
+     *  ```
+     * @see IncomingMessage
      * @param integer $id
-     * @param string IncomingMessage::DECODE or IncomingMessage::NOT_DECODE
-     * @return object
+     * @param string $decode IncomingMessage::DECODE or IncomingMessage::NOT_DECODE
+     * @return object IncomingMessage
      */
     public function getMessage($id, $decode = IncomingMessage::DECODE)
     {
