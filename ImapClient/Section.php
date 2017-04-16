@@ -21,7 +21,18 @@ namespace SSilence\ImapClient;
  */
 class Section
 {
+    /**
+     * Structure current section
+     *
+     * @var object
+     */
     private $_structure;
+
+    /**
+     * Body current section
+     *
+     * @var string
+     */
     private $_body;
 
     public function __set($property, $value)
