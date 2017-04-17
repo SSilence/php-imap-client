@@ -358,8 +358,8 @@ class ImapClient
     /**
      * Returns all available folders
      *
-     * @param string $separator. Default is '.'
-     * @param int $type. Has three meanings 0,1,2.
+     * @param string $separator default is '.'
+     * @param integer $type has three meanings 0,1,2.
      * If 0 return nested array, if 1 return an array of strings, if 2 return raw imap_list()
      * @return array with folder names
      */
@@ -425,12 +425,13 @@ class ImapClient
     /**
      * Returns an array of brief information about each message in the current mailbox.
      *
-     * Structure return array arrays
+     * Returns the following structure of the array of arrays.
+     * ```php
      * $array = [
      *     [ 'id'=>4, 'info'=>'brief info' ]
      *     [ 'id'=>5, 'info'=>'brief info' ]
      * ]
-     *
+     *```
      * @return array
      */
     public function getBriefInfoMessages()
@@ -687,9 +688,13 @@ class ImapClient
      * The allowed types are TypeAttachments
      * You can add your own
      *
-     * @param array $options.
-     * $options['dir'] it is directory for save attachments.
-     * $options['incomingMessage'] it is incomingMessage object
+     * @param array $options have next parameters
+     * ```php
+     * # it is directory for save attachments
+     * $options['dir']
+     * # it is incomingMessage object
+     * $options['incomingMessage']
+     * ```
      * @return void
      */
     public function saveAttachments($options = null)
@@ -1144,7 +1149,7 @@ class ImapClient
     /**
      * Get uid from id
      *
-     * @var integer $id
+     * @param integer $id
      * @return integer
      */
     public function getUid($id)
@@ -1155,7 +1160,7 @@ class ImapClient
     /**
      * Get id from uid
      *
-     * @var int $uid
+     * @param int $uid
      * @return integer
      */
     public function getId($uid)
