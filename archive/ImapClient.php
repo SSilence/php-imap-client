@@ -19,7 +19,7 @@ namespace SSilence\ImapClient;
  * @copyright  Copyright (c) Tobias Zeising (http://www.aditu.de)
  * @author     Tobias Zeising <tobias.zeising@aditu.de>
  */
-class ImapClient
+class ImapClientArchive
 {
     /**
      * Use the Secure Socket Layer to encrypt the session

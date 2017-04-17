@@ -35,6 +35,13 @@ class Section
      */
     private $_body;
 
+    /**
+     * Set current property
+     *
+     * @param string $property it is property of the called object
+     * @param object|string $value it is value of the called object
+     * @throws ImapClientException
+     */
     public function __set($property, $value)
     {
         switch($property)
@@ -50,6 +57,13 @@ class Section
         };
     }
 
+    /**
+     * Get current property
+     *
+     * @param string $property
+     * @return object|string
+     * @throws ImapClientException
+     */
     public function __get($property)
     {
         switch($property)
@@ -65,6 +79,13 @@ class Section
         }
     }
 
+    /**
+     * Check isset() current object property
+     *
+     * @param string $property
+     * @return object|string
+     * @throws ImapClientException
+     */
     public function __isset($property)
     {
         switch($property)
@@ -80,11 +101,22 @@ class Section
         }
     }
 
+    /**
+     * Unset current object property
+     *
+     * @param string $property
+     * @throws ImapClientException
+     */
     public function __unset($property)
     {
         throw new ImapClientException('Section object not supported unset.');
     }
 
+    /**
+     * Return $this->_body when object convert to string
+     *
+     * @return string
+     */
     public function __toString()
     {
         return $this->_body;
