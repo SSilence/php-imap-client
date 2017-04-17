@@ -15,6 +15,18 @@ namespace SSilence\ImapClient;
 /**
  * Class for all incoming messages
  *
+ * This class get message and generates a message structure of the form:
+ * ```php
+ * $incomingMessage = new IncomingMessage();
+ * $incomingMessage->header;
+ * $incomingMessage->message;
+ * $incomingMessage->attachments;
+ * $incomingMessage->section;
+ * $incomingMessage->structure;
+ * $incomingMessage->debug;
+ * ```
+ * And marks the message read.
+ *
  * @package    SSilence\ImapClient
  * @copyright  Copyright (c) Tobias Zeising (http://www.aditu.de)
  * @authors    Tobias Zeising <tobias.zeising@aditu.de>, sergey144010
@@ -175,12 +187,14 @@ class IncomingMessage
         };
     }
 
-    /*
+    /**
      * Get headers in the current message
      *
      * Set
+     * ```php
      * $this->header
      * $this->header->details
+     * ```
      *
      * @return void
      */
@@ -381,7 +395,7 @@ class IncomingMessage
      * $obj->body
      *
      * @param string $section
-     * @param array $options. Nave one option $options['class']. It create object, which must be instance \SSilence\ImapClient\Section.
+     * @param array|null $options have one option $options['class']. It create object, which must be instance \SSilence\ImapClient\Section.
      * @return \SSilence\ImapClient\Section object
      * @throws ImapClientException
      */
@@ -457,11 +471,12 @@ class IncomingMessage
         return imap_fetch_overview($this->imapStream, $sequence, $options);
     }
 
-    /*
+    /**
      * Imap Header Info
      *
      * Wrapper for http://php.net/manual/ru/function.imap-headerinfo.php
      *
+     * @see http://php.net/manual/ru/function.imap-headerinfo.php
      * @return object
      */
     private function imapHeaderInfo()
@@ -483,10 +498,11 @@ class IncomingMessage
         return $str;
     }
 
-    /*
+    /**
      * Wrapper for imap_mime_header_decode()
      * http://php.net/manual/ru/function.imap-mime-header-decode.php
      *
+     * @see http://php.net/manual/ru/function.imap-mime-header-decode.php
      * @param string $string
      * @return array
      */
@@ -495,10 +511,11 @@ class IncomingMessage
         return imap_mime_header_decode($string);
     }
 
-    /*
+    /**
      * Decodes and glues the title bar
      * http://php.net/manual/ru/function.imap-mime-header-decode.php
      *
+     * @see http://php.net/manual/ru/function.imap-mime-header-decode.php
      * @param string $string
      * @return string
      */
@@ -512,8 +529,10 @@ class IncomingMessage
         return $cache;
     }
 
-    /*
+    /**
      * Decode incoming message
+     *
+     * @return void
      */
     private function decode()
     {
@@ -522,6 +541,11 @@ class IncomingMessage
         $this->decodeAttachments();
     }
 
+    /**
+     * Decode header
+     *
+     * @return void
+     */
     private function decodeHeader()
     {
         if(isset($this->header->subject)){
@@ -541,6 +565,11 @@ class IncomingMessage
         };
     }
 
+    /**
+     * Decode attachments
+     *
+     * @return void
+     */
     private function decodeAttachments()
     {
         foreach ($this->attachments as $key => $attachment) {
@@ -563,6 +592,11 @@ class IncomingMessage
         }
     }
 
+    /**
+     * Decode body
+     *
+     * @return void
+     */
     private function decodeBody()
     {
         foreach ($this->message->types as $typeMessage) {
@@ -581,6 +615,11 @@ class IncomingMessage
 
     }
 
+    /**
+     * Info about this object
+     *
+     * @return array
+     */
     public function __debugInfo()
     {
         return [

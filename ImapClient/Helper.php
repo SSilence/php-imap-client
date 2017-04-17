@@ -29,13 +29,16 @@ class Helper
      * Preparing properties
      *
      * Return object like this
+     * ```php
      * $obj->to => 'to',
      * $obj->subject => 'subject',
-     * $obj->message => null , if incoming array not have 'message', like this ['subject'=>'val', 'to'=>'val']
+     * $obj->message => null
+     * # it is if incoming array not have 'message', like this ['subject'=>'val', 'to'=>'val']
+     * ```
      *
-     * @param array $arrayCurrentPropertiesAndValues. Available properties like only ['subject'=>'val', 'message'=>'val']
-     * @param array $arrayAllowedProperties. All need properties [... 'to', 'subject', 'message' ...]
-     * @param string $outType. If Helper::OUT_OBJECT return object, if Helper::OUT_ARRAY return array.
+     * @param array $arrayCurrentPropertiesAndValues available properties like only ['subject'=>'val', 'message'=>'val']
+     * @param array $arrayAllowedProperties all need properties [... 'to', 'subject', 'message' ...]
+     * @param string $outType if Helper::OUT_OBJECT return object, if Helper::OUT_ARRAY return array.
      * @return object|array
      */
     public static function preparingProperties($arrayCurrentPropertiesAndValues, $arrayAllowedProperties, $outType = self::OUT_OBJECT)
