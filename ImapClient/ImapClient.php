@@ -731,7 +731,7 @@ class ImapClient
             imap_delete($this->imap, $id, FT_UID);
         }
         /*
-	// TODO: Needed?
+        // TODO: Needed?
         if( imap_mail_move($this->imap, implode(",", $ids), $this->getTrash(), CP_UID) == false)
             return false;
         */
@@ -839,10 +839,12 @@ class ImapClient
      * If you have a lot of folders and letters, it can take a long time.
      * And mark all the letters as read.
      *
-     * @param array $options have options:
+     * @param array|null $options have options:
+     * ```php
      * $options['getFolders']['separator']
      * $options['getFolders']['type']
      * $options['mark'] = SEEN and $options['mark'] = UNSEEN
+     * ```
      * @return array with all email addresses or false on error
      */
     public function getAllEmailAddresses(array $options = null) {
@@ -870,12 +872,47 @@ class ImapClient
                 $emails = array_merge($emails, $message->header->to);
                 if (isset($message->header->details->cc)) {
                     $emails = array_merge($emails, $message->header->details->cc);
-                }
+                };
                 if(isset($options['mark']) && $options['mark'] == 'UNSEEN'){
                     $this->setUnseenMessage($message->header->msgno);
                 };
             }
         }
+        $this->selectFolder($saveCurrentFolder);
+        return array_unique($emails);
+    }
+
+    /**
+     * Returns email addresses in the specified folder
+     *
+     * @param string $folder Specified folder
+     * @param array|null $options have option
+     * ```php
+     * $options['mark'] = SEEN and $options['mark'] = UNSEEN
+     * ```
+     * @return array addresses
+     */
+    public function getEmailAddressesInFolder($folder, array $options = null)
+    {
+        if(!isset($options['mark'])){
+            $options['mark'] = 'SEEN';
+        };
+        $saveCurrentFolder = $this->folder;
+        $this->selectFolder($folder);
+        $emails = array();
+        /**
+         * @var $message IncomingMessage
+         */
+        foreach($this->getMessages() as $message) {
+            $emails[] = $message->header->from;
+            $emails = array_merge($emails, $message->header->to);
+            if (isset($message->header->details->cc)) {
+                $emails = array_merge($emails, $message->header->details->cc);
+            };
+            if(isset($options['mark']) && $options['mark'] == 'UNSEEN'){
+                $this->setUnseenMessage($message->header->msgno);
+            };
+        };
         $this->selectFolder($saveCurrentFolder);
         return array_unique($emails);
     }
