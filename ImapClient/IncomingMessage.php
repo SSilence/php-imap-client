@@ -84,11 +84,11 @@ class IncomingMessage
 	 */
     public $debug;
 
-	/**
-	 * The imap string
+    /**
+     * The imap string
      *
      * @var resource
-	 */
+     */
     private $imapStream;
 
 	/**
@@ -119,14 +119,14 @@ class IncomingMessage
      */
     private $_decode;
 
-	/**
-	 * Called when the class has a new instance made of it
+    /**
+     * Called when the class has a new instance made of it
      *
      * @param resource $imapStream
      * @param integer $id
      * @param string $decode
      * @return IncomingMessage
-	 */
+     */
     public function __construct($imapStream, $id, $decode = self::DECODE)
     {
         $this->imapStream = $imapStream;
