@@ -43,7 +43,6 @@ class AdapterForOutgoingMessage
      * Called when the class is made.
      *
      * @param array $connectConfig
-     * @return void
      */
     public function __construct(array $connectConfig)
     {

@@ -15,7 +15,7 @@ namespace SSilence\ImapClient;
 /**
  * Class for all incoming messages
  *
- * @package    protocols
+ * @package    SSilence\ImapClient
  * @copyright  Copyright (c) Tobias Zeising (http://www.aditu.de)
  * @authors    Tobias Zeising <tobias.zeising@aditu.de>, sergey144010
  */
@@ -84,11 +84,11 @@ class IncomingMessage
 	 */
     public $debug;
 
-	/**
-	 * The imap string
+    /**
+     * The imap string
      *
-     * @var ImapConnect
-	 */
+     * @var resource
+     */
     private $imapStream;
 
 	/**
@@ -119,14 +119,14 @@ class IncomingMessage
      */
     private $_decode;
 
-	/**
-	 * Called when the class has a new instance made of it
+    /**
+     * Called when the class has a new instance made of it
      *
-     * @param ImapConnect $imapStream
+     * @param resource $imapStream
      * @param integer $id
      * @param string $decode
      * @return IncomingMessage
-	 */
+     */
     public function __construct($imapStream, $id, $decode = self::DECODE)
     {
         $this->imapStream = $imapStream;
@@ -235,6 +235,8 @@ class IncomingMessage
      *
      * Set $this->section
      *
+     * @param object $obj
+     * @param integer $recursive
      * @return void
      */
     private function getRecursiveSections($obj, $recursive = 1)
@@ -256,6 +258,7 @@ class IncomingMessage
      *
      * @param string $type
      * @return array
+     * @throws ImapClientException
      */
     private function getSections ($type = null)
     {
@@ -380,6 +383,7 @@ class IncomingMessage
      * @param string $section
      * @param array $options. Nave one option $options['class']. It create object, which must be instance \SSilence\ImapClient\Section.
      * @return \SSilence\ImapClient\Section object
+     * @throws ImapClientException
      */
     public function getSection($section, $options = null)
     {
@@ -400,6 +404,7 @@ class IncomingMessage
     /**
      * Get a specific section
      *
+     * @param string $section
      * @return string
      */
     private function imapFetchbody($section)
@@ -420,6 +425,7 @@ class IncomingMessage
     /**
      * Structure specific section
      *
+     * @param string $section
      * @return object
      */
     private function imapBodystruct($section)
@@ -431,6 +437,7 @@ class IncomingMessage
      * Fetch a quick "Overview" on a message
      *
      * @return object
+     * @throws ImapClientException
      */
     private function imapFetchOverview()
     {
