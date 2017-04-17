@@ -24,27 +24,81 @@ namespace SSilence\ImapClient;
  */
 class OutgoingMessage
 {
-
+    /**
+     * Message To
+     *
+     * @see http://php.net/manual/ru/function.imap-mail.php
+     * @var string
+     */
     private $to;
+
+    /**
+     * Message Subject
+     *
+     * @see http://php.net/manual/ru/function.imap-mail.php
+     * @var string
+     */
     private $subject;
+
+    /**
+     * Message Message
+     *
+     * @see http://php.net/manual/ru/function.imap-mail.php
+     * @var string
+     */
     private $message;
+
+    /**
+     * Message additional_headers
+     *
+     * @see http://php.net/manual/ru/function.imap-mail.php
+     * @var
+     */
     private $additional_headers;
+
+    /**
+     * Message CC
+     *
+     * @see http://php.net/manual/ru/function.imap-mail.php
+     * @var string
+     */
     private $cc;
+
+
+    /**
+     * Message BCC
+     *
+     * @see http://php.net/manual/ru/function.imap-mail.php
+     * @var
+     */
     private $bcc;
+
+    /**
+     * Message rpath
+     *
+     * @see http://php.net/manual/ru/function.imap-mail.php
+     * @var string
+     */
     private $rpath;
 
-    /*
-     * send()
+    /**
+     * For send() method
      */
     private $properties;
 
-    /*
-     * createMimeMessage()
+    /**
+     * For createMimeMessage() method
      */
     private $envelope;
+
+    /**
+     * For createBody() method
+     *
+     * @var string
+     */
     private $body;
 
-    /*
+    /**
      * Send message via imap_mail
      *
      * @return void
@@ -66,6 +120,11 @@ class OutgoingMessage
         );
     }
 
+    /**
+     * Preparing properties
+     *
+     * @return void
+     */
     private function preparingSend(){
         $allowedProperties = [
             'to', 'subject', 'message', 'additional_headers', 'cc', 'bcc', 'rpath'
@@ -82,8 +141,11 @@ class OutgoingMessage
         $this->properties = Helper::preparingProperties($properties, $allowedProperties);
     }
 
-    /*
-     * http://php.net/manual/ru/function.imap-mail-compose.php
+    /**
+     * Create Mime Message
+     *
+     * @see http://php.net/manual/ru/function.imap-mail-compose.php
+     * @return string
      */
     public function createMimeMessage()
     {
@@ -108,6 +170,11 @@ class OutgoingMessage
         return imap_mail_compose ($envelope, $body);
     }
 
+    /**
+     * Create body
+     *
+     * @return void
+     */
     public function createBody()
     {
         $this->envelope['date'] = '29.03.2017';
@@ -128,29 +195,52 @@ class OutgoingMessage
         $this->body = $body;
     }
 
+    /**
+     * Set attachment
+     */
     public function setAttachment()
     {
 
     }
 
+    /**
+     * Set From
+     *
+     * @param string $from
+     */
     public function setFrom($from)
     {
         $this->envelope['from'] = $from;
         $this->additional_headers = "From: ".$from;
     }
 
+    /**
+     * Set To
+     *
+     * @param string $to
+     */
     public function setTo($to)
     {
         $this->to = $to;
         $this->envelope['to'] = $to;
     }
 
+    /**
+     * Set Subject
+     *
+     * @param string $subject
+     */
     public function setSubject($subject)
     {
         $this->subject = $subject;
         $this->envelope['subject'] = $subject;
     }
 
+    /**
+     * Set Message
+     *
+     * @param string $message
+     */
     public function setMessage($message)
     {
         $this->message = $message;
