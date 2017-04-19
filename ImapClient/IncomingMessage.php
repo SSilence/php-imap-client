@@ -227,20 +227,15 @@ class IncomingMessage
     private function getCountSection()
     {
         $this->getRecursiveSections($this->structure);
-        $mas = explode(';',$this->section);
-        $mas = array_unique($mas);
-        foreach ($mas as $key=>$val) {
-            if(empty($val)){
-                unset($mas[$key]);
+        $sections = [];
+        foreach ($this->section as $array) {
+            foreach ($array as $section) {
+                $sections[] = $section;
             };
         };
-        foreach ($mas as $key => $section) {
-            $obj = $this->getSection($section);
-            if(empty($obj->body)){
-                unset($mas[$key]);
-            };
-        };
-        $this->section = $mas;
+        $sections = array_unique($sections);
+        sort($sections);
+        $this->section = $sections;
         return $this->section;
     }
 
@@ -250,21 +245,26 @@ class IncomingMessage
      * Set $this->section
      *
      * @param object $obj
-     * @param integer $recursive
+     * @param string $before
      * @return void
      */
-    private function getRecursiveSections($obj, $recursive = 1)
+    private function getRecursiveSections($obj, $before = null)
     {
-        $this->section .= $recursive.';';
         if(!isset($obj->parts)){
             return;
         };
-        foreach($obj->parts as $key => $subObj){
-            if($key != 0){
-                $this->section .= $recursive.'.'.$key.';';
+        $countParts = count($obj->parts); $out = [];
+        $beforeSave = $before;
+        foreach ($obj->parts as $key => $subObj) {
+            if(!isset($beforeSave)){
+                $before = ($key+1);
+            }else{
+                $before = $beforeSave.'.'.($key+1);
             };
-            $this->getRecursiveSections($subObj, $recursive+1);
+            $this->getRecursiveSections($subObj, $before);
+            $out[] = (string)$before;
         };
+        $this->section[] = $out;
     }
 
     /**
@@ -296,12 +296,12 @@ class IncomingMessage
         $sections = [];
         foreach ($this->section as $section)
         {
-            $obj = $this->getSection($section);
-            if (!isset($obj->structure->subtype))
+            $obj = $this->getSectionStructure($section);
+            if (!isset($obj->subtype))
             {
                 continue;
             };
-            if (in_array($obj->structure->subtype, $types, false))
+            if (in_array($obj->subtype, $types, false))
             {
                 $sections[] = $section;
             };
@@ -413,6 +413,59 @@ class IncomingMessage
         $sectionObj->structure = $this->imapBodystruct($section);
         $sectionObj->body = $this->imapFetchbody($section);
         return $sectionObj;
+    }
+
+    /**
+     * Alias for getSectionStructureFromIncomingStructure();
+     *
+     * @param string $section
+     * @return object|null
+     */
+    public function getSectionStructure($section)
+    {
+        return $this->getSectionStructureFromIncomingStructure($section);
+    }
+
+    /**
+     * Get section structure from incoming structure
+     *
+     * @param string $section
+     * @return object|null
+     */
+    private function getSectionStructureFromIncomingStructure($section)
+    {
+        $pos = strpos($section, '.');
+        if($pos === false){
+            $section = (int)$section;
+            if($section == 0){
+                return $this->structure;
+            };
+            return $this->structure->parts[($section-1)];
+        };
+        $sections = explode('.', $section);
+        $count = count($sections);
+        $outObject = null;
+        foreach ($sections as $section) {
+            $section = (int)$section;
+            if(!isset($outObject)){
+                $outObject = $this->getObjectStructureFromParts($this->structure, ($section-1));
+            }else{
+                $outObject = $this->getObjectStructureFromParts($outObject, ($section-1));
+            };
+        };
+        return $outObject;
+    }
+
+    /**
+     * Get object structure from parts
+     *
+     * @param object $inObject
+     * @param integer $part
+     * @return object
+     */
+    private function getObjectStructureFromParts($inObject, $part)
+    {
+        return $inObject->parts[$part];
     }
 
     /**
