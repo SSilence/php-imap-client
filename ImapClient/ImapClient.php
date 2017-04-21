@@ -996,6 +996,59 @@ class ImapClient
     }
 
     /**
+     * Get message overview
+     *
+     * @see ImapClient::imapFetchOverview()
+     * @param integer $id
+     * @param null $options
+     * @return object
+     */
+    public function getMessageOverview($id, $options = null)
+    {
+        $array = $this->imapFetchOverview($id, $options);
+        return $array[0];
+    }
+
+    /**
+     * Get messages overview
+     *
+     * @param string $id
+     * @param null $options
+     * @return array
+     */
+    public function getMessagesOverview($id, $options = null)
+    {
+        return $this->imapFetchOverview($id, $options);
+    }
+
+    /**
+     * Wrapper for php imap_fetch_overview()
+     *
+     * @see http://php.net/manual/ru/function.imap-fetch-overview.php
+     * @param string $sequence a message sequence description,
+     * you can enumerate desired messages with the X,Y syntax,
+     * or retrieve all messages within an interval with the X:Y syntax
+     * @param int $options sequence will contain a sequence of message indices or UIDs,
+     * if this parameter is set to FT_UID.
+     * @return array
+     */
+    public function imapFetchOverview($sequence, $options = null)
+    {
+        return imap_fetch_overview($this->imap, $sequence, $options);
+    }
+
+    /**
+     * Wrapper for php imap_headerinfo()
+     *
+     * @see http://php.net/manual/ru/function.imap-headerinfo.php
+     * @return object
+     */
+    public function imapHeaderInfo($id)
+    {
+        return imap_headerinfo($this->imap, $id);
+    }
+
+    /**
      * Convert imap given address into string
      *
      * @param object $headerinfos the infos given by imap
