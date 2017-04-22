@@ -1008,6 +1008,7 @@ class ImapClient
      * Wrapper for php imap_headerinfo()
      *
      * @see http://php.net/manual/ru/function.imap-headerinfo.php
+     * @param integer $id
      * @return object|false
      */
     public function imapHeaderInfo($id)
