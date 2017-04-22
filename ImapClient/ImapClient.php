@@ -966,7 +966,7 @@ class ImapClient
      * @return string sent folder name
      */
     protected function getSent() {
-        foreach ($this->getFolders() as $folder) {
+        foreach ($this->getFolders(null, 1) as $folder) {
             if (in_array(strtolower($folder), array('sent', 'gesendet', 'inbox.gesendet'))) {
                 return $folder;
             }
@@ -980,19 +980,12 @@ class ImapClient
     /**
      * Fetch message by id
      *
-     * @param int $id of the message
-     * @return false|object header
+     * @param integer $id of the message
+     * @return object|false header
      */
-    protected function getMessageHeader($id) {
-        $count = $this->countMessages();
-        for ($i=1;$i<=$count;$i++) {
-            $uid = imap_uid($this->imap, $i);
-            if ($uid==$id) {
-                $header = imap_headerinfo($this->imap, $i);
-                return $header;
-            }
-        }
-        return false;
+    protected function getMessageHeader($id)
+    {
+        return $this->imapHeaderInfo($id);
     }
 
     /**
@@ -1041,7 +1034,7 @@ class ImapClient
      * Wrapper for php imap_headerinfo()
      *
      * @see http://php.net/manual/ru/function.imap-headerinfo.php
-     * @return object
+     * @return object|false
      */
     public function imapHeaderInfo($id)
     {
