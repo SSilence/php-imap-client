@@ -503,6 +503,7 @@ class IncomingMessage
     /**
      * Fetch a quick "Overview" on a message
      *
+     * @see http://php.net/manual/ru/function.imap-fetch-overview.php
      * @return object
      * @throws ImapClientException
      */
