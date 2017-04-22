@@ -817,7 +817,7 @@ class ImapClient
     }
 
     /**
-     * Clean up trash and spam folder
+     * Clean up trash AND spam folder
      *
      * @return bool success or not
      */
@@ -949,7 +949,7 @@ class ImapClient
      */
     protected function getTrash() {
 
-        foreach ($this->getFolders() as $folder) {
+        foreach ($this->getFolders(null, 1) as $folder) {
             if (in_array(strtolower($folder), array('trash', 'inbox.trash', 'papierkorb'))) {
                 return $folder;
             }
@@ -1042,6 +1042,18 @@ class ImapClient
     }
 
     /**
+     * Wrapper for imap_fetchstructure()
+     *
+     * @see http://php.net/manual/ru/function.imap-fetchstructure.php
+     * @param integer $id
+     * @return object
+     */
+    public function imapFetchStructure($id)
+    {
+        return imap_fetchstructure($this->imap, $id);
+    }
+
+    /**
      * Convert imap given address into string
      *
      * @param object $headerinfos the infos given by imap
@@ -1100,17 +1112,15 @@ class ImapClient
     * @param $id
     * @return string
     */
-    protected function setEncoding($id)
+    protected function getEncoding($id)
     {
-        $header = imap_fetchstructure($this->imap, $id);
+        $header = $this->imapFetchStructure($id);
         $params = $header->parameters ?: [];
-
             foreach ($params as $k => $v) {
                 if (stristr($v->attribute, 'charset')) {
                     return $v->value;
                 }
             }
-
         return 'utf-8';
     }
 
