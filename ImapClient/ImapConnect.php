@@ -148,15 +148,6 @@ class ImapConnect
             throw new ImapClientException('Params must be an array');
         };
 
-        /*
-	// TODO: Needed?
-        $array = [$mailbox, $username , $password, $options, $n_retries, $params];
-        foreach ($array as $val) {
-            var_dump($val);
-        };
-        return;
-        */
-
         if(empty($options) && empty($n_retries) && empty($params)){
             $this->imap = @imap_open($mailbox, $username , $password);
         }else{
