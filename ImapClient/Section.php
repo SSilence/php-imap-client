@@ -19,7 +19,7 @@ namespace SSilence\ImapClient;
  * @copyright  Copyright (c) Tobias Zeising (http://www.aditu.de)
  * @authors    Tobias Zeising <tobias.zeising@aditu.de>, sergey144010
  */
-class Section
+class Section implements \JsonSerializable
 {
     /**
      * Structure current section
@@ -120,5 +120,26 @@ class Section
     public function __toString()
     {
         return $this->_body;
+    }
+
+    /**
+     * Returns the private properties of the object when serializing,
+     * like this json_encode().
+     *
+     * @return array
+     */
+    public function jsonSerialize()
+    {
+        $properties = get_object_vars($this);
+        $outProperties = [];
+        foreach ($properties as $propertie => $value) {
+            if ($propertie[0] == '_'){
+                $namePropertie = substr($propertie, 1);
+                $outProperties[$namePropertie] = $this->$propertie;
+            }else{
+                $outProperties[$propertie] = $this->$propertie;
+            };
+        }
+        return $outProperties;
     }
 }
