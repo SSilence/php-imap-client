@@ -48,3 +48,4 @@ local.properties
 
 #Tests
 tests/local-test.php
+tests/config.php
