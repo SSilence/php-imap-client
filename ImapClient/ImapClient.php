@@ -25,6 +25,7 @@ class ImapClient
      * Use the Secure Socket Layer to encrypt the session
      */
     const ENCRYPT_SSL = 'ssl';
+
     /**
      * Force use of start-TLS to encrypt the session, and reject connection to servers that do not support it
      */
@@ -68,39 +69,11 @@ class ImapClient
     protected $mailbox = "";
 
     /**
-     * Parts for saveEmail()
-     *
-     * @var bool
-     */
-    protected $parts = false;
-
-    /**
-     * Parts for saveEmail()
-     *
-     * @var string
-     */
-    protected $saveFile = "";
-
-    /**
      * Current folder
      *
      * @var string
      */
     protected $folder = "INBOX";
-
-    /**
-     * Have inline files
-     *
-     * @var bool
-     */
-    protected $inline = false;
-
-    /**
-     * Images Embed in HTML
-     *
-     * @var bool
-     */
-    protected $embed = false;
 
     /**
      * Initialize imap helper
@@ -217,7 +190,8 @@ class ImapClient
      *
      * @return void
      */
-    public function __destruct() {
+    public function __destruct()
+    {
         if (is_resource($this->imap))
         {
             imap_close($this->imap);
@@ -229,7 +203,8 @@ class ImapClient
      *
      * @return bool true on success
      */
-    public function isConnected() {
+    public function isConnected()
+    {
         return $this->imap !== false;
     }
 
@@ -336,7 +311,8 @@ class ImapClient
      *
      * @return string error message
      */
-    public function getError() {
+    public function getError()
+    {
         return imap_last_error();
     }
 
@@ -347,7 +323,8 @@ class ImapClient
      * @param string $folder name
      * @return bool successful opened folder
      */
-    public function selectFolder($folder) {
+    public function selectFolder($folder)
+    {
         $result = imap_reopen($this->imap, $this->mailbox . $folder);
         if ($result === true) {
             $this->folder = $folder;
@@ -405,20 +382,12 @@ class ImapClient
     }
 
     /**
-     * Set embeded or not
-     *
-     * @param bool $val
-     */
-    public function setEmbed($val = false) {
-        $this->embed = boolval($val);
-    }
-
-    /**
      * Returns the number of messages in the current folder
      *
      * @return int message count
      */
-    public function countMessages() {
+    public function countMessages()
+    {
         return imap_num_msg($this->imap);
     }
 
@@ -565,7 +534,8 @@ class ImapClient
      * @param string $order        ASC or DESC
      * @return array IncomingMessage of objects
      */
-    public function getMessages($number = 0, $start = 0, $order = 'DESC') {
+    public function getMessages($number = 0, $start = 0, $order = 'DESC')
+    {
         if ($number == 0)
         {
             $number = $this->countMessages();
@@ -721,7 +691,8 @@ class ImapClient
      * @param int $id of the message
      * @return bool success or not
      */
-    public function deleteMessage($id) {
+    public function deleteMessage($id)
+    {
         return $this->deleteMessages(array($id));
     }
 
@@ -731,15 +702,11 @@ class ImapClient
      * @return bool success or not
      * @param $ids array of ids
      */
-    public function deleteMessages($ids) {
+    public function deleteMessages($ids)
+    {
         foreach ($ids as $id) {
             imap_delete($this->imap, $id, FT_UID);
-        }
-        /*
-        // TODO: Needed?
-        if( imap_mail_move($this->imap, implode(",", $ids), $this->getTrash(), CP_UID) == false)
-            return false;
-        */
+        };
         return imap_expunge($this->imap);
     }
 
@@ -750,7 +717,8 @@ class ImapClient
      * @param string $target new folder
      * @return bool success or not
      */
-    public function moveMessage($id, $target) {
+    public function moveMessage($id, $target)
+    {
         return $this->moveMessages(array($id), $target);
     }
 
@@ -761,7 +729,8 @@ class ImapClient
      * @param string $target new folder
      * @return bool success or not
      */
-    public function moveMessages($ids, $target) {
+    public function moveMessages($ids, $target)
+    {
         if (imap_mail_move($this->imap, implode(",", $ids), $target, CP_UID) === false)
             return false;
         return imap_expunge($this->imap);
@@ -785,7 +754,8 @@ class ImapClient
      * @param bool|false $subscribe immediately subscribe to folder
      * @return bool success or not
      */
-    public function addFolder($name, $subscribe = false) {
+    public function addFolder($name, $subscribe = false)
+    {
         $success = imap_createmailbox($this->imap, $this->mailbox . $name);
 
         if ($success && $subscribe) {
@@ -801,7 +771,8 @@ class ImapClient
      * @param string $name of the folder
      * @return bool success or not
      */
-    public function removeFolder($name) {
+    public function removeFolder($name)
+    {
         return imap_deletemailbox($this->imap, $this->mailbox . $name);
     }
 
@@ -812,16 +783,18 @@ class ImapClient
      * @param string $newname of the folder
      * @return bool success or not
      */
-    public function renameFolder($name, $newname) {
+    public function renameFolder($name, $newname)
+    {
         return imap_renamemailbox($this->imap, $this->mailbox . $name, $this->mailbox . $newname);
     }
 
     /**
-     * Clean up trash and spam folder
+     * Clean up trash AND spam folder
      *
      * @return bool success or not
      */
-    public function purge() {
+    public function purge()
+    {
         // delete trash and spam
         if ($this->folder==$this->getTrash() || strtolower($this->folder)=="spam") {
             if (imap_delete($this->imap,'1:*') === false) {
@@ -852,8 +825,8 @@ class ImapClient
      * ```
      * @return array with all email addresses or false on error
      */
-    public function getAllEmailAddresses(array $options = null) {
-
+    public function getAllEmailAddresses(array $options = null)
+    {
         /* Check Options */
         if(!isset($options['getFolders']['separator'])){
             $options['getFolders']['separator'] = '.';
@@ -947,9 +920,9 @@ class ImapClient
      *
      * @return string trash folder name
      */
-    protected function getTrash() {
-
-        foreach ($this->getFolders() as $folder) {
+    protected function getTrash()
+    {
+        foreach ($this->getFolders(null, 1) as $folder) {
             if (in_array(strtolower($folder), array('trash', 'inbox.trash', 'papierkorb'))) {
                 return $folder;
             }
@@ -965,8 +938,9 @@ class ImapClient
      *
      * @return string sent folder name
      */
-    protected function getSent() {
-        foreach ($this->getFolders() as $folder) {
+    protected function getSent()
+    {
+        foreach ($this->getFolders(null, 1) as $folder) {
             if (in_array(strtolower($folder), array('sent', 'gesendet', 'inbox.gesendet'))) {
                 return $folder;
             }
@@ -980,19 +954,78 @@ class ImapClient
     /**
      * Fetch message by id
      *
-     * @param int $id of the message
-     * @return false|object header
+     * @param integer $id of the message
+     * @return object|false header
      */
-    protected function getMessageHeader($id) {
-        $count = $this->countMessages();
-        for ($i=1;$i<=$count;$i++) {
-            $uid = imap_uid($this->imap, $i);
-            if ($uid==$id) {
-                $header = imap_headerinfo($this->imap, $i);
-                return $header;
-            }
-        }
-        return false;
+    protected function getMessageHeader($id)
+    {
+        return $this->imapHeaderInfo($id);
+    }
+
+    /**
+     * Get message overview
+     *
+     * @see ImapClient::imapFetchOverview()
+     * @param integer $id
+     * @param null $options
+     * @return object
+     */
+    public function getMessageOverview($id, $options = null)
+    {
+        $array = $this->imapFetchOverview($id, $options);
+        return $array[0];
+    }
+
+    /**
+     * Get messages overview
+     *
+     * @param string $id
+     * @param null $options
+     * @return array
+     */
+    public function getMessagesOverview($id, $options = null)
+    {
+        return $this->imapFetchOverview($id, $options);
+    }
+
+    /**
+     * Wrapper for php imap_fetch_overview()
+     *
+     * @see http://php.net/manual/ru/function.imap-fetch-overview.php
+     * @param string $sequence a message sequence description,
+     * you can enumerate desired messages with the X,Y syntax,
+     * or retrieve all messages within an interval with the X:Y syntax
+     * @param int $options sequence will contain a sequence of message indices or UIDs,
+     * if this parameter is set to FT_UID.
+     * @return array
+     */
+    public function imapFetchOverview($sequence, $options = null)
+    {
+        return imap_fetch_overview($this->imap, $sequence, $options);
+    }
+
+    /**
+     * Wrapper for php imap_headerinfo()
+     *
+     * @see http://php.net/manual/ru/function.imap-headerinfo.php
+     * @param integer $id
+     * @return object|false
+     */
+    public function imapHeaderInfo($id)
+    {
+        return imap_headerinfo($this->imap, $id);
+    }
+
+    /**
+     * Wrapper for imap_fetchstructure()
+     *
+     * @see http://php.net/manual/ru/function.imap-fetchstructure.php
+     * @param integer $id
+     * @return object
+     */
+    public function imapFetchStructure($id)
+    {
+        return imap_fetchstructure($this->imap, $id);
     }
 
     /**
@@ -1054,45 +1087,16 @@ class ImapClient
     * @param $id
     * @return string
     */
-    protected function setEncoding($id)
+    protected function getEncoding($id)
     {
-        $header = imap_fetchstructure($this->imap, $id);
+        $header = $this->imapFetchStructure($id);
         $params = $header->parameters ?: [];
-
             foreach ($params as $k => $v) {
                 if (stristr($v->attribute, 'charset')) {
                     return $v->value;
                 }
             }
-
         return 'utf-8';
-    }
-
-    /**
-     * HTML embed inline images
-     *
-     * // TODO
-     * Needs to be fixed. Maybe moved aswel
-     * //TODO
-     *
-     * @param array $email
-     * @return string
-     */
-    protected function embedImages($email) {
-
-        $html_embed = $email['body'];
-
-        foreach ($email['attachments'] as $key => $attachment) {
-            if (strtolower($attachment['disposition']) == 'inline' && !empty($attachment['reference'])){
-                $file = $this->getAttachment($email['id'] , $key);
-
-                $reference = str_replace(array("<", ">"), "", $attachment['reference']);
-                $img_embed = "data:image/" . strtolower($file['type']) . ";base64," . base64_encode($file['content']);
-
-                $html_embed = str_replace("cid:" . $reference, $img_embed, $html_embed);
-            }
-        }
-        return $html_embed;
     }
 
     /**
@@ -1100,7 +1104,8 @@ class ImapClient
      *
      * @return bool|resource object
      */
-    public function getMailboxStatistics() {
+    public function getMailboxStatistics()
+    {
         return $this->isConnected() ? imap_mailboxmsginfo($this->imap) : false ;
     }
 
@@ -1118,7 +1123,6 @@ class ImapClient
         }
     }
 
-
     /**
      * Retrieve the quota level settings, and usage statics per mailbox.
      *
@@ -1131,7 +1135,6 @@ class ImapClient
         $quota = imap_get_quota($this->imap, "user.".$mailbox);
         return $quota;
     }
-
 
     /**
      * Retrieve the quota level settings, and usage statics per mailbox.

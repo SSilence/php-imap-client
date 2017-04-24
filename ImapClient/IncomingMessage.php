@@ -220,7 +220,15 @@ class IncomingMessage
     /**
      * Get count section
      *
-     * Set $this->section
+     * We take $this->section and make a simple array from an array of arrays.
+     * If getRecursiveSections($this->structure) set $this->section to NULL,
+     * then we think that there is only one section in the letter.
+     * We install $this->section[0] = [0],
+     * and then we will take this into account in subsequent processing.
+     * Namely here getSection() and $this->getSectionStructure()
+     * or getSectionStructureFromIncomingStructure().
+     * Because if the message id is correct and the structure is returned,
+     * then there is exactly one section in the message.
      *
      * @return array sections
      */
@@ -228,6 +236,9 @@ class IncomingMessage
     {
         $this->getRecursiveSections($this->structure);
         $sections = [];
+        if(!isset($this->section)){
+            $this->section[0] = [0];
+        };
         foreach ($this->section as $array) {
             foreach ($array as $section) {
                 $sections[] = $section;
@@ -242,7 +253,9 @@ class IncomingMessage
     /**
      * Bypasses the recursive parts current message
      *
-     * Set $this->section
+     * Counts sections based on $obj->parts.
+     * And sets $this->section as an array of arrays or null.
+     * Null if $obj->parts is not.
      *
      * @param object $obj
      * @param string $before
@@ -410,8 +423,17 @@ class IncomingMessage
         }else{
             $sectionObj = new Section();
         };
-        $sectionObj->structure = $this->imapBodystruct($section);
-        $sectionObj->body = $this->imapFetchbody($section);
+        if($section == 0){
+            /*
+            If the message id is correct and the structure is returned,
+            then there is exactly one section in the message.
+            */
+            $sectionObj->structure = $this->imapBodystruct(1);
+            $sectionObj->body = $this->imapFetchbody(1);
+        }else{
+            $sectionObj->structure = $this->imapBodystruct($section);
+            $sectionObj->body = $this->imapFetchbody($section);
+        };
         return $sectionObj;
     }
 
@@ -503,6 +525,7 @@ class IncomingMessage
     /**
      * Fetch a quick "Overview" on a message
      *
+     * @see http://php.net/manual/ru/function.imap-fetch-overview.php
      * @return object
      * @throws ImapClientException
      */
