@@ -10,15 +10,19 @@ It is based on the [PHP IMAP extension](http://php.net/imap) and offers a simple
 * get attachments
 
 #### Install
+** We are working on new docs [here](http://ssilence.github.io/php-imap-client/)
 Read [our install guide](docs/guide-en/Install.md)
 
 #### How to use
+** We are working on new docs [here](http://ssilence.github.io/php-imap-client/
 Read [our usage guide](docs/guide-en/Usage.md)
 
 #### Methods
+** We are working on new docs [here](http://ssilence.github.io/php-imap-client/
 Read [our current list of methods](docs/guide-en/Methods.md)
 
 #### Errors
+** We are working on new docs [here](http://ssilence.github.io/php-imap-client/
 Are you stuck on an error? Read [our error guide](docs/guide-en/Error.md)
 
 #### Feedback and Contributing
