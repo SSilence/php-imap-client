@@ -10,6 +10,15 @@
  * GNU General Public License for more details.
  */
 
+/***
+ * !!!WARNING!!!
+ * Hello, just a quick tip,
+ * this is the original code for php-imap-client
+ * this code is very old and really REALLY should
+ * not be used. Whatever floats your boat.
+ * I warned you...
+ * !!!WARNING!!!
+ */
 namespace SSilence\ImapClient;
 
 /**
@@ -18,6 +27,7 @@ namespace SSilence\ImapClient;
  * @package    protocols
  * @copyright  Copyright (c) Tobias Zeising (http://www.aditu.de)
  * @author     Tobias Zeising <tobias.zeising@aditu.de>
+ * @deprecated 2.0 Old one class example
  */
 class ImapClientArchive
 {
