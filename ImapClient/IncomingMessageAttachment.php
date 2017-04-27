@@ -67,12 +67,29 @@ class IncomingMessageAttachment
      */
     private function getName ()
     {
-        foreach ($this->_incomingObject->structure->dparameters as $param) {
-            if ($param->attribute == 'filename') {
-                $this->name = $param->value;
-                break;
-            };
+        // Check for different types of inline attachments. 
+        if ($this->_incomingObject->structure->ifdparameters)
+        {
+            foreach ($this->_incomingObject->structure->dparameters as $param)
+            {
+                if ($param->attribute == 'filename')
+                {
+                    $this->name = $param->value;
+                    break;
+                };
+            }
         }
+        elseif($this->_incomingObject->structure->ifparameters)
+        {
+            foreach ($this->_incomingObject->structure->parameters as $param)
+            {
+                if ($param->attribute == 'name')
+                {
+                    $this->name = $param->value;
+                    break;
+                };
+            }
+        };
     }
 
     /**

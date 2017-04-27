@@ -26,7 +26,7 @@ namespace SSilence\ImapClient;
  * $incomingMessage->debug;
  * ```
  * And marks the message read.
- *
+ * TODO: Format class correctly.
  * @package    SSilence\ImapClient
  * @copyright  Copyright (c) Tobias Zeising (http://www.aditu.de)
  * @authors    Tobias Zeising <tobias.zeising@aditu.de>, sergey144010
@@ -179,9 +179,9 @@ class IncomingMessage
             $this->countAttachment = $countSection-1;
         };
         $this->getCountSection();
+	$this->getHeader();
         $this->getAttachments();
         $this->getBody();
-        $this->getHeader();
         if($this->_decode == self::DECODE){
             $this->decode();
         };
