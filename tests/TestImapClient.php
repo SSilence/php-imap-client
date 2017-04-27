@@ -6,7 +6,7 @@
  * Time: 20:54
  */
 
-namespace tests;
+namespace SSilence\ImapClient\Tests;
 
 
 use SSilence\ImapClient\ImapClient;
@@ -16,5 +16,10 @@ class TestImapClient extends ImapClient
     public function getImap()
     {
         return $this->imap;
+    }
+
+    public function getMailbox()
+    {
+        return $this->mailbox;
     }
 }

@@ -10,13 +10,18 @@ namespace SSilence\ImapClient\Tests;
 
 use SSilence\ImapClient\Tests\MessageInterface;
 
-class ObjectPool
+class MessagesPool
 {
     protected static $objects = array();
 
     public static function push(MessageInterface $object)
     {
         self::$objects[] = $object;
+    }
+
+    public static function clean()
+    {
+        self::$objects = [];
     }
 
     public static function send($stream, $folder)
