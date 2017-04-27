@@ -119,6 +119,9 @@ class Section implements \JsonSerializable
      */
     public function __toString()
     {
+        if(!$this->_body){
+            return '';
+        };
         return $this->_body;
     }
 
