@@ -957,7 +957,7 @@ class ImapClient
      * @param integer $id of the message
      * @return object|false header
      */
-    protected function getMessageHeader($id)
+    public function getMessageHeader($id)
     {
         return $this->imapHeaderInfo($id);
     }
