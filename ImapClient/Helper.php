@@ -15,11 +15,9 @@ namespace SSilence\ImapClient;
 /**
  * Helper class the internals of php-imap-client.
  *
- * @package    SSilence\ImapClient
  * @copyright  Copyright (c) Tobias Zeising (http://www.aditu.de)
  * @author     Tobias Zeising <tobias.zeising@aditu.de>, sergey144010
  */
-
 class Helper
 {
     const OUT_OBJECT = 'object';
@@ -44,10 +42,10 @@ class Helper
      */
     public static function preparingProperties($arrayCurrentPropertiesAndValues, $arrayAllowedProperties, $outType = self::OUT_OBJECT)
     {
-        if($outType == self::OUT_ARRAY) {
+        if ($outType == self::OUT_ARRAY) {
             $outArray = array();
             foreach ($arrayAllowedProperties as $property) {
-                if(!isset($arrayCurrentPropertiesAndValues[$property])) {
+                if (!isset($arrayCurrentPropertiesAndValues[$property])) {
                     $outArray[$property] = null;
                 } else {
                     $outArray[$property] = $arrayCurrentPropertiesAndValues[$property];
@@ -55,10 +53,10 @@ class Helper
             }
             return $outArray;
         }
-        if($outType == self::OUT_OBJECT) {
+        if ($outType == self::OUT_OBJECT) {
             $obj = new \stdClass();
             foreach ($arrayAllowedProperties as $property) {
-                if(!isset($arrayCurrentPropertiesAndValues[$property])) {
+                if (!isset($arrayCurrentPropertiesAndValues[$property])) {
                     $obj->$property = null;
                 } else {
                     $obj->$property = $arrayCurrentPropertiesAndValues[$property];
