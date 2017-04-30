@@ -13,7 +13,7 @@
 namespace SSilence\ImapClient;
 
 /**
- * Helper class the internals of php-imap-client
+ * Helper class the internals of php-imap-client.
  *
  * @package    SSilence\ImapClient
  * @copyright  Copyright (c) Tobias Zeising (http://www.aditu.de)
@@ -26,7 +26,7 @@ class Helper
     const OUT_ARRAY = 'array';
 
     /**
-     * Preparing properties
+     * Preparing properties.
      *
      * Return object like this
      * ```php
@@ -36,35 +36,35 @@ class Helper
      * # it is if incoming array not have 'message', like this ['subject'=>'val', 'to'=>'val']
      * ```
      *
-     * @param array $arrayCurrentPropertiesAndValues available properties like only ['subject'=>'val', 'message'=>'val']
-     * @param array $arrayAllowedProperties all need properties [... 'to', 'subject', 'message' ...]
-     * @param string $outType if Helper::OUT_OBJECT return object, if Helper::OUT_ARRAY return array.
+     * @param array  $arrayCurrentPropertiesAndValues available properties like only ['subject'=>'val', 'message'=>'val']
+     * @param array  $arrayAllowedProperties          all need properties [... 'to', 'subject', 'message' ...]
+     * @param string $outType                         if Helper::OUT_OBJECT return object, if Helper::OUT_ARRAY return array.
+     *
      * @return object|array
      */
     public static function preparingProperties($arrayCurrentPropertiesAndValues, $arrayAllowedProperties, $outType = self::OUT_OBJECT)
     {
-        if($outType == self::OUT_ARRAY){
-            $outArray = [];
+        if($outType == self::OUT_ARRAY) {
+            $outArray = array();
             foreach ($arrayAllowedProperties as $property) {
-                if(!isset($arrayCurrentPropertiesAndValues[$property])){
+                if(!isset($arrayCurrentPropertiesAndValues[$property])) {
                     $outArray[$property] = null;
-                }else{
+                } else {
                     $outArray[$property] = $arrayCurrentPropertiesAndValues[$property];
-                };
-            };
+                }
+            }
             return $outArray;
-        };
-        if($outType == self::OUT_OBJECT){
+        }
+        if($outType == self::OUT_OBJECT) {
             $obj = new \stdClass();
             foreach ($arrayAllowedProperties as $property) {
-                if(!isset($arrayCurrentPropertiesAndValues[$property])){
+                if(!isset($arrayCurrentPropertiesAndValues[$property])) {
                     $obj->$property = null;
-                }else{
+                } else {
                     $obj->$property = $arrayCurrentPropertiesAndValues[$property];
-                };
-            };
+                }
+            }
             return $obj;
-        };
-        return null;
+        }
     }
 }
