@@ -24,87 +24,92 @@ namespace SSilence\ImapClient;
 class OutgoingMessage
 {
     /**
-     * Message To
+     * Message To.
      *
      * @see http://php.net/manual/ru/function.imap-mail.php
+     *
      * @var string
      */
     private $to;
 
     /**
-     * Message Subject
+     * Message Subject.
      *
      * @see http://php.net/manual/ru/function.imap-mail.php
+     *
      * @var string
      */
     private $subject;
 
     /**
-     * Message Message
+     * Message Message.
      *
      * @see http://php.net/manual/ru/function.imap-mail.php
+     *
      * @var string
      */
     private $message;
 
     /**
-     * Message additional_headers
+     * Message additional_headers.
      *
      * @see http://php.net/manual/ru/function.imap-mail.php
+     *
      * @var
      */
     private $additional_headers;
 
     /**
-     * Message CC
+     * Message CC.
      *
      * @see http://php.net/manual/ru/function.imap-mail.php
+     *
      * @var string
      */
     private $cc;
 
-
     /**
-     * Message BCC
+     * Message BCC.
      *
      * @see http://php.net/manual/ru/function.imap-mail.php
+     *
      * @var
      */
     private $bcc;
 
     /**
-     * Message rpath
+     * Message rpath.
      *
      * @see http://php.net/manual/ru/function.imap-mail.php
+     *
      * @var string
      */
     private $rpath;
 
     /**
-     * For send() method
+     * For send() method.
      */
     private $properties;
 
     /**
-     * For createMimeMessage() method
+     * For createMimeMessage() method.
      */
     private $envelope;
 
     /**
-     * For createBody() method
+     * For createBody() method.
      *
      * @var string
      */
     private $body;
 
     /**
-     * Send message via imap_mail
+     * Send message via imap_mail.
      *
      * @return void
      */
     public function send()
     {
-
         $mimeMessage = $this->createMimeMessage();
         $this->message = $mimeMessage;
         $this->preparingSend();
@@ -120,57 +125,60 @@ class OutgoingMessage
     }
 
     /**
-     * Preparing properties
+     * Preparing properties.
      *
      * @return void
      */
-    private function preparingSend(){
-        $allowedProperties = [
-            'to', 'subject', 'message', 'additional_headers', 'cc', 'bcc', 'rpath'
-        ];
-        $properties = [
+    private function preparingSend()
+    {
+        $allowedProperties = array(
+            'to', 'subject', 'message', 'additional_headers', 'cc', 'bcc', 'rpath',
+        );
+        $properties = array(
             'to' => $this->to,
             'subject' => $this->subject,
             'message' => $this->message,
             'additional_headers' => $this->additional_headers,
             'cc' => $this->cc,
             'bcc' => $this->bcc,
-            'rpath' => $this->rpath
-        ];
+            'rpath' => $this->rpath,
+        );
         $this->properties = Helper::preparingProperties($properties, $allowedProperties);
     }
 
     /**
-     * Create Mime Message
+     * Create Mime Message.
      *
      * @see http://php.net/manual/ru/function.imap-mail-compose.php
+     *
      * @return string
      */
     public function createMimeMessage()
     {
         $this->createBody();
 
-        $envelopeAllowedType = [
-            "remail", "return_path", "date", "from", "reply_to", "in_reply_to",
-            "subject", "to", "cc", "bcc", "message_id", "custom_headers"
-        ];
+        $envelopeAllowedType = array(
+            'remail', 'return_path', 'date', 'from', 'reply_to', 'in_reply_to',
+            'subject', 'to', 'cc', 'bcc', 'message_id', 'custom_headers',
+        );
         /* @var $envelope array */
         $envelope = Helper::preparingProperties($this->envelope, $envelopeAllowedType, Helper::OUT_ARRAY);
-        $bodyAllowedType = [
-            "type", "encoding", "charset", "type.parameters", "subtype",
-            "id", "description", "disposition.type", "disposition", "contents.data",
-            "lines", "bytes", "md5"
-        ];
+        $bodyAllowedType = array(
+            'type', 'encoding', 'charset', 'type.parameters', 'subtype',
+            'id', 'description', 'disposition.type', 'disposition', 'contents.data',
+            'lines', 'bytes', 'md5',
+        );
         /* @var $body array */
         foreach ($this->body as $key => $part) {
             $this->body[$key] = Helper::preparingProperties($part, $bodyAllowedType, Helper::OUT_ARRAY);
-        };
+        }
         $body = $this->body;
-        return imap_mail_compose ($envelope, $body);
+
+        return imap_mail_compose($envelope, $body);
     }
 
     /**
-     * Create body
+     * Create body.
      *
      * @return void
      */
@@ -179,42 +187,41 @@ class OutgoingMessage
         $this->envelope['date'] = '29.03.2017';
         $this->envelope['message_id'] = '81';
 
-        $part1["type"] = TYPEMULTIPART;
-        $part1["subtype"] = "mixed";
+        $part1['type'] = TYPEMULTIPART;
+        $part1['subtype'] = 'mixed';
 
-        $part3["type"] = TYPETEXT;
-        $part3["subtype"] = "plain";
-        $part3["description"] = "description3";
-        $part3["contents.data"] = "contents.data3\n\n\n\t";
+        $part3['type'] = TYPETEXT;
+        $part3['subtype'] = 'plain';
+        $part3['description'] = 'description3';
+        $part3['contents.data'] = "contents.data3\n\n\n\t";
 
         $body[1] = $part1;
-        #$body[2] = $part2;
+        //$body[2] = $part2;
         $body[3] = $part3;
 
         $this->body = $body;
     }
 
     /**
-     * Set attachment
+     * Set attachment.
      */
     public function setAttachment()
     {
-
     }
 
     /**
-     * Set From
+     * Set From.
      *
      * @param string $from
      */
     public function setFrom($from)
     {
         $this->envelope['from'] = $from;
-        $this->additional_headers = "From: ".$from;
+        $this->additional_headers = 'From: '.$from;
     }
 
     /**
-     * Set To
+     * Set To.
      *
      * @param string $to
      */
@@ -225,7 +232,7 @@ class OutgoingMessage
     }
 
     /**
-     * Set Subject
+     * Set Subject.
      *
      * @param string $subject
      */
@@ -236,7 +243,7 @@ class OutgoingMessage
     }
 
     /**
-     * Set Message
+     * Set Message.
      *
      * @param string $message
      */

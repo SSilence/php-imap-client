@@ -21,7 +21,7 @@ namespace SSilence\ImapClient;
 class SubtypeBody extends Section
 {
     /**
-     * Charset current section body
+     * Charset current section body.
      *
      * @var string
      */

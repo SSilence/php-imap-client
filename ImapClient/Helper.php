@@ -63,7 +63,7 @@ class Helper
                     $obj->$property = $arrayCurrentPropertiesAndValues[$property];
                 }
             }
-            
+
             return $obj;
         }
     }

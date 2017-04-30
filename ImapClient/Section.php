@@ -21,30 +21,30 @@ namespace SSilence\ImapClient;
 class Section implements \JsonSerializable
 {
     /**
-     * Structure current section
+     * Structure current section.
      *
      * @var object
      */
     private $_structure;
 
     /**
-     * Body current section
+     * Body current section.
      *
      * @var string
      */
     private $_body;
 
     /**
-     * Set current property
+     * Set current property.
      *
-     * @param string $property it is property of the called object
-     * @param object|string $value it is value of the called object
+     * @param string        $property it is property of the called object
+     * @param object|string $value    it is value of the called object
+     *
      * @throws ImapClientException
      */
     public function __set($property, $value)
     {
-        switch($property)
-        {
+        switch ($property) {
             case 'structure':
                 $this->_structure = $value;
                 break;
@@ -53,20 +53,21 @@ class Section implements \JsonSerializable
                 break;
             default:
                 throw new ImapClientException('Section object have only "structure" and "body" properties.');
-        };
+        }
     }
 
     /**
-     * Get current property
+     * Get current property.
      *
      * @param string $property
-     * @return object|string
+     *
      * @throws ImapClientException
+     *
+     * @return object|string
      */
     public function __get($property)
     {
-        switch($property)
-        {
+        switch ($property) {
             case 'structure':
                 return $this->_structure;
                 break;
@@ -79,16 +80,17 @@ class Section implements \JsonSerializable
     }
 
     /**
-     * Check isset() current object property
+     * Check isset() current object property.
      *
      * @param string $property
-     * @return object|string
+     *
      * @throws ImapClientException
+     *
+     * @return object|string
      */
     public function __isset($property)
     {
-        switch($property)
-        {
+        switch ($property) {
             case 'structure':
                 return $this->_structure;
                 break;
@@ -101,9 +103,10 @@ class Section implements \JsonSerializable
     }
 
     /**
-     * Unset current object property
+     * Unset current object property.
      *
      * @param string $property
+     *
      * @throws ImapClientException
      */
     public function __unset($property)
@@ -112,15 +115,16 @@ class Section implements \JsonSerializable
     }
 
     /**
-     * Return $this->_body when object convert to string
+     * Return $this->_body when object convert to string.
      *
      * @return string
      */
     public function __toString()
     {
-        if(!$this->_body){
+        if (!$this->_body) {
             return '';
-        };
+        }
+
         return $this->_body;
     }
 
@@ -133,15 +137,16 @@ class Section implements \JsonSerializable
     public function jsonSerialize()
     {
         $properties = get_object_vars($this);
-        $outProperties = [];
+        $outProperties = array();
         foreach ($properties as $propertie => $value) {
-            if ($propertie[0] == '_'){
+            if ($propertie[0] === '_') {
                 $namePropertie = substr($propertie, 1);
                 $outProperties[$namePropertie] = $this->$propertie;
-            }else{
+            } else {
                 $outProperties[$propertie] = $this->$propertie;
-            };
+            }
         }
+
         return $outProperties;
     }
 }

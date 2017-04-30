@@ -20,23 +20,22 @@ namespace SSilence\ImapClient;
  */
 class IncomingMessageAttachment
 {
-
     /**
-     * Name current attachment
+     * Name current attachment.
      *
      * @var string
      */
     public $name;
 
     /**
-     * Body current attachment
+     * Body current attachment.
      *
      * @var string
      */
     public $body;
 
     /**
-     * Incoming object
+     * Incoming object.
      *
      * Incoming SSilence\ImapClient\Section object
      *
@@ -45,14 +44,15 @@ class IncomingMessageAttachment
     private $_incomingObject;
 
     /**
-     * The constructor
+     * The constructor.
      *
      * Set $this->name and $this->body
      *
      * @param Section $incomingObject
+     *
      * @return IncomingMessageAttachment
      */
-    public function __construct (Section $incomingObject)
+    public function __construct(Section $incomingObject)
     {
         $this->_incomingObject = $incomingObject;
         $this->getName();
@@ -60,45 +60,37 @@ class IncomingMessageAttachment
     }
 
     /**
-     * Returns the name of the attachment along with file extension
+     * Returns the name of the attachment along with file extension.
      *
      * @return string
      */
-    private function getName ()
+    private function getName()
     {
         // Check for different types of inline attachments.
-        if ($this->_incomingObject->structure->ifdparameters)
-        {
-            foreach ($this->_incomingObject->structure->dparameters as $param)
-            {
-                if ($param->attribute == 'filename')
-                {
+        if ($this->_incomingObject->structure->ifdparameters) {
+            foreach ($this->_incomingObject->structure->dparameters as $param) {
+                if ($param->attribute === 'filename') {
                     $this->name = $param->value;
                     break;
-                };
+                }
+            }
+        } elseif ($this->_incomingObject->structure->ifparameters) {
+            foreach ($this->_incomingObject->structure->parameters as $param) {
+                if ($param->attribute === 'name') {
+                    $this->name = $param->value;
+                    break;
+                }
             }
         }
-        elseif($this->_incomingObject->structure->ifparameters)
-        {
-            foreach ($this->_incomingObject->structure->parameters as $param)
-            {
-                if ($param->attribute == 'name')
-                {
-                    $this->name = $param->value;
-                    break;
-                };
-            }
-        };
     }
 
     /**
-     * Returns the body of the e-mail
+     * Returns the body of the e-mail.
      *
      * @return string
      */
-    private function getBody ()
+    private function getBody()
     {
         $this->body = $this->_incomingObject->body;
     }
-
 }

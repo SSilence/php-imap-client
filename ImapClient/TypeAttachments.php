@@ -20,14 +20,14 @@ namespace SSilence\ImapClient;
  */
 class TypeAttachments
 {
-	/**
-	 * Types of attachments
+    /**
+     * Types of attachments.
      *
      * @var array
-	 */
-    private static $types = ['JPEG', 'PNG', 'GIF', 'PDF', 'X-MPEG', 'MSWORD', 'OCTET-STREAM'];
+     */
+    private static $types = array('JPEG', 'PNG', 'GIF', 'PDF', 'X-MPEG', 'MSWORD', 'OCTET-STREAM');
 
-	 /**
+    /**
      * Get the allowed types.
      *
      * @return array

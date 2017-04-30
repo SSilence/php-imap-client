@@ -20,12 +20,12 @@ namespace SSilence\ImapClient;
  */
 class TypeBody
 {
-	/**
-	 * Types of body's
+    /**
+     * Types of body's.
      *
      * @var array
-	 */
-    private static $types = ['PLAIN', 'HTML'];
+     */
+    private static $types = array('PLAIN', 'HTML');
 
     /**
      * Get the allowed types.
