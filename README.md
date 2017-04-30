@@ -1,9 +1,9 @@
 Welcome to php-imap-client
 ===================
-![StyleCI button](https://styleci.io/repos/15479057/shield?branch=master)
-Hello! This is php-imap-client. This is a simple and easy to use class for connecting to imap servers and working with the emails inside. Our well-known features are:
- simple interface
+![StyleCI button](https://styleci.io/repos/15479057/shield?branch=master)    
 
+Hello! This is php-imap-client. This is a simple and easy to use class for connecting to imap servers and working with the emails inside. Our well-known features are:
+ - simple interface
  - Get emails and folders
  - Move, delete, count emails
  - Rename, delete and
