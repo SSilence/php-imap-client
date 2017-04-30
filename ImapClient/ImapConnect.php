@@ -15,7 +15,6 @@ namespace SSilence\ImapClient;
 /**
  * Class ImapConnect. Connect with imap servers.
  *
- * @package    SSilence\ImapClient
  * @copyright  Copyright (c) Tobias Zeising (http://www.aditu.de)
  * @author     Tobias Zeising <tobias.zeising@aditu.de>
  */
@@ -171,7 +170,7 @@ class ImapConnect
 
     /**
      * Get string mailbox
-     * 
+     *
      * @return object
      */
     public function getMailbox()

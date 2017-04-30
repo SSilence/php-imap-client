@@ -13,7 +13,7 @@
 namespace SSilence\ImapClient;
 
 /**
- * Class for all incoming messages
+ * Class for all incoming messages.
  *
  * This class get message and generates a message structure of the form:
  * ```php
@@ -27,9 +27,8 @@ namespace SSilence\ImapClient;
  * ```
  * And marks the message read.
  * TODO: Format class correctly.
- * @package    SSilence\ImapClient
  * @copyright  Copyright (c) Tobias Zeising (http://www.aditu.de)
- * @authors    Tobias Zeising <tobias.zeising@aditu.de>, sergey144010
+ * @author    Sergey144010
  */
 class IncomingMessage
 {

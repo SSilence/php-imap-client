@@ -13,9 +13,8 @@
 namespace SSilence\ImapClient;
 
 /**
- * Class TypeAttachments that holds attachment types
+ * Class TypeAttachments that holds attachment types.
  *
- * @package    SSilence\ImapClient
  * @copyright  Copyright (c) Tobias Zeising (http://www.aditu.de)
  * @author     Tobias Zeising <tobias.zeising@aditu.de>
  */

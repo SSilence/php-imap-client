@@ -13,12 +13,11 @@
 namespace SSilence\ImapClient;
 
 /**
- * Class for all outgoing messages
+ * Class for all outgoing messages.
  *
- * Due to the fact that this class is a W.I.P, i have not added
+ * Due to the fact that this class is a W.I.P, I have not added
  * comments as I assume they will be added later...
  *
- * @package    SSilence\ImapClient
  * @copyright  Copyright (c) Tobias Zeising (http://www.aditu.de)
  * @author     Tobias Zeising <tobias.zeising@aditu.de>, sergey144010
  */

@@ -13,9 +13,8 @@
 namespace SSilence\ImapClient;
 
 /**
- * Class TypeBody that holds the possible body types for an email
+ * Class TypeBody that holds the possible body types for an email.
  *
- * @package    SSilence\ImapClient
  * @copyright  Copyright (c) Tobias Zeising (http://www.aditu.de)
  * @author     Tobias Zeising <tobias.zeising@aditu.de>
  */

@@ -13,9 +13,8 @@
 namespace SSilence\ImapClient;
 
 /**
- * Class ImapClient is helper class for imap access
+ * Class ImapClient is helper class for imap access.
  *
- * @package    protocols
  * @copyright  Copyright (c) Tobias Zeising (http://www.aditu.de)
  * @author     Tobias Zeising <tobias.zeising@aditu.de>
  */

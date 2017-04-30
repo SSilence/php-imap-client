@@ -12,25 +12,24 @@
 
 namespace SSilence\ImapClient;
 
-use \Exception;
+use Exception;
 
 /**
- * Class ImapClientException is used to make a custom Exception for our library
+ * Class ImapClientException is used to make a custom Exception for our library.
  *
- * @package    SSilence\ImapClient
  * @copyright  Copyright (c) Tobias Zeising (http://www.aditu.de)
  * @author     Tobias Zeising <tobias.zeising@aditu.de>, sergey144010
  */
 class ImapClientException extends Exception
 {
     /**
-     * Get info about errors
+     * Get info about the error(s).
      *
      * @return string
      */
     public function getInfo()
     {
-        $error  = $this->getMessage().PHP_EOL;
+        $error = $this->getMessage().PHP_EOL;
         $error .= 'File: '.$this->getFile().PHP_EOL;
         $error .= 'Line: '.$this->getLine().PHP_EOL;
         return $error;

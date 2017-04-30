@@ -51,6 +51,7 @@ class Helper
                     $outArray[$property] = $arrayCurrentPropertiesAndValues[$property];
                 }
             }
+
             return $outArray;
         }
         if ($outType === self::OUT_OBJECT) {
@@ -62,6 +63,7 @@ class Helper
                     $obj->$property = $arrayCurrentPropertiesAndValues[$property];
                 }
             }
+            
             return $obj;
         }
     }

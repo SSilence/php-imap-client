@@ -13,9 +13,8 @@
 namespace SSilence\ImapClient;
 
 /**
- * Class IncomingMessageAttachment for all incoming message attachments
+ * Class IncomingMessageAttachment for all incoming message attachments.
  *
- * @package    SSilence\ImapClient
  * @copyright  Copyright (c) Tobias Zeising (http://www.aditu.de)
  * @author     Tobias Zeising <tobias.zeising@aditu.de>
  */
@@ -67,7 +66,7 @@ class IncomingMessageAttachment
      */
     private function getName ()
     {
-        // Check for different types of inline attachments. 
+        // Check for different types of inline attachments.
         if ($this->_incomingObject->structure->ifdparameters)
         {
             foreach ($this->_incomingObject->structure->dparameters as $param)
