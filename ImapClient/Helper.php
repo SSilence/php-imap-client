@@ -42,7 +42,7 @@ class Helper
      */
     public static function preparingProperties($arrayCurrentPropertiesAndValues, $arrayAllowedProperties, $outType = self::OUT_OBJECT)
     {
-        if ($outType == self::OUT_ARRAY) {
+        if ($outType === self::OUT_ARRAY) {
             $outArray = array();
             foreach ($arrayAllowedProperties as $property) {
                 if (!isset($arrayCurrentPropertiesAndValues[$property])) {
@@ -53,7 +53,7 @@ class Helper
             }
             return $outArray;
         }
-        if ($outType == self::OUT_OBJECT) {
+        if ($outType === self::OUT_OBJECT) {
             $obj = new \stdClass();
             foreach ($arrayAllowedProperties as $property) {
                 if (!isset($arrayCurrentPropertiesAndValues[$property])) {
