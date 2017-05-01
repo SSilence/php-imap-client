@@ -11,3 +11,5 @@ matrix:
   fast_finish: false
   allow_failures:
     - php: hhvm
+script:
+  - vendor/bin/phpunit ImapClient/
