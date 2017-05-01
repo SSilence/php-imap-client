@@ -1,5 +1,6 @@
 Welcome to php-imap-client
 ===================
+![Travis button](https://travis-ci.org/SSilence/php-imap-client.svg?branch=master)
 ![StyleCI button](https://styleci.io/repos/15479057/shield?branch=master)    
 
 Hello! This is php-imap-client. This is a simple and easy to use class for connecting to imap servers and working with the emails inside. Our well-known features are:
