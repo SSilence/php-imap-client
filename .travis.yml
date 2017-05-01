@@ -12,4 +12,4 @@ matrix:
   allow_failures:
     - php: hhvm
 script:
-  - vendor/bin/phpunit ImapClient/
+  - phpunit ImapClient/
