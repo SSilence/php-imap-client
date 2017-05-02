@@ -170,7 +170,7 @@ class IncomingMessage
      *
      * @return void
      */
-    private function init()
+    protected function init()
     {
         $structure = $this->imapFetchstructure();
         $this->structure = $structure;
@@ -198,7 +198,7 @@ class IncomingMessage
      *
      * @return void
      */
-    private function getHeader()
+    protected function getHeader()
     {
         $header = $this->imapFetchOverview();
         $this->header = $header[0];
@@ -232,7 +232,7 @@ class IncomingMessage
      *
      * @return array sections
      */
-    private function getCountSection()
+    protected function getCountSection()
     {
         $this->getRecursiveSections($this->structure);
         $sections = array();
@@ -263,7 +263,7 @@ class IncomingMessage
      *
      * @return void
      */
-    private function getRecursiveSections($obj, $before = null)
+    protected function getRecursiveSections($obj, $before = null)
     {
         if (!isset($obj->parts)) {
             return;
@@ -292,7 +292,7 @@ class IncomingMessage
      *
      * @return array
      */
-    private function getSections($type = null)
+    protected function getSections($type = null)
     {
         if (!$type) {
             return $this->section;
@@ -333,7 +333,7 @@ class IncomingMessage
      *
      * @return array
      */
-    private function getAttachments()
+    protected function getAttachments()
     {
         $attachments = array();
         foreach ($this->getSections(self::SECTION_ATTACHMENTS) as $section) {
@@ -360,7 +360,7 @@ class IncomingMessage
      *
      * @return object
      */
-    private function getBody()
+    protected function getBody()
     {
         $objNew = new \stdClass();
         $i = 1;
@@ -459,7 +459,7 @@ class IncomingMessage
      *
      * @return object|null
      */
-    private function getSectionStructureFromIncomingStructure($section)
+    protected function getSectionStructureFromIncomingStructure($section)
     {
         $pos = strpos($section, '.');
         if ($pos === false) {
@@ -493,7 +493,7 @@ class IncomingMessage
      *
      * @return object
      */
-    private function getObjectStructureFromParts($inObject, $part)
+    protected function getObjectStructureFromParts($inObject, $part)
     {
         return $inObject->parts[$part];
     }
@@ -505,7 +505,7 @@ class IncomingMessage
      *
      * @return string
      */
-    private function imapFetchbody($section)
+    protected function imapFetchbody($section)
     {
         return imap_fetchbody($this->imapStream, $this->id, $section);
     }
@@ -515,7 +515,7 @@ class IncomingMessage
      *
      * @return object
      */
-    private function imapFetchstructure()
+    protected function imapFetchstructure()
     {
         return imap_fetchstructure($this->imapStream, $this->id);
     }
@@ -527,7 +527,7 @@ class IncomingMessage
      *
      * @return object
      */
-    private function imapBodystruct($section)
+    protected function imapBodystruct($section)
     {
         return imap_bodystruct($this->imapStream, $this->id, $section);
     }
@@ -541,7 +541,7 @@ class IncomingMessage
      *
      * @return object
      */
-    private function imapFetchOverview()
+    protected function imapFetchOverview()
     {
         if (isset($this->id) && isset($this->uid)) {
             throw new ImapClientException('What to use id or uid?');
@@ -569,7 +569,7 @@ class IncomingMessage
      *
      * @return object
      */
-    private function imapHeaderInfo()
+    protected function imapHeaderInfo()
     {
         return imap_headerinfo($this->imapStream, $this->id);
     }
@@ -581,7 +581,7 @@ class IncomingMessage
      *
      * @return string
      */
-    private function convertToUtf8($str)
+    protected function convertToUtf8($str)
     {
         if (mb_detect_encoding($str, 'UTF-8, ISO-8859-1, GBK') !== 'UTF-8') {
             $str = utf8_encode($str);
@@ -601,7 +601,7 @@ class IncomingMessage
      *
      * @return array
      */
-    private function imapMimeHeaderDecode($string)
+    protected function imapMimeHeaderDecode($string)
     {
         return imap_mime_header_decode($string);
     }
@@ -616,7 +616,7 @@ class IncomingMessage
      *
      * @return string
      */
-    private function mimeHeaderDecode($string)
+    protected function mimeHeaderDecode($string)
     {
         $cache = null;
         $array = $this->imapMimeHeaderDecode($string);
@@ -632,7 +632,7 @@ class IncomingMessage
      *
      * @return void
      */
-    private function decode()
+    protected function decode()
     {
         $this->decodeHeader();
         $this->decodeBody();
@@ -644,7 +644,7 @@ class IncomingMessage
      *
      * @return void
      */
-    private function decodeHeader()
+    protected function decodeHeader()
     {
         if (isset($this->header->subject)) {
             $this->header->subject = $this->mimeHeaderDecode($this->header->subject);
@@ -668,7 +668,7 @@ class IncomingMessage
      *
      * @return void
      */
-    private function decodeAttachments()
+    protected function decodeAttachments()
     {
         foreach ($this->attachments as $key => $attachment) {
             /*
@@ -694,7 +694,7 @@ class IncomingMessage
      *
      * @return void
      */
-    private function decodeBody()
+    protected function decodeBody()
     {
         foreach ($this->message->types as $typeMessage) {
             switch ($this->message->$typeMessage->structure->encoding) {
