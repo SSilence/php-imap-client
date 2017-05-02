@@ -64,7 +64,7 @@ class IncomingMessageAttachment
      *
      * @return string
      */
-    private function getName()
+    protected function getName()
     {
         // Check for different types of inline attachments.
         if ($this->_incomingObject->structure->ifdparameters) {
@@ -89,7 +89,7 @@ class IncomingMessageAttachment
      *
      * @return string
      */
-    private function getBody()
+    protected function getBody()
     {
         $this->body = $this->_incomingObject->body;
     }
