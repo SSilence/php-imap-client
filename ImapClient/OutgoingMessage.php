@@ -129,7 +129,7 @@ class OutgoingMessage
      *
      * @return void
      */
-    private function preparingSend()
+    protected function preparingSend()
     {
         $allowedProperties = array(
             'to', 'subject', 'message', 'additional_headers', 'cc', 'bcc', 'rpath',
