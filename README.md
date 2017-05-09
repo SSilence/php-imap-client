@@ -16,7 +16,7 @@ Documentation
 php-imap-client is heavily documented. The docs can be accessed [here](http://ssilence.github.io/php-imap-client/index.html).
 #### Getting started
 If you would like help getting started, we have a guide [here](http://ssilence.github.io/php-imap-client/gettingstarted.html).
-#### Connecting(
+#### Connecting
 If you need help setting up connections. Read [our connecting guide](http://ssilence.github.io/php-imap-client/connecting.html).
 #### Error database
 Have an error? Read up on our error [database](http://ssilence.github.io/php-imap-client/errordb.html) to see what is going wrong.
