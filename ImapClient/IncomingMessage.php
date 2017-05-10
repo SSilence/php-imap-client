@@ -366,7 +366,7 @@ class IncomingMessage
         $i = 1;
         foreach ($this->getSections(self::SECTION_BODY) as $section) {
             $obj = $this->getSection($section, array('class' => SubtypeBody::class));
-            $subtype = strtolower($obj->structure->subtype);
+            $subtype = strtolower($obj->__get('structure')->subtype);
             if (!isset($objNew->$subtype)) {
                 $objNew->$subtype = $obj;
             } else {
@@ -379,7 +379,7 @@ class IncomingMessage
             /*
              * Set charset
              */
-            foreach ($objNew->$subtype->structure->parameters as $parameter) {
+            foreach ($objNew->$subtype->__get('structure')->parameters as $parameter) {
                 $attribute = strtolower($parameter->attribute);
                 if ($attribute === 'charset') {
                     $value = strtolower($parameter->value);
