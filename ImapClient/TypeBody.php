@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (C) 2016-2017  SSilence
- * For the full license, please see LICENSE. 
+ * For the full license, please see LICENSE.
  */
 
 namespace SSilence\ImapClient;
