@@ -12,18 +12,18 @@ namespace tests;
 ini_set('display_errors', 'On');
 error_reporting(E_ALL);
 
-require_once "../autoload.php";
+require_once "autoload.php";
 
-require_once "TestImapClient.php";
-require_once "MessagesPool.php";
-require_once "MessageInterface.php";
-require_once "Message.php";
-require_once "Check.php";
-require_once "SimpleMessage.php";
-require_once "TestMessage1.php";
+require_once "tests/TestImapClient.php";
+require_once "tests/MessagesPool.php";
+require_once "tests/MessageInterface.php";
+require_once "tests/Message.php";
+require_once "tests/Check.php";
+require_once "tests/SimpleMessage.php";
+require_once "tests/TestMessage1.php";
 
 
-$conf = require_once "config.php";
+$conf = require_once "tests/config.php";
 
 use SSilence\ImapClient\Helper;
 use SSilence\ImapClient\ImapClientException;
