@@ -37,4 +37,4 @@ Copyright info
 ----------
 Copyright (c) 2016-2017 Tobias Zeising, tobias.zeising@aditu.de  
 http://www.aditu.de  
-Licensed under the GNU public license
+Licensed under the MIT license
