@@ -359,7 +359,7 @@ class IncomingMessage
         $objNew = new \stdClass();
         $i = 1;
         foreach ($this->getSections(self::SECTION_BODY) as $section) {
-            $obj = $this->getSection($section, array('class' => SubtypeBody::class));
+            $obj = $this->getSection($section, array("class" => SubtypeBody::class));
             $subtype = strtolower($obj->__get('structure')->subtype);
             if (!isset($objNew->$subtype)) {
                 $objNew->$subtype = $obj;
