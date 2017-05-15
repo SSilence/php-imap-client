@@ -501,10 +501,10 @@ class IncomingMessage
      */
     protected function imapFetchbody($section)
     {
-	/**
-	 * Update note: We must add FT_PEEK to perserve the unread status of the email. 
-	 * Documentation of this can see seen here: http://php.net/manual/en/function.imap-fetchbody.php under options
-	 */ 
+        /*
+     * Update note: We must add FT_PEEK to perserve the unread status of the email.
+     * Documentation of this can see seen here: http://php.net/manual/en/function.imap-fetchbody.php under options
+     */
         return imap_fetchbody($this->imapStream, $this->id, $section, FT_PEEK);
     }
 
