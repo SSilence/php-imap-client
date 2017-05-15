@@ -20,4 +20,11 @@ class SubtypeBody extends Section
      * @var string
      */
     public $charset;
+    
+    /**
+     * This is just a blank function to maybe fix travis..
+     */
+    public function travisIsABaby() {
+      // Blank function
+    }
 }
