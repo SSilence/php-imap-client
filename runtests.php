@@ -1,9 +1,6 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: Sergey144010
- * Date: 24.04.2017
- * Time: 20:55
+ * This class starts up everything for Travis.
  */
 
 namespace tests;
@@ -21,9 +18,6 @@ require_once "tests/Message.php";
 require_once "tests/Check.php";
 require_once "tests/SimpleMessage.php";
 require_once "tests/TestMessage1.php";
-
-
-$conf = require_once "tests/config.php";
 
 use SSilence\ImapClient\Helper;
 use SSilence\ImapClient\ImapClientException;
@@ -48,7 +42,7 @@ use SSilence\ImapClient\Tests\SimpleMessage;
 
 try{
 
-    $imap = new TestImapClient($conf);
+    $imap = new TestImapClient();
 
     /*
      * Test_1
