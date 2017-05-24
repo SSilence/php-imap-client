@@ -737,7 +737,8 @@ class ImapClient
      */
     public function setUnseenMessage($ids)
     {
-        return imap_clearflag_full($this->imap, $ids, "\\Seen");
+        // We need better docs for this
+        return imap_clearflag_full($this->imap, $ids, "\\Seen");   
     }
 
     /**
