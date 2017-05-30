@@ -115,6 +115,15 @@ class ImapClient
     }
 
     /**
+     * Get the imap connection
+     *
+     * $return imap
+     */
+    public function getImapConnection() {
+        return $this->imap;   
+    }
+    
+    /**
      * Set connection config
      *
      * @param array $config
