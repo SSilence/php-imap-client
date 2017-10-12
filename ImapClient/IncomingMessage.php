@@ -363,10 +363,10 @@ class IncomingMessage
             $obj = $this->getSection($section, array('class' => $subType));
             $subtype = strtolower($obj->__get('structure')->subtype);
             if (!isset($objNew->$subtype)) {
-                $objNew->subtype = $obj;
+                $objNew->$subtype = $obj;
             } else {
-                $subtype = subtype.'_'.$i;
-                $objNew->subtype = $obj;
+                $subtype = $subtype.'_'.$i;
+                $objNew->$subtype = $obj;
                 $i++;
             }
             $objNew->info[] = $obj;
@@ -374,7 +374,7 @@ class IncomingMessage
             /*
              * Set charset
              */
-            foreach ($objNew->subtype->__get('structure')->parameters as $parameter) {
+            foreach ($objNew->$subtype->__get('structure')->parameters as $parameter) {
                 $attribute = strtolower($parameter->attribute);
                 if ($attribute === 'charset') {
                     $value = strtolower($parameter->value);
@@ -696,12 +696,12 @@ class IncomingMessage
     protected function decodeBody()
     {
         foreach ($this->message->types as $typeMessage) {
-            switch ($this->message->typeMessage->structure->encoding) {
+            switch ($this->message->$typeMessage->structure->encoding) {
                 case 3:
-                    $this->message->typeMessage->body = imap_base64($this->message->typeMessage->body);
+                    $this->message->$typeMessage->body = imap_base64($this->message->$typeMessage->body);
                     break;
                 case 4:
-                    $this->message->typeMessage->body = imap_qprint($this->message->typeMessage->body);
+                    $this->message->$typeMessage->body = imap_qprint($this->message->$typeMessage->body);
                     break;
             }
         }
