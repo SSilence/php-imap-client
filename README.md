@@ -1,30 +1,40 @@
-# PHP Imap Client
-This PHP IMAP Client is a simple class for IMAP Email access.
-It is based on the [PHP IMAP extension](http://php.net/imap) and offers a simple interface for handling emails. In my opinion the PHP IMAP functions are not very intuitive.
+Welcome to php-imap-client
+===================
+[![Travis button](https://travis-ci.org/SSilence/php-imap-client.svg?branch=master)](https://travis-ci.org/SSilence/php-imap-client)
+[![StyleCI button](https://styleci.io/repos/15479057/shield?branch=master)](https://styleci.io/repos/15479057) 
 
-#### Features
-* simple interface
-* get emails and folders
-* move, delete, count emails
-* rename, delete and add folders
-* get attachments
+Hello! This is php-imap-client. This is a simple and easy to use class for connecting to imap servers and working with the emails inside. Our well-known features are:
+ - simple interface
+ - Get emails and folders
+ - Move, delete, count emails
+ - Rename, delete and
+ - Get attachments
+ - Many more
 
-#### Install
-Read [our install guide](docs/guide-en/Install.md)
-
-#### How to use
-Read [our usage guide](docs/guide-en/Usage.md)
-
+Documentation
+-------------
+php-imap-client is heavily documented. The docs can be accessed [here](http://ssilence.github.io/php-imap-client/index.html).
+#### Getting started
+If you would like help getting started, we have a guide [here](http://ssilence.github.io/php-imap-client/gettingstarted.html).
+#### Connecting
+If you need help setting up connections. Read [our connecting guide](http://ssilence.github.io/php-imap-client/connecting.html).
+#### Error database
+Have an error? Read up on our error [database](http://ssilence.github.io/php-imap-client/errordb.html) to see what is going wrong.
+#### Installing
+Need help installing our library? Check out our install [guide](http://ssilence.github.io/php-imap-client/installing.html).
 #### Methods
-Read [our current list of methods](docs/guide-en/Methods.md)
+Want a full list of methods? Check it out [right here](http://ssilence.github.io/php-imap-client/methods.html).
+#### Usage
+Using this library is not hard. Why not read [our usage guide](http://ssilence.github.io/php-imap-client/usage.html).
+#### Examples
+Need a nice little pointer? Check out our examples [here](http://ssilence.github.io/php-imap-client/examples.html).
+#### Incoming messages
+Any message in the inbox is called an incoming message 'round these parts. Read up on them [here](http://ssilence.github.io/php-imap-client/incomingmessage.html).
+#### Contributing
+If you would like to be a lamb and help us out check out [our contributing guide](http://ssilence.github.io/php-imap-client/contributing.html).
 
-#### Errors
-Are you stuck on an error? Read [our error guide](docs/guide-en/Error.md)
-
-#### Feedback and Contributing
-Feel free to improve this class. You can use the pull request function of github for contributing improvments. The inner structure of this class is simple and easy. Don't hesitate and check it out ;). Note to contributers: If you make a edit and it gets accepted it is up to YOU to add your self to the composer.json file. *No one* will do this for you!
-
-#### License
+Copyright info
+----------
 Copyright (c) 2016-2017 Tobias Zeising, tobias.zeising@aditu.de  
 http://www.aditu.de  
-Licensed under the GNU public license
+Licensed under the MIT license

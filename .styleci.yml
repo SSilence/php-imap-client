@@ -1,0 +1,23 @@
+preset: recommended
+
+enabled:
+  - long_array_syntax
+  - strict
+  - unalign_double_arrow
+
+disabled:
+  - align_double_arrow
+  - short_array_syntax
+
+finder:
+  exclude:
+    - "tests"
+  name:
+    - "*.php"
+  not-contains:
+    - "config"
+  path:
+    - "ImapClient/"
+  depth:
+    - "< 3"
+    

@@ -2,20 +2,20 @@
 
 namespace program;
 
-require_once "../ImapClient/ImapClientException.php";
-require_once "../ImapClient/ImapConnect.php";
-require_once "../ImapClient/ImapClient.php";
-require_once "../ImapClient/IncomingMessage.php";
-require_once "../ImapClient/TypeAttachments.php";
-require_once "../ImapClient/TypeBody.php";
-require_once "../ImapClient/OutgoingMessage.php";
-require_once "../ImapClient/Helper.php";
+require_once "../autoload.php";
 
 use SSilence\ImapClient\Helper;
 use SSilence\ImapClient\ImapClientException;
 use SSilence\ImapClient\ImapConnect;
 use SSilence\ImapClient\ImapClient;
 use SSilence\ImapClient\OutgoingMessage;
+use SSilence\ImapClient\AdapterForOutgoingMessage;
+use SSilence\ImapClient\IncomingMessage;
+use SSilence\ImapClient\IncomingMessageAttachment;
+use SSilence\ImapClient\Section;
+use SSilence\ImapClient\SubtypeBody;
+use SSilence\ImapClient\TypeAttachments;
+use SSilence\ImapClient\TypeBody;
 
 try{
 
