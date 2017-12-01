@@ -556,12 +556,16 @@ class ImapClient
             {
                 $ids = array_reverse($ids);
             }
-            $ids = array_chunk($ids, $number);
-            $ids = $ids[$start];
 
-            foreach ($ids as $id)
-            {
-                $emails[] = $this->getMessage($id);
+            if (count($ids) > $number) {
+                $ids = array_chunk($ids, $number);
+                $ids = $ids[$start];
+            }
+
+            if (isset($ids)) {
+                foreach ($ids as $id) {
+                    $emails[] = $this->getMessage($id);
+                }
             }
         }
         return $emails;
