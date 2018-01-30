@@ -250,12 +250,14 @@ class ImapClient
          $saveFile = fopen($file,'w');
          if($parts)
          {
-             imap_savebody($this->imap, $saveFile, $id, $part);
+             $ret = imap_savebody($this->imap, $saveFile, $id, $part);
          }
          else {
-             imap_savebody($this->imap, $saveFile, $id);
+	         $ret = imap_savebody($this->imap, $saveFile, $id);
          }
          fclose($saveFile);
+         
+         return $ret;
      }
 
      /**
@@ -300,12 +302,14 @@ class ImapClient
           stream_filter_append($saveFile, $streamFilter, STREAM_FILTER_WRITE);
           if($parts)
           {
-              imap_savebody($this->imap, $saveFile, $id, $part);
+              $ret = imap_savebody($this->imap, $saveFile, $id, $part);
           }
           else {
-              imap_savebody($this->imap, $saveFile, $id);
+              $ret = imap_savebody($this->imap, $saveFile, $id);
           };
           fclose($saveFile);
+
+          return $ret;
       }
 
     /**
