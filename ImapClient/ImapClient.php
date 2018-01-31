@@ -94,6 +94,16 @@ class ImapClient
         };
     }
 
+	/**
+	 * Get the imap resource
+	 *
+	 * @return resource
+	 */
+	public function getImap()
+    {
+    	return $this->imap;
+    }
+
     /**
      * Set connection to advanced
      *
