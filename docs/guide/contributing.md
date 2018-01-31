@@ -2,13 +2,6 @@
 Thanks for wanting to help us and this library out!
 # Getting started
 Clone this repo locally and make some code changes that better out library.    
-```
-!!! Warning !!!
-We do _not_ accept pull request to the "master" branch.
-This is for releases only! Users use this branch.
-Your feature much be put in the "dev" branch or if you are fixing a specific branch, that branch.
-When a new release is ready, the branches will be merged
-```
 Or update our docs and help other developers like you ise this library.    
 If you do not know what git is please see [github's guide to git](https://help.github.com/articles/git-and-github-learning-resources/).    
 After that make a pull request and fill out the pull request form. A person with correct permission will review the changes. Anwser any 
