@@ -358,7 +358,7 @@ class IncomingMessage
     {
         $objNew = new \stdClass();
         $i = 1;
-        $subType = new SubtypeBody;
+        $subType = new SubtypeBody();
         foreach ($this->getSections(self::SECTION_BODY) as $section) {
             $obj = $this->getSection($section, array('class' => $subType));
             $subtype = strtolower($obj->__get('structure')->subtype);
@@ -580,12 +580,13 @@ class IncomingMessage
      *
      * @return string
      */
-    protected function convertToUtf8($str)
+    public function convertToUtf8($str, $charset = 'ISO-8859-1')
     {
-        if (mb_detect_encoding($str, 'UTF-8, ISO-8859-1, GBK') !== 'UTF-8') {
-            $str = utf8_encode($str);
+        if ($charset == 'default') {
+            $charset = 'utf-8';
         }
-        $str = iconv('UTF-8', 'UTF-8//IGNORE', $str);
+
+        $str = iconv($charset, 'UTF-8//IGNORE', $str);
 
         return $str;
     }
@@ -620,7 +621,7 @@ class IncomingMessage
         $cache = null;
         $array = $this->imapMimeHeaderDecode($string);
         foreach ($array as $object) {
-            $cache .= $object->text;
+            $cache .= $this->convertToUtf8($object->text, $object->charset);
         }
 
         return $cache;
@@ -703,6 +704,10 @@ class IncomingMessage
                 case 4:
                     $this->message->$typeMessage->body = imap_qprint($this->message->$typeMessage->body);
                     break;
+            }
+
+            if ($this->message->$typeMessage->charset) {
+                $this->message->$typeMessage->body = $this->convertToUtf8($this->message->$typeMessage->body, $this->message->$typeMessage->charset);
             }
         }
     }
