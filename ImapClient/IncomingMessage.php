@@ -358,7 +358,7 @@ class IncomingMessage
     {
         $objNew = new \stdClass();
         $i = 1;
-        $subType = new SubtypeBody;
+        $subType = new SubtypeBody();
         foreach ($this->getSections(self::SECTION_BODY) as $section) {
             $obj = $this->getSection($section, array('class' => $subType));
             $subtype = strtolower($obj->__get('structure')->subtype);
@@ -580,7 +580,8 @@ class IncomingMessage
      *
      * @return string
      */
-    public function convertToUtf8($str, $charset = 'ISO-8859-1') {
+    public function convertToUtf8($str, $charset = 'ISO-8859-1')
+    {
         if ($charset == 'default') {
             $charset = 'utf-8';
         }

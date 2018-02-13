@@ -24,7 +24,8 @@ class SubtypeBody extends Section
     /**
      * This is just a blank function to maybe fix travis..
      */
-    public function travisIsABaby() {
+    public function travisIsABaby()
+    {
       // Blank function
     }
 }
