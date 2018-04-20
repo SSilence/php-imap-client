@@ -728,4 +728,14 @@ class IncomingMessage
             'debug' => $this->debug,
         );
     }
+    
+    /**
+     * Get the id property of the message
+     *
+     * @return int
+     */
+    public function getID()
+    {
+        return $this->id;   
+    }
 }
