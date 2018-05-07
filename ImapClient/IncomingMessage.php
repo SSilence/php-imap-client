@@ -565,12 +565,13 @@ class IncomingMessage
      * Wrapper for http://php.net/manual/ru/function.imap-headerinfo.php
      *
      * @see http://php.net/manual/ru/function.imap-headerinfo.php
+     * @see http://php.net/manual/en/function.imap-headerinfo.php#98809
      *
      * @return object
      */
     protected function imapHeaderInfo()
     {
-        return imap_headerinfo($this->imapStream, $this->id);
+	return imap_rfc822_parse_headers(imap_fetchheader(($this->imapStream, $this->id));
     }
 
     /**
