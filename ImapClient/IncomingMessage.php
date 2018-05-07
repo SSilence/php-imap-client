@@ -571,7 +571,7 @@ class IncomingMessage
      */
     protected function imapHeaderInfo()
     {
-	return imap_rfc822_parse_headers(imap_fetchheader(($this->imapStream, $this->id));
+	 return imap_rfc822_parse_headers(imap_fetchheader($this->imapStream, $this->id));
     }
 
     /**
