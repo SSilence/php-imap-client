@@ -1029,12 +1029,13 @@ class ImapClient
      * Wrapper for php imap_headerinfo()
      *
      * @see http://php.net/manual/ru/function.imap-headerinfo.php
+     * @see http://php.net/manual/en/function.imap-headerinfo.php#98809
      * @param integer $id
      * @return object|false
      */
     public function imapHeaderInfo($id)
     {
-        return imap_headerinfo($this->imap, $id);
+        return imap_rfc822_parse_headers(imap_fetchheader($this->imap, $id));
     }
 
     /**
