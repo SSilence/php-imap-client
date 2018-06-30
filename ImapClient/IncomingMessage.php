@@ -387,7 +387,7 @@ class IncomingMessage
             }
         }
         if (isset($objNew->plain)) {
-            $objNew->text = $objNew->plain;
+            $objNew->text = quoted_printable_decode( mb_convert_encoding( $objNew->plain, "utf-8", $objNew->plain->charset ));
             $objNew->types[] = 'text';
         } else {
             $objNew->text = null;
