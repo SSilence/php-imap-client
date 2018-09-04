@@ -704,18 +704,24 @@ class IncomingMessage
      */
     protected function decodeBody()
     {
-        foreach ($this->message->types as $typeMessage) {
-            switch ($this->message->$typeMessage->structure->encoding) {
-                case 3:
-                    $this->message->$typeMessage->body = imap_base64($this->message->$typeMessage->body);
-                    break;
-                case 4:
-                    $this->message->$typeMessage->body = imap_qprint($this->message->$typeMessage->body);
-                    break;
-            }
+        if(is_object($this->message)){
+            foreach ($this->message->types as $typeMessage) {
+                if(is_object($this->message->$typeMessage)){
+                    switch ($this->message->$typeMessage->structure->encoding) {
+                        case 3:
+                            $this->message->$typeMessage->body = imap_base64($this->message->$typeMessage->body);
+                            break;
+                        case 4:
+                            $this->message->$typeMessage->body = imap_qprint($this->message->$typeMessage->body);
+                            break;
+                    }
+                }
 
-            if ($this->message->$typeMessage->charset) {
-                $this->message->$typeMessage->body = $this->convertToUtf8($this->message->$typeMessage->body, $this->message->$typeMessage->charset);
+                if(is_object($this->message->$typeMessage)){
+                    if ($this->message->$typeMessage->charset) {
+                        $this->message->$typeMessage->body = $this->convertToUtf8($this->message->$typeMessage->body, $this->message->$typeMessage->charset);
+                    }
+                }
             }
         }
     }
