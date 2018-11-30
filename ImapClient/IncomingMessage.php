@@ -361,6 +361,9 @@ class IncomingMessage
         $subType = new SubtypeBody();
         foreach ($this->getSections(self::SECTION_BODY) as $section) {
             $obj = $this->getSection($section, array('class' => $subType));
+            if(!is_object($obj) || !property_exists($obj, 'structure')) {
+                continue;
+            }
             $subtype = strtolower($obj->__get('structure')->subtype);
             if (!isset($objNew->$subtype)) {
                 $objNew->$subtype = $obj;
@@ -594,7 +597,14 @@ class IncomingMessage
             $charset = 'utf-8';
         }
 
-        $str = iconv($charset, 'UTF-8//IGNORE', $str);
+        $encoding = mb_detect_encoding($str, mb_detect_order(), false);
+
+        if($encoding == 'UTF-8'){
+            $str = mb_convert_encoding($str, 'UTF-8', 'UTF-8');
+        }
+
+        $str = iconv(mb_detect_encoding($str, mb_detect_order(), false), "UTF-8//IGNORE", $str);
+//        $str = iconv($charset, 'UTF-8//IGNORE', $str);
 
         return $str;
     }
@@ -679,21 +689,30 @@ class IncomingMessage
     protected function decodeAttachments()
     {
         foreach ($this->attachments as $key => $attachment) {
-            /*
-             * Decode body
-             */
-            switch ($attachment->info->structure->encoding) {
-                case 3:
-                    $this->attachments[$key]->body = imap_base64($attachment->body);
-                    break;
-                case 4:
-                    $this->attachments[$key]->body = quoted_printable_decode($attachment->body);
-                    break;
+            if(
+                is_object($attachment) &&
+                property_exists($attachment, 'info') &&
+                is_object($attachment->info) &&
+                property_exists($attachment->info, 'structure') &&
+                is_object($attachment->info->structure) &&
+                property_exists($attachment->info->structure, 'encoding')
+            ) {
+                /*
+                 * Decode body
+                 */
+                switch ($attachment->info->structure->encoding) {
+                    case 3:
+                        $this->attachments[$key]->body = imap_base64($attachment->body);
+                        break;
+                    case 4:
+                        $this->attachments[$key]->body = quoted_printable_decode($attachment->body);
+                        break;
+                }
+                /*
+                 * Decode name
+                 */
+                $this->attachments[$key]->name = $this->mimeHeaderDecode($attachment->name);
             }
-            /*
-             * Decode name
-             */
-            $this->attachments[$key]->name = $this->mimeHeaderDecode($attachment->name);
         }
     }
 
@@ -705,21 +724,23 @@ class IncomingMessage
     protected function decodeBody()
     {
         if(is_object($this->message)){
-            foreach ($this->message->types as $typeMessage) {
-                if(is_object($this->message->$typeMessage)){
-                    switch ($this->message->$typeMessage->structure->encoding) {
-                        case 3:
-                            $this->message->$typeMessage->body = imap_base64($this->message->$typeMessage->body);
-                            break;
-                        case 4:
-                            $this->message->$typeMessage->body = imap_qprint($this->message->$typeMessage->body);
-                            break;
+            if(property_exists($this->message, 'types')) {
+                foreach ($this->message->types as $typeMessage) {
+                    if(is_object($this->message->$typeMessage)){
+                        switch ($this->message->$typeMessage->structure->encoding) {
+                            case 3:
+                                $this->message->$typeMessage->body = imap_base64($this->message->$typeMessage->body);
+                                break;
+                            case 4:
+                                $this->message->$typeMessage->body = imap_qprint($this->message->$typeMessage->body);
+                                break;
+                        }
                     }
-                }
 
-                if(is_object($this->message->$typeMessage)){
-                    if ($this->message->$typeMessage->charset) {
-                        $this->message->$typeMessage->body = $this->convertToUtf8($this->message->$typeMessage->body, $this->message->$typeMessage->charset);
+                    if(is_object($this->message->$typeMessage)){
+                        if ($this->message->$typeMessage->charset) {
+                            $this->message->$typeMessage->body = $this->convertToUtf8($this->message->$typeMessage->body, $this->message->$typeMessage->charset);
+                        }
                     }
                 }
             }
