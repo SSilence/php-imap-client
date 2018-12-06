@@ -12,8 +12,8 @@ The following methods are currently available.
 * ``getQuota($user)`` Retrieve the quota level settings, and usage statics per mailbox.
 * ``getQuotaRoot($user)`` Retrieve the quota level settings, and usage statics per mailbox.
 * ``getAllEmailAddresses()`` returns all email addresses of all emails (for auto suggestion list).
-* ``getMailboxStatistics()`` returns statistics, see [imap_mailboxmsginfo](http://php.net/manual/en/function.imap-mailboxmsginfo.php).
-* ``getHeaderInfo($msgNumber)`` Get the header info via the message number. http://php.net/manual/en/function.imap-headerinfo.php#refsect1-function.imap-headerinfo-returnvalues
+* ``getMailboxStatistics()`` returns statistics, see [imap_mailboxmsginfo](https://php.net/manual/en/function.imap-mailboxmsginfo.php).
+* ``getHeaderInfo($msgNumber)`` Get the header info via the message number. https://php.net/manual/en/function.imap-headerinfo.php#refsect1-function.imap-headerinfo-returnvalues
 * ``getMessagesByCriteria($criteria, $number, $start, $order)`` Get messages by criteria like 'FROM uncle'.
 * ``getBriefInfoMessages()`` Get a short information about the messages in the current folder.
 * ``getSection($id, $section)`` Get the section of the specified message.
