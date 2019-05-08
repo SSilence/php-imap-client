@@ -362,27 +362,29 @@ class IncomingMessage
         foreach ($this->getSections(self::SECTION_BODY) as $section) {
             $obj = $this->getSection($section, array('class' => $subType));
             $subtype = strtolower($obj->__get('structure')->subtype);
-            if (!isset($objNew->$subtype)) {
-                $objNew->$subtype = $obj;
-            } else {
-                $subtype = $subtype.'_'.$i;
-                $objNew->$subtype = $obj;
-                $i++;
-            }
-            $objNew->info[] = $obj;
-            $objNew->types[] = $subtype;
-            /*
-             * Set charset
-             */
-            foreach ($objNew->$subtype->__get('structure')->parameters as $parameter) {
-                $attribute = strtolower($parameter->attribute);
-                if ($attribute === 'charset') {
-                    $value = strtolower($parameter->value);
-                    /*
-                     * Here must be array, but
-                     */
-                    //$objNew->$subtype->charset[] = $value;
-                    $objNew->$subtype->charset = $value;
+            if(!empty($subtype)) {
+                if (!isset($objNew->$subtype)) {
+                    $objNew->$subtype = $obj;
+                } else {
+                    $subtype = $subtype.'_'.$i;
+                    $objNew->$subtype = $obj;
+                    $i++;
+                }
+                $objNew->info[] = $obj;
+                $objNew->types[] = $subtype;
+                /*
+                * Set charset
+                */
+                foreach ($objNew->$subtype->__get('structure')->parameters as $parameter) {
+                    $attribute = strtolower($parameter->attribute);
+                    if ($attribute === 'charset') {
+                        $value = strtolower($parameter->value);
+                        /*
+                        * Here must be array, but
+                        */
+                        //$objNew->$subtype->charset[] = $value;
+                        $objNew->$subtype->charset = $value;
+                    }
                 }
             }
         }
