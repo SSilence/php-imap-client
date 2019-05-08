@@ -61,14 +61,18 @@ class IncomingMessageAttachment
     protected function getName()
     {
         // Check for different types of inline attachments.
-        if ($this->_incomingObject->structure->ifdparameters) {
+        if (is_object($this->_incomingObject->structure) &&
+            property_exists($this->_incomingObject->structure, 'ifdparameters') &&
+            $this->_incomingObject->structure->ifdparameters) {
             foreach ($this->_incomingObject->structure->dparameters as $param) {
                 if (strtolower($param->attribute) === 'filename') {
                     $this->name = $param->value;
                     break;
                 }
             }
-        } elseif ($this->_incomingObject->structure->ifparameters) {
+        } elseif (is_object($this->_incomingObject->structure) &&
+            property_exists($this->_incomingObject->structure, 'ifparameters') &&
+            $this->_incomingObject->structure->ifparameters) {
             foreach ($this->_incomingObject->structure->parameters as $param) {
                 if (strtolower($param->attribute) === 'name') {
                     $this->name = $param->value;
