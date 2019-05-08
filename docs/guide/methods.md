@@ -30,7 +30,7 @@ The following methods are currently available.
 * ``moveMessage($id, $target)`` move message with given id in new folder
 * ``moveMessages($ids, $target)`` move messages with given ids (as array) in new folder
 * ``addFolder($name)`` add new folder with given name
-* ``removeFolder($name)`` delete folder with fiven name
+* ``removeFolder($name)`` delete folder with given name
 * ``renameFolder($name, $newname)`` rename folder with given name
 * ``purge()`` move all emails in the current folder into trash. emails in trash and spam will be deleted.
 * ``convertToUtf8()`` Apply encoding defined in header
