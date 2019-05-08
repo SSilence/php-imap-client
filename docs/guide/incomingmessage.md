@@ -56,7 +56,7 @@ The header properties typically look like this:
 To get the subject of the message, use
 $imap->incomingMessage->header->subject
 
-This object also contains the id and the uid of the current message according to http://php.net/manual/ru/function.imap-fetch-overview.php:
+This object also contains the id and the uid of the current message according to https://php.net/manual/en/function.imap-fetch-overview.php:
 ```php
 # id
     $imap->incomingMessage->header->msgno;
@@ -68,7 +68,7 @@ To get the CC or BCC use the property
 ```php
 $imap->incomingMessage->header->details
 ```
-Header details properties have more properties like this [imap_headerinfo](http://php.net/manual/ru/function.imap-headerinfo.php).
+Header details properties have more properties like this [imap_headerinfo](https://php.net/manual/en/function.imap-headerinfo.php).
 If there is no property in the returned object, then it is not present in this email.
 To get the CC or BCC of the message, use
 ```php
