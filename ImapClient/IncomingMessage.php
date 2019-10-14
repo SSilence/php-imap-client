@@ -361,7 +361,7 @@ class IncomingMessage
         $subType = new SubtypeBody();
         foreach ($this->getSections(self::SECTION_BODY) as $section) {
             $obj = $this->getSection($section, array('class' => $subType));
-            if(!is_object($obj) || !property_exists($obj, 'structure')) {
+            if(!is_object($obj) || !$obj->__get('structure')) {
                 continue;
             }
             $subtype = strtolower($obj->__get('structure')->subtype);
