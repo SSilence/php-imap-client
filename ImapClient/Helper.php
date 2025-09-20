@@ -1,19 +1,8 @@
 <?php
-/**
- * Copyright (C) 2016-2017  SSilence
- * For the full license, please see LICENSE.
- */
 
 namespace SSilence\ImapClient;
 
-/**
- * Helper class the internals of php-imap-client.
- *
- * @copyright  Copyright (c) Tobias Zeising (http://www.aditu.de)
- * @author     Tobias Zeising <tobias.zeising@aditu.de>, sergey144010
- */
-class Helper
-{
+class Helper {
     const OUT_OBJECT = 'object';
     const OUT_ARRAY = 'array';
 
@@ -34,8 +23,7 @@ class Helper
      *
      * @return object|array
      */
-    public static function preparingProperties($arrayCurrentPropertiesAndValues, $arrayAllowedProperties, $outType = self::OUT_OBJECT)
-    {
+    public static function preparingProperties($arrayCurrentPropertiesAndValues, $arrayAllowedProperties, $outType = self::OUT_OBJECT) {
         if ($outType === self::OUT_ARRAY) {
             $outArray = array();
             foreach ($arrayAllowedProperties as $property) {
@@ -49,7 +37,7 @@ class Helper
             return $outArray;
         }
         if ($outType === self::OUT_OBJECT) {
-            $obj = new \stdClass();
+            $obj = new HelperObject();
             foreach ($arrayAllowedProperties as $property) {
                 if (!isset($arrayCurrentPropertiesAndValues[$property])) {
                     $obj->$property = null;

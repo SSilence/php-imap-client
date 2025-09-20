@@ -1,19 +1,10 @@
 <?php
-/**
- * Copyright (C) 2016-2017  SSilence
- * For the full license, please see LICENSE.
- */
-
 namespace SSilence\ImapClient;
 
 /**
  * Class TypeAttachments that holds attachment types.
- *
- * @copyright  Copyright (c) Tobias Zeising (http://www.aditu.de)
- * @author     Tobias Zeising <tobias.zeising@aditu.de>
  */
-class TypeAttachments
-{
+class TypeAttachments {
     /**
      * Types of attachments.
      *
@@ -23,11 +14,8 @@ class TypeAttachments
 
     /**
      * Get the allowed types.
-     *
-     * @return array
      */
-    public static function get()
-    {
+    public static function get() {
         return static::$types;
     }
 }

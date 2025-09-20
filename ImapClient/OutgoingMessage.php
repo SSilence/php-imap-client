@@ -1,9 +1,4 @@
 <?php
-/**
- * Copyright (C) 2016-2017  SSilence
- * For the full license, please see LICENSE.
- */
-
 namespace SSilence\ImapClient;
 
 /**
@@ -11,12 +6,8 @@ namespace SSilence\ImapClient;
  *
  * Due to the fact that this class is a W.I.P, I have not added
  * comments as I assume they will be added later...
- *
- * @copyright  Copyright (c) Tobias Zeising (http://www.aditu.de)
- * @author     Tobias Zeising <tobias.zeising@aditu.de>, sergey144010
  */
-class OutgoingMessage
-{
+class OutgoingMessage {
     /**
      * Message To.
      *
@@ -102,8 +93,7 @@ class OutgoingMessage
      *
      * @return void
      */
-    public function send()
-    {
+    public function send() {
         $mimeMessage = $this->createMimeMessage();
         $this->message = $mimeMessage;
         $this->preparingSend();
@@ -123,8 +113,7 @@ class OutgoingMessage
      *
      * @return void
      */
-    protected function preparingSend()
-    {
+    protected function preparingSend() {
         $allowedProperties = array(
             'to', 'subject', 'message', 'additional_headers', 'cc', 'bcc', 'rpath',
         );
@@ -147,8 +136,7 @@ class OutgoingMessage
      *
      * @return string
      */
-    public function createMimeMessage()
-    {
+    public function createMimeMessage() {
         $this->createBody();
 
         $envelopeAllowedType = array(
@@ -176,8 +164,7 @@ class OutgoingMessage
      *
      * @return void
      */
-    public function createBody()
-    {
+    public function createBody() {
         $this->envelope['date'] = '29.03.2017';
         $this->envelope['message_id'] = '81';
 
@@ -199,8 +186,7 @@ class OutgoingMessage
     /**
      * Set attachment.
      */
-    public function setAttachment()
-    {
+    public function setAttachment() {
     }
 
     /**
@@ -208,8 +194,7 @@ class OutgoingMessage
      *
      * @param string $from
      */
-    public function setFrom($from)
-    {
+    public function setFrom($from) {
         $this->envelope['from'] = $from;
         $this->additional_headers = 'From: '.$from;
     }
@@ -219,8 +204,7 @@ class OutgoingMessage
      *
      * @param string $to
      */
-    public function setTo($to)
-    {
+    public function setTo($to) {
         $this->to = $to;
         $this->envelope['to'] = $to;
     }
@@ -230,8 +214,7 @@ class OutgoingMessage
      *
      * @param string $subject
      */
-    public function setSubject($subject)
-    {
+    public function setSubject($subject) {
         $this->subject = $subject;
         $this->envelope['subject'] = $subject;
     }
@@ -241,8 +224,7 @@ class OutgoingMessage
      *
      * @param string $message
      */
-    public function setMessage($message)
-    {
+    public function setMessage($message) {
         $this->message = $message;
     }
 }

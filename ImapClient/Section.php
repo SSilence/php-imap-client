@@ -1,19 +1,10 @@
 <?php
-/**
- * Copyright (C) 2016-2017  SSilence
- * For the full license, please see LICENSE.
- */
-
 namespace SSilence\ImapClient;
 
 /**
  * Class for all incoming messages.
- *
- * @copyright  Copyright (c) Tobias Zeising (http://www.aditu.de)
- * @author    Sergey144010
  */
-class Section implements \JsonSerializable
-{
+class Section implements \JsonSerializable {
     /**
      * Structure current section.
      *
@@ -36,8 +27,7 @@ class Section implements \JsonSerializable
      *
      * @throws ImapClientException
      */
-    public function __set($property, $value)
-    {
+    public function __set($property, $value) {
         switch ($property) {
             case 'structure':
                 $this->_structure = $value;
@@ -53,14 +43,9 @@ class Section implements \JsonSerializable
     /**
      * Get current property.
      *
-     * @param string $property
-     *
      * @throws ImapClientException
-     *
-     * @return object|string
      */
-    public function __get($property)
-    {
+    public function __get($property) {
         switch ($property) {
             case 'structure':
                 return $this->_structure;
@@ -76,21 +61,14 @@ class Section implements \JsonSerializable
     /**
      * Check isset() current object property.
      *
-     * @param string $property
-     *
      * @throws ImapClientException
-     *
-     * @return object|string
      */
-    public function __isset($property)
-    {
+    public function __isset($property) {
         switch ($property) {
             case 'structure':
-                return $this->_structure;
-                break;
+                return isset($this->_structure);
             case 'body':
-                return $this->_body;
-                break;
+                return isset($this->_body);
             default:
                 throw new ImapClientException('Section object have only "structure" and "body" properties.');
         }
@@ -99,12 +77,9 @@ class Section implements \JsonSerializable
     /**
      * Unset current object property.
      *
-     * @param string $property
-     *
      * @throws ImapClientException
      */
-    public function __unset($property)
-    {
+    public function __unset($property) {
         throw new ImapClientException('Section object not supported unset.');
     }
 
@@ -113,12 +88,10 @@ class Section implements \JsonSerializable
      *
      * @return string
      */
-    public function __toString()
-    {
+    public function __toString() {
         if (!$this->_body) {
             return '';
         }
-
         return $this->_body;
     }
 
@@ -128,8 +101,7 @@ class Section implements \JsonSerializable
      *
      * @return array
      */
-    public function jsonSerialize()
-    {
+    public function jsonSerialize(): mixed {
         $properties = get_object_vars($this);
         $outProperties = array();
         foreach ($properties as $propertie => $value) {

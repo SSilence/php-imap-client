@@ -1,19 +1,10 @@
 <?php
-/**
- * Copyright (C) 2016-2017  SSilence
- * For the full license, please see LICENSE.
- */
-
 namespace SSilence\ImapClient;
 
 /**
  * Class IncomingMessageAttachment for all incoming message attachments.
- *
- * @copyright  Copyright (c) Tobias Zeising (http://www.aditu.de)
- * @author     Tobias Zeising <tobias.zeising@aditu.de>
  */
-class IncomingMessageAttachment
-{
+class IncomingMessageAttachment {
     /**
      * Name current attachment.
      *
@@ -46,8 +37,7 @@ class IncomingMessageAttachment
      *
      * @return IncomingMessageAttachment
      */
-    public function __construct(Section $incomingObject)
-    {
+    public function __construct(Section $incomingObject) {
         $this->_incomingObject = $incomingObject;
         $this->getName();
         $this->getBody();
@@ -58,8 +48,7 @@ class IncomingMessageAttachment
      *
      * @return string
      */
-    protected function getName()
-    {
+    protected function getName() {
         // Check for different types of inline attachments.
         if (is_object($this->_incomingObject->structure) &&
             property_exists($this->_incomingObject->structure, 'ifdparameters') &&
@@ -87,8 +76,7 @@ class IncomingMessageAttachment
      *
      * @return string
      */
-    protected function getBody()
-    {
+    protected function getBody() {
         $this->body = $this->_incomingObject->body;
     }
 }

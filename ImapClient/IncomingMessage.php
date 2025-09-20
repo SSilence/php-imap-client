@@ -1,9 +1,4 @@
 <?php
-/**
- * Copyright (C) 2016-2017  SSilence
- * For the full license, please see LICENSE.
- */
-
 namespace SSilence\ImapClient;
 
 /**
@@ -20,13 +15,8 @@ namespace SSilence\ImapClient;
  * $incomingMessage->debug;
  * ```
  * And marks the message read.
- * TODO: Format class correctly.
- *
- * @copyright  Copyright (c) Tobias Zeising (http://www.aditu.de)
- * @author    Sergey144010
  */
-class IncomingMessage
-{
+class IncomingMessage {
     /**
      * Used to handle sections of the e-mail easier.
      */
@@ -126,15 +116,8 @@ class IncomingMessage
 
     /**
      * Called when the class has a new instance made of it.
-     *
-     * @param resource $imapStream
-     * @param int      $id
-     * @param string   $decode
-     *
-     * @return IncomingMessage
      */
-    public function __construct($imapStream, $id, $decode = self::DECODE)
-    {
+    public function __construct($imapStream, $id, $decode = self::DECODE) {
         $this->imapStream = $imapStream;
         if (is_array($id)) {
             $identifier = $id;
@@ -151,21 +134,16 @@ class IncomingMessage
         if (is_int($id)) {
             $this->id = $id;
         }
-
         if (isset($decode)) {
             $this->_decode = $decode;
         }
-
         $this->init();
     }
 
     /**
      * Main process.
-     *
-     * @return void
      */
-    protected function init()
-    {
+    protected function init() {
         $structure = $this->imapFetchstructure();
         $this->structure = $structure;
         if (isset($structure->parts)) {
@@ -192,8 +170,7 @@ class IncomingMessage
      *
      * @return void
      */
-    protected function getHeader()
-    {
+    protected function getHeader() {
         $header = $this->imapFetchOverview();
         $this->header = $header[0];
         $this->header->details = $this->imapHeaderInfo();
@@ -203,11 +180,8 @@ class IncomingMessage
      * Returns current object.
      *
      * Set $this->debug
-     *
-     * @return void
      */
-    public function debug()
-    {
+    public function debug() {
         $this->debug = $this;
     }
 
@@ -226,8 +200,7 @@ class IncomingMessage
      *
      * @return array sections
      */
-    protected function getCountSection()
-    {
+    protected function getCountSection() {
         $this->getRecursiveSections($this->structure);
         $sections = array();
         if (!isset($this->section)) {
@@ -257,8 +230,7 @@ class IncomingMessage
      *
      * @return void
      */
-    protected function getRecursiveSections($obj, $before = null)
-    {
+    protected function getRecursiveSections($obj, $before = null) {
         if (!isset($obj->parts)) {
             return;
         }
@@ -286,8 +258,7 @@ class IncomingMessage
      *
      * @return array
      */
-    protected function getSections($type = null)
-    {
+    protected function getSections($type = null) {
         if (!$type) {
             return $this->section;
         }
@@ -327,13 +298,12 @@ class IncomingMessage
      *
      * @return array
      */
-    protected function getAttachments()
-    {
+    protected function getAttachments() {
         $attachments = array();
         foreach ($this->getSections(self::SECTION_ATTACHMENTS) as $section) {
             $obj = $this->getSection($section);
             $attachment = new IncomingMessageAttachment($obj);
-            $objNew = new \stdClass();
+            $objNew = new HelperObject();
             $objNew->name = $attachment->name;
             $objNew->body = $attachment->body;
             $objNew->info = $obj;
@@ -354,9 +324,10 @@ class IncomingMessage
      *
      * @return object
      */
-    protected function getBody()
-    {
-        $objNew = new \stdClass();
+    protected function getBody() {
+        $objNew = new HelperObject();
+        $objNew->info = [];
+        $objNew->types = [];
         $i = 1;
         $subType = new SubtypeBody();
         foreach ($this->getSections(self::SECTION_BODY) as $section) {
@@ -421,8 +392,7 @@ class IncomingMessage
      *
      * @return \SSilence\ImapClient\Section object
      */
-    public function getSection($section, $options = null)
-    {
+    public function getSection($section, $options = null) {
         if (isset($options['class'])) {
             $sectionObj = new $options['class']();
             if ($sectionObj instanceof Section) {
@@ -454,8 +424,7 @@ class IncomingMessage
      *
      * @return object|null
      */
-    public function getSectionStructure($section)
-    {
+    public function getSectionStructure($section) {
         return $this->getSectionStructureFromIncomingStructure($section);
     }
 
@@ -466,8 +435,7 @@ class IncomingMessage
      *
      * @return object|null
      */
-    protected function getSectionStructureFromIncomingStructure($section)
-    {
+    protected function getSectionStructureFromIncomingStructure($section) {
         $pos = strpos($section, '.');
         if ($pos === false) {
             $section = (int) $section;
@@ -500,8 +468,7 @@ class IncomingMessage
      *
      * @return object
      */
-    protected function getObjectStructureFromParts($inObject, $part)
-    {
+    protected function getObjectStructureFromParts($inObject, $part) {
         return $inObject->parts[$part];
     }
 
@@ -512,34 +479,23 @@ class IncomingMessage
      *
      * @return string
      */
-    protected function imapFetchbody($section)
-    {
-        /*
-     * Update note: We must add FT_PEEK to perserve the unread status of the email.
-     * Documentation of this can see seen here: http://php.net/manual/en/function.imap-fetchbody.php under options
-     */
+    protected function imapFetchbody($section) {
+        // Update note: We must add FT_PEEK to perserve the unread status of the email.
+        // Documentation of this can see seen here: http://php.net/manual/en/function.imap-fetchbody.php under options
         return imap_fetchbody($this->imapStream, $this->id, $section, FT_PEEK);
     }
 
     /**
      * Structure all messages.
-     *
-     * @return object
      */
-    protected function imapFetchstructure()
-    {
+    protected function imapFetchstructure() {
         return imap_fetchstructure($this->imapStream, $this->id);
     }
 
     /**
      * Structure specific section.
-     *
-     * @param string $section
-     *
-     * @return object
      */
-    protected function imapBodystruct($section)
-    {
+    protected function imapBodystruct($section) {
         return imap_bodystruct($this->imapStream, $this->id, $section);
     }
 
@@ -552,8 +508,7 @@ class IncomingMessage
      *
      * @return object
      */
-    protected function imapFetchOverview()
-    {
+    protected function imapFetchOverview() {
         if (isset($this->id) && isset($this->uid)) {
             throw new ImapClientException('What to use id or uid?');
         }
@@ -567,7 +522,6 @@ class IncomingMessage
             $sequence = $this->uid;
             $options = FT_UID;
         }
-
         return imap_fetch_overview($this->imapStream, $sequence, $options);
     }
 
@@ -581,9 +535,8 @@ class IncomingMessage
      *
      * @return object
      */
-    protected function imapHeaderInfo()
-    {
-	 return imap_rfc822_parse_headers(imap_fetchheader($this->imapStream, $this->id));
+    protected function imapHeaderInfo() {
+	    return imap_rfc822_parse_headers(imap_fetchheader($this->imapStream, $this->id));
     }
 
     /**
@@ -593,21 +546,15 @@ class IncomingMessage
      *
      * @return string
      */
-    public function convertToUtf8($str, $charset = 'ISO-8859-1')
-    {
+    public function convertToUtf8($str, $charset = 'ISO-8859-1') {
         if ($charset == 'default') {
             $charset = 'utf-8';
         }
-
         $encoding = mb_detect_encoding($str, mb_detect_order(), false);
-
-        if($encoding == 'UTF-8'){
+        if ($encoding == 'UTF-8') {
             $str = mb_convert_encoding($str, 'UTF-8', 'UTF-8');
         }
-
         $str = iconv(mb_detect_encoding($str, mb_detect_order(), false), "UTF-8//IGNORE", $str);
-//        $str = iconv($charset, 'UTF-8//IGNORE', $str);
-
         return $str;
     }
 
@@ -621,8 +568,7 @@ class IncomingMessage
      *
      * @return array
      */
-    protected function imapMimeHeaderDecode($string)
-    {
+    protected function imapMimeHeaderDecode($string) {
         return imap_mime_header_decode($string);
     }
 
@@ -636,14 +582,12 @@ class IncomingMessage
      *
      * @return string
      */
-    protected function mimeHeaderDecode($string)
-    {
+    protected function mimeHeaderDecode($string) {
         $cache = null;
         $array = $this->imapMimeHeaderDecode($string);
         foreach ($array as $object) {
             $cache .= $this->convertToUtf8($object->text, $object->charset);
         }
-
         return $cache;
     }
 
@@ -652,8 +596,7 @@ class IncomingMessage
      *
      * @return void
      */
-    protected function decode()
-    {
+    protected function decode() {
         $this->decodeHeader();
         $this->decodeBody();
         $this->decodeAttachments();
@@ -664,8 +607,7 @@ class IncomingMessage
      *
      * @return void
      */
-    protected function decodeHeader()
-    {
+    protected function decodeHeader() {
         if (isset($this->header->subject)) {
             $this->header->subject = $this->mimeHeaderDecode($this->header->subject);
         }
@@ -688,10 +630,9 @@ class IncomingMessage
      *
      * @return void
      */
-    protected function decodeAttachments()
-    {
+    protected function decodeAttachments() {
         foreach ($this->attachments as $key => $attachment) {
-            if(
+            if (
                 is_object($attachment) &&
                 property_exists($attachment, 'info') &&
                 is_object($attachment->info) &&
@@ -699,9 +640,7 @@ class IncomingMessage
                 is_object($attachment->info->structure) &&
                 property_exists($attachment->info->structure, 'encoding')
             ) {
-                /*
-                 * Decode body
-                 */
+                // Decode body
                 switch ($attachment->info->structure->encoding) {
                     case 3:
                         $this->attachments[$key]->body = imap_base64($attachment->body);
@@ -710,9 +649,7 @@ class IncomingMessage
                         $this->attachments[$key]->body = quoted_printable_decode($attachment->body);
                         break;
                 }
-                /*
-                 * Decode name
-                 */
+                // Decode name
                 $this->attachments[$key]->name = $this->mimeHeaderDecode($attachment->name);
             }
         }
@@ -723,8 +660,7 @@ class IncomingMessage
      *
      * @return void
      */
-    protected function decodeBody()
-    {
+    protected function decodeBody() {
         if(is_object($this->message)){
             if(property_exists($this->message, 'types')) {
                 foreach ($this->message->types as $typeMessage) {
@@ -754,8 +690,7 @@ class IncomingMessage
      *
      * @return array
      */
-    public function __debugInfo()
-    {
+    public function __debugInfo() {
         return array(
             'header' => $this->header,
             'message' => $this->message,
@@ -771,8 +706,7 @@ class IncomingMessage
      *
      * @return int
      */
-    public function getID()
-    {
+    public function getID() {
         return $this->id;   
     }
 }
