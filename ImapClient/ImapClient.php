@@ -294,6 +294,7 @@ class ImapClient {
      * @return bool successful opened folder
      */
     public function selectFolder($folder) {
+        $encodedFolder = imap_utf7_encode($folder);
         $result = imap_reopen($this->imap, $this->mailbox . $encodedFolder);
         if ($result === true) {
             $this->folder = $folder;
@@ -319,11 +320,19 @@ class ImapClient {
 
         $folders = imap_list($this->imap, $mailbox, "*");
 
+        if ($folders === false || empty($folders)) {
+            return ($type == 0) ? [] : [];
+        }
+
         if ($type == 2) {
             return $folders;
         };
         if ($type == 1) {
-            return str_replace($mailbox, "", $folders);
+            $folderNames = str_replace($mailbox, "", $folders);
+            foreach ($folderNames as $key => $folderName) {
+                $folderNames[$key] = $this->decodeUtf7FolderName($folderName);
+            }
+            return $folderNames;
         };
         if ($type == 0) {
             $arrayRaw = str_replace($mailbox, "", $folders);
@@ -332,6 +341,7 @@ class ImapClient {
             };
             $arrayNew = [];
             foreach ($arrayRaw as $string) {
+                $string = $this->decodeUtf7FolderName($string);
                 $array = explode($separator, $string);
                 $count = count($array);
                 $count = $count-1;
@@ -1025,6 +1035,45 @@ class ImapClient {
         }
         $str = iconv('UTF-8', 'UTF-8//IGNORE', $str);
         return $str;
+    }
+
+    /**
+     * Decode IMAP UTF-7 folder name to UTF-8 with fallback
+     *
+     * @param string $folderName UTF-7 encoded folder name
+     * @return string UTF-8 decoded folder name
+     */
+    private function decodeUtf7FolderName($folderName) {
+        // Only decode if the folder name contains UTF-7 encoding markers
+        if (strpos($folderName, '&') !== false) {
+            $decoded = imap_utf7_decode($folderName);
+            if ($decoded !== false && $decoded !== null && $decoded !== '') {
+                // Clean up any null bytes and convert to UTF-8
+                $decoded = str_replace("\0", '', $decoded);
+                return $this->convertToUtf8($decoded);
+            }
+        }
+        
+        // Return original if no decoding needed or decoding failed
+        return $folderName;
+    }
+
+    /**
+     * Decode IMAP UTF-7 folder name to UTF-8
+     *
+     * @param string $folderName UTF-7 encoded folder name
+     * @return string UTF-8 decoded folder name
+     */
+    public function decodeFolderName($folderName) {
+        // Try to decode UTF-7 to UTF-8
+        $decoded = imap_utf7_decode($folderName);
+        
+        // If decoding failed or resulted in empty string, return original
+        if ($decoded === false || $decoded === '') {
+            return $folderName;
+        }
+        
+        return $decoded;
     }
 
     /**
