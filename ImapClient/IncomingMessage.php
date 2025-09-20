@@ -513,10 +513,10 @@ class IncomingMessage {
             throw new ImapClientException('What to use id or uid?');
         }
         $sequence = null;
-        $options = null;
+        $options = 0;
         if (isset($this->id) && !isset($this->uid)) {
             $sequence = $this->id;
-            $options = null;
+            $options = 0;
         }
         if (!isset($this->id) && isset($this->uid)) {
             $sequence = $this->uid;

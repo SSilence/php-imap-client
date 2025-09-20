@@ -501,7 +501,7 @@ class ImapClient {
      * Get messages
      *
      * @param int    $number       Number of messages. 0 to get all
-     * @param int    $start        Starting message number
+     * @param int    $start        Starting offset (0-based)
      * @param string $order        ASC or DESC
      * @return array IncomingMessage of objects
      */
@@ -521,10 +521,13 @@ class ImapClient {
                 $ids = array_reverse($ids);
             }
 
-            if (count($ids) > $number) {
-                $ids = array_chunk($ids, $number);
-                $ids = $ids[$start];
+            // Apply offset and limit for pagination
+            $totalMessages = count($ids);
+            if ($start >= $totalMessages) {
+                return array(); // No more messages available
             }
+            
+            $ids = array_slice($ids, $start, $number);
 
             if (isset($ids)) {
                 foreach ($ids as $id) {
@@ -1027,11 +1030,12 @@ class ImapClient {
      * Convert to utf8 if necessary.
      *
      * @param string $str utf8 encoded string
-     * @return bool
+     * @return string
      */
     public function convertToUtf8($str) {
-        if (mb_detect_encoding($str, "UTF-8, ISO-8859-1, GBK")!="UTF-8") {
-            $str = utf8_encode($str);
+        $encoding = mb_detect_encoding($str, "UTF-8, ISO-8859-1, GBK");
+        if ($encoding !== "UTF-8") {
+            $str = mb_convert_encoding($str, 'UTF-8', $encoding ?: 'ISO-8859-1');
         }
         $str = iconv('UTF-8', 'UTF-8//IGNORE', $str);
         return $str;
