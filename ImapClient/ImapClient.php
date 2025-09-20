@@ -681,7 +681,7 @@ class ImapClient {
     /**
      * Move given message in new folder
      *
-     * @param int $id of the message
+     * @param int $id UID of the message
      * @param string $target new folder
      * @return bool success or not
      */
@@ -692,13 +692,15 @@ class ImapClient {
     /**
      * Move given message in new folder
      *
-     * @param array $ids array of message ids
+     * @param array $ids array of message ids (UIDs)
      * @param string $target new folder
      * @return bool success or not
      */
     public function moveMessages($ids, $target) {
-        if (imap_mail_move($this->imap, implode(",", $ids), $target, CP_UID) === false)
+        if (imap_mail_move($this->imap, implode(",", $ids), $target, CP_UID) === false) {
             return false;
+        }
+        // Expunge to finalize the move operation
         return imap_expunge($this->imap);
     }
 
