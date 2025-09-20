@@ -294,42 +294,11 @@ class ImapClient {
      * @return bool successful opened folder
      */
     public function selectFolder($folder) {
-        // Encode folder name for IMAP (handles umlauts and international characters)
-        $encodedFolder = $this->encodeFolderName($folder);
         $result = imap_reopen($this->imap, $this->mailbox . $encodedFolder);
         if ($result === true) {
-            $this->folder = $folder; // Store original (decoded) folder name
+            $this->folder = $folder;
         }
         return $result;
-    }
-
-    /**
-     * Encode folder name for IMAP protocol (handles international characters like umlauts)
-     *
-     * @param string $folderName
-     * @return string
-     */
-    private function encodeFolderName($folderName) {
-        if (function_exists('imap_utf7_encode')) {
-            return imap_utf7_encode($folderName);
-        }
-        // Fallback: return as-is if imap_utf7_encode is not available
-        // Note: This may cause issues with folders containing non-ASCII characters
-        return $folderName;
-    }
-
-    /**
-     * Decode folder name from IMAP protocol (handles international characters like umlauts)
-     *
-     * @param string $encodedFolderName
-     * @return string
-     */
-    private function decodeFolderName($encodedFolderName) {
-        if (function_exists('imap_utf7_decode')) {
-            return imap_utf7_decode($encodedFolderName);
-        }
-        // Fallback: return as-is if imap_utf7_decode is not available
-        return $encodedFolderName;
     }
 
     /**
@@ -340,7 +309,8 @@ class ImapClient {
      * If 0 return nested array, if 1 return an array of strings, if 2 return raw imap_list()
      * @return array with folder names
      */
-    public function getFolders($separator = null, $type = 0) {
+    public function getFolders($separator = null, $type = 0)
+    {
         if(preg_match( '/^{.+}/', $this->mailbox, $matches)){
             $mailbox = $matches[0];
         }else{
@@ -353,14 +323,10 @@ class ImapClient {
             return $folders;
         };
         if ($type == 1) {
-            $folderNames = str_replace($mailbox, "", $folders);
-            // Decode UTF-7 IMAP encoded folder names (handles umlauts)
-            return array_map([$this, 'decodeFolderName'], $folderNames);
+            return str_replace($mailbox, "", $folders);
         };
         if ($type == 0) {
             $arrayRaw = str_replace($mailbox, "", $folders);
-            // Decode UTF-7 IMAP encoded folder names (handles umlauts)
-            $arrayRaw = array_map([$this, 'decodeFolderName'], $arrayRaw);
             if (!isset($separator)) {
                 $separator = '.';
             };
