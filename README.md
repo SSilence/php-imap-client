@@ -9,6 +9,8 @@ Hello! This is php-imap-client. This is a simple and easy to use class for conne
  - Get attachments
  - Many more
 
+Click to open [documentation](https://ssilence.github.io/php-imap-client/)
+
 # Documentation
 
 1. [Getting started](#getting-started)
