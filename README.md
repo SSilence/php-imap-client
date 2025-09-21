@@ -1,7 +1,7 @@
 Welcome to php-imap-client
 ===================
 
-Hello! This is php-imap-client. This is a simple and easy to use class for connecting to imap servers and working with the emails inside. Our well-known features are:
+Hello! This is php-imap-client. This is a simple and easy to use library for connecting to imap servers and working with the emails inside. Our well-known features are:
  - simple interface
  - Get emails and folders
  - Move, delete, count emails
@@ -29,7 +29,7 @@ In order to get started, we first need to get php-imap-client to your code base.
 There are currently two ways of doing this.   
 
 ### 1) Composer
-`composer require ssilence/php-imap-client dev-master`
+`composer require ssilence/php-imap-client:^3.0`
 ```php
 require_once "vendor/autoload.php";
 ```
@@ -233,8 +233,8 @@ Everything is structured like this:
 PHP-imap-client can be installed 2 ways. The first composer and the second manual
 
 ### 1) Composer
-Untill Big o' 2.0 is ready, use the following command to install PHP-imap-library:    
-`composer require ssilence/php-imap-client dev-master`
+Use the following command to install php-imap-client library:
+`composer require ssilence/php-imap-client:^3.0`
 
 ### 2) Manual
 1) Download the files from github or the releases page    
