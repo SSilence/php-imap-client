@@ -11,6 +11,9 @@ Hello! This is php-imap-client. This is a simple and easy to use library for con
 
 Click to open [documentation](https://ssilence.github.io/php-imap-client/)
 
+> [!CAUTION]
+> php-imap-client base on the IMAP extensions. From PHP 8.4 it will [move from PHP core to PECL](https://php.watch/versions/8.4/imap-unbundled). The IMAP extension can still be installed from PECL but the [Webklex/php-imap library](https://github.com/Webklex/php-imap) doesn't need any extension.
+
 # Documentation
 
 1. [Getting started](#getting-started)
